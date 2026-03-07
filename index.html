@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>DetaBridge Wheel Pro v5.8</title>
+    <title>DetaBridge Wheel Pro v5.6 Master</title>
     <style>
         :root {
             --bg-top: #1e2128; --bg-bottom: #0e1013;
@@ -18,70 +18,63 @@
         html, body { margin: 0; padding: 0; width: 100%; height: 100dvh; overflow: hidden; touch-action: manipulation; background: radial-gradient(circle at center, var(--bg-top) 0%, var(--bg-bottom) 100%); color: white; font-family: 'Pretendard', sans-serif; }
         .main-container { width: 100%; max-width: 500px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
 
-        /* [Golden Master] Overlay & Header */
-        #langOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
+        /* 언어 선택 오버레이 */
+        #langOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
         .lang-list { display: flex; flex-direction: column; gap: 12px; width: 220px; }
-        .lang-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #fff; padding: 15px 20px; border-radius: 12px; font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; gap: 15px; cursor: pointer; }
+        .lang-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #fff; padding: 15px 20px; border-radius: 12px; font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; justify-content: flex-start; gap: 15px; cursor: pointer; }
+
         header { padding: 12px 18px; background: rgba(0,0,0,0.4); display: flex; justify-content: space-between; align-items: center; z-index: 100; }
         .user-id { font-size: 0.8rem; font-weight: 700; border-left: 3px solid var(--accent); padding-left: 10px; }
         .balance-box { background: rgba(255, 149, 0, 0.05); padding: 5px 10px; border-radius: 6px; border: 1px solid var(--point-color); color: var(--point-color); font-weight: 800; font-size: 0.85rem; }
 
-        /* [Golden Master] History & Wheel */
         .timer-container { width: 100%; height: 6px; background: #000; position: relative; }
         #timerBar { position: absolute; left: 0; top: 0; height: 100%; width: 0%; transition: width 0.1s linear; }
         .history-strip { display: flex; gap: 5px; padding: 10px 0; height: 24px; width: 100%; justify-content: center; background: rgba(0,0,0,0.2); flex-shrink: 0; box-sizing: content-box; }
         .hist-bar { width: 8px; height: 100%; border-radius: 1px; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.05); }
-        .wheel-section { position: relative; margin: 20px 0; width: 240px; height: 240px; flex-shrink: 0; }
-        #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
-        .wheel-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-weight: 900; font-size: 2rem; text-shadow: 0 0 15px var(--accent); pointer-events: none; }
-        .pointer { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); width: 14px; height: 22px; background: #fff; clip-path: polygon(0 0, 100% 0, 50% 100%); z-index: 20; filter: drop-shadow(0 0 8px var(--accent)); }
 
         .content-view { flex: 1; overflow-y: auto; display: none; padding-bottom: 90px; width: 100%; }
         .content-view.active { display: flex; flex-direction: column; align-items: center; }
 
-        /* [v5.8] 배팅 버튼 색상 레이아웃 고정 */
+        .wheel-section { position: relative; margin: 20px 0; width: 240px; height: 240px; flex-shrink: 0; }
+        #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        .wheel-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-weight: 900; font-size: 2rem; text-shadow: 0 0 15px var(--accent); }
+        .pointer { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); width: 14px; height: 22px; background: #fff; clip-path: polygon(0 0, 100% 0, 50% 100%); z-index: 20; filter: drop-shadow(0 0 8px var(--accent)); }
+
         .overlay-container { position: relative; width: 95%; margin: 10px auto 0; }
         .controls { width: 100%; background: var(--card); padding: 12px; border-radius: 12px; }
         .bet-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
         .btn { height: 55px; border: none; border-radius: 8px; font-weight: 900; font-size: 0.85rem; color: #fff; cursor: pointer; transition: transform 0.1s; }
         .btn:active { transform: scale(0.95); }
-        .btn-black { background-color: var(--black) !important; color: white; }
-        .btn-red { background-color: var(--red) !important; color: white; }
-        .btn-blue { background-color: var(--blue) !important; color: #000; }
-        .btn-gold { background-color: var(--gold) !important; color: #000; }
+        .btn-black { background: var(--black); } .btn-red { background: var(--red); } .btn-blue { background: var(--blue); color: #000; } .btn-gold { background: var(--gold); color: #000; }
 
         .closed-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); border-radius: 12px; z-index: 50; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
         .closed-text { color: #ddd; font-weight: 900; font-size: 1.8rem; letter-spacing: 5px; animation: pulse 0.8s infinite; }
 
-        /* [v5.7] 가이드 & 24H 통계 유지 */
-        .how-to-play { width: 90%; padding: 20px 0; color: #bbb; font-size: 0.75rem; line-height: 1.6; }
-        .how-to-play h3 { color: var(--accent); font-size: 1.1rem; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 5px; }
-        .how-to-play .step { margin-bottom: 15px; }
-        .stats-24h { width: 92%; margin-top: 20px; }
-        .stats-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: rgba(0,242,255,0.1); padding: 10px; border-radius: 8px; border: 1px solid rgba(0,242,255,0.2); }
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
-        .stat-box { background: var(--card); padding: 15px; border-radius: 12px; border: 1px solid #222; text-align: center; }
-        .stat-val { font-size: 1.3rem; font-weight: 900; color: var(--accent); display: block; }
-        .dist-chart { margin-top: 20px; background: var(--card); padding: 15px; border-radius: 12px; width: 100%; }
-        .chart-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-        .chart-label { width: 50px; font-size: 0.65rem; font-weight: 800; }
-        .chart-bar-bg { flex: 1; height: 10px; background: #000; border-radius: 5px; overflow: hidden; }
-        .chart-bar-fill { height: 100%; width: 0%; transition: width 1s ease-out; }
+        .live-betting-area { width: 100%; margin-top: 12px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 12px; }
+        .live-feed { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+        .live-col { background: rgba(0,0,0,0.4); border-radius: 6px; min-height: 110px; border-top: 2px solid #444; }
+        .col-head { padding: 5px 0; font-size: 0.5rem; text-align: center; font-weight: 900; }
+        .bet-list { padding: 3px; display: flex; flex-direction: column; gap: 2px; height: 80px; overflow: hidden; }
+        .bet-item { display: flex; justify-content: space-between; font-size: 0.4rem; background: rgba(255,255,255,0.05); padding: 2px; animation: fadeIn 0.3s ease; }
 
-        /* [Golden Master] Nav */
         nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; height: 80px; background: var(--nav-bg); display: flex; border-top: 1px solid #222; z-index: 200; }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; }
         .nav-item .nav-icon { font-size: 1.5rem; margin-bottom: 4px; }
         .nav-item span { font-size: 0.85rem; font-weight: 700; }
         .nav-item.active { color: var(--accent); }
 
+        .log-table { width: 100%; border-collapse: collapse; font-size: 0.7rem; background: rgba(0,0,0,0.4); border-radius: 10px; overflow: hidden; margin-top: 20px; }
+        .log-table th { background: #1a1a1a; padding: 10px; color: var(--text-muted); }
+        .log-table td { padding: 10px; border-bottom: 1px solid #222; text-align: center; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
     </style>
 </head>
 <body onclick="initAudio()">
 
 <div id="langOverlay">
-    <h3 style="color:var(--accent); font-weight:900; margin-bottom:25px; letter-spacing:1px; text-shadow: 0 0 10px var(--accent);">SELECT LANGUAGE</h3>
+    <h3 style="color:var(--accent); font-weight:900; margin-bottom:25px; letter-spacing:1px;">SELECT LANGUAGE</h3>
     <div class="lang-list">
         <div class="lang-btn" onclick="setLanguage('en')">🇺🇸 English</div>
         <div class="lang-btn" onclick="setLanguage('ko')">🇰🇷 한국어</div>
@@ -96,7 +89,7 @@
         <div style="display:flex; gap:8px; align-items:center;">
             <button id="soundToggle" onclick="toggleMute()" style="background:none; border:none; font-size:1.1rem; color:#fff; cursor:pointer;">🔊</button>
             <div class="balance-box"><span id="balance">1,000,000</span> P</div>
-            <button id="btnBuy" style="background:var(--buy-color); color:#fff; border:none; padding:5px 10px; border-radius:4px; font-weight:800; font-size:0.75rem; cursor:pointer;">BUY</button>
+            <button id="btnBuy" style="background:var(--buy-color); color:#fff; border:none; padding:5px 10px; border-radius:4px; font-weight:800; font-size:0.75rem;">BUY</button>
         </div>
     </header>
 
@@ -109,6 +102,7 @@
             <div class="wheel-logo">Spin4</div>
             <canvas id="wheelCanvas" width="500" height="500"></canvas>
         </div>
+
         <div class="overlay-container">
             <div id="betOverlay" class="closed-overlay"><div id="closedTxt" class="closed-text">CLOSED</div></div>
             <div class="controls">
@@ -126,69 +120,32 @@
                     <button class="btn btn-gold" onclick="handleUserBet('gold')" id="btnGold">GOLD x50</button>
                 </div>
             </div>
-            <div class="live-betting-area" style="width:100%; margin-top:12px; padding:10px; background:rgba(255,255,255,0.02); border-radius:12px;">
+
+            <div class="live-betting-area">
                 <div id="liveTitle" style="font-size:0.6rem; color:var(--text-muted); text-align:center; margin-bottom:8px;">LIVE BETTING USER</div>
-                <div class="live-feed" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px;">
-                    <div class="live-col" style="border-top:2px solid var(--black); background:rgba(0,0,0,0.4); border-radius:6px; min-height:110px;">
-                        <div style="text-align:center; padding:5px 0; font-size:0.5rem; font-weight:900;"><span class="lb-black">BLACK</span><br><span id="t-black" style="color:var(--accent)">0</span></div>
-                        <div id="l-black" class="bet-list" style="padding:3px; display:flex; flex-direction:column; gap:2px; height:80px; overflow:hidden;"></div>
-                    </div>
-                    <div class="live-col" style="border-top:2px solid var(--red); background:rgba(0,0,0,0.4); border-radius:6px; min-height:110px;">
-                        <div style="text-align:center; padding:5px 0; font-size:0.5rem; font-weight:900;"><span class="lb-red">RED</span><br><span id="t-red" style="color:var(--accent)">0</span></div>
-                        <div id="l-red" class="bet-list" style="padding:3px; display:flex; flex-direction:column; gap:2px; height:80px; overflow:hidden;"></div>
-                    </div>
-                    <div class="live-col" style="border-top:2px solid var(--blue); background:rgba(0,0,0,0.4); border-radius:6px; min-height:110px;">
-                        <div style="text-align:center; padding:5px 0; font-size:0.5rem; font-weight:900;"><span class="lb-blue">BLUE</span><br><span id="t-blue" style="color:var(--accent)">0</span></div>
-                        <div id="l-blue" class="bet-list" style="padding:3px; display:flex; flex-direction:column; gap:2px; height:80px; overflow:hidden;"></div>
-                    </div>
-                    <div class="live-col" style="border-top:2px solid var(--gold); background:rgba(0,0,0,0.4); border-radius:6px; min-height:110px;">
-                        <div style="text-align:center; padding:5px 0; font-size:0.5rem; font-weight:900;"><span class="lb-gold">GOLD</span><br><span id="t-gold" style="color:var(--accent)">0</span></div>
-                        <div id="l-gold" class="bet-list" style="padding:3px; display:flex; flex-direction:column; gap:2px; height:80px; overflow:hidden;"></div>
-                    </div>
+                <div class="live-feed">
+                    <div class="live-col" style="border-top-color:var(--black);"><div class="col-head"><span class="lb-black">BLACK</span><br><span id="t-black" style="color:var(--accent)">0</span></div><div id="l-black" class="bet-list"></div></div>
+                    <div class="live-col" style="border-top-color:var(--red);"><div class="col-head"><span class="lb-red">RED</span><br><span id="t-red" style="color:var(--accent)">0</span></div><div id="l-red" class="bet-list"></div></div>
+                    <div class="live-col" style="border-top-color:var(--blue);"><div class="col-head"><span class="lb-blue">BLUE</span><br><span id="t-blue" style="color:var(--accent)">0</span></div><div id="l-blue" class="bet-list"></div></div>
+                    <div class="live-col" style="border-top-color:var(--gold);"><div class="col-head"><span class="lb-gold">GOLD</span><br><span id="t-gold" style="color:var(--accent)">0</span></div><div id="l-gold" class="bet-list"></div></div>
                 </div>
             </div>
         </div>
-        <div style="width:95%; margin:20px auto;">
-            <table style="width:100%; border-collapse:collapse; font-size:0.7rem; background:rgba(0,0,0,0.4); border-radius:10px; overflow:hidden; text-align:center;">
-                <thead><tr style="background:#1a1a1a; color:var(--text-muted);"><th style="padding:10px;" class="th-pick">Pick</th><th class="th-bet">Bet</th><th class="th-res">Result</th><th style="padding:10px;" class="th-win">Winner</th></tr></thead>
+
+        <div style="width:95%; margin:0 auto;">
+            <table class="log-table">
+                <thead><tr><th class="th-pick">Pick</th><th class="th-bet">Bet</th><th class="th-res">Result</th><th class="th-win">Winner</th></tr></thead>
                 <tbody id="myLogBody"></tbody>
             </table>
         </div>
     </div>
 
-    <div id="view-how" class="content-view">
-        <div class="how-to-play">
-            <h3 id="howTitle">Spin4 Game Guide</h3>
-            <div id="howContentBody"></div>
-        </div>
-    </div>
-
-    <div id="view-recommend" class="content-view">
-        <div class="stats-24h">
-            <div class="stats-header">
-                <span style="font-size:0.75rem; font-weight:900;" id="statsTimeRange">REAL-TIME 24H ANALYTICS</span>
-                <span style="font-size:0.6rem; color:var(--accent);" id="statsStatus">● LIVE SYNCING</span>
-            </div>
-            <div class="stats-grid">
-                <div class="stat-box"><span class="stat-val" id="st-total-24h">4,320</span><span class="stat-lbl" id="lblTotalRounds">Total Rounds</span></div>
-                <div class="stat-box"><span class="stat-val" id="st-hot-color" style="color:var(--red);">RED</span><span class="stat-lbl" id="lblHotColor">Hot Color</span></div>
-                <div class="stat-box"><span class="stat-val" id="st-my-spins">0</span><span class="stat-lbl" id="lblMyParticipation">My Spins</span></div>
-                <div class="stat-box"><span class="stat-val" id="st-my-winrate">0%</span><span class="stat-lbl" id="lblMyWinrate">My Win Rate</span></div>
-            </div>
-            <div class="dist-chart">
-                <div style="font-size:0.7rem; font-weight:900; margin-bottom:15px; color:var(--accent);" id="lblDistTitle">COLOR FREQUENCY (24H)</div>
-                <div class="chart-row"><div class="chart-label">BLACK</div><div class="chart-bar-bg"><div id="bar-black" class="chart-bar-fill" style="background:var(--black)"></div></div><span id="p-black" style="font-size:0.6rem; width:30px; text-align:right;">0%</span></div>
-                <div class="chart-row"><div class="chart-label">RED</div><div class="chart-bar-bg"><div id="bar-red" class="chart-bar-fill" style="background:var(--red)"></div></div><span id="p-red" style="font-size:0.6rem; width:30px; text-align:right;">0%</span></div>
-                <div class="chart-row"><div class="chart-label">BLUE</div><div class="chart-bar-bg"><div id="bar-blue" class="chart-bar-fill" style="background:var(--blue)"></div></div><span id="p-blue" style="font-size:0.6rem; width:30px; text-align:right;">0%</span></div>
-                <div class="chart-row"><div class="chart-label">GOLD</div><div class="chart-bar-bg"><div id="bar-gold" class="chart-bar-fill" style="background:var(--gold)"></div></div><span id="p-gold" style="font-size:0.6rem; width:30px; text-align:right;">0%</span></div>
-            </div>
-        </div>
-    </div>
-
+    <div id="view-how" class="content-view"><div id="howMsg" style="padding:25px; color:#ccc;">Provably Fair v5.6</div></div>
+    <div id="view-recommend" class="content-view"><div style="padding:20px; width:95%;" id="statContent"></div></div>
     <div id="view-login" class="content-view">
         <div style="width:90%; text-align:center; margin:40px auto;">
             <h3 id="loginTitle" style="color:var(--accent)">Sync Data</h3>
-            <input type="text" id="loginInput" placeholder="Telegram ID" style="width:100%; padding:15px; background:#000; border:1px solid #333; color:var(--accent); border-radius:8px; margin-bottom:15px; outline:none; font-weight:700;">
+            <input type="text" id="loginInput" placeholder="Telegram ID" style="width:100%; padding:15px; background:#000; color:var(--accent); border:1px solid #333; border-radius:8px; margin-bottom:15px;">
             <button id="btnLogin" class="btn btn-gold" onclick="doLogin()" style="width:100%;">Login</button>
         </div>
     </div>
@@ -206,34 +163,14 @@
 <audio id="sndLose" src="https://assets.mixkit.co/active_storage/sfx/2004/2004-preview.mp3"></audio>
 
 <script>
-    /* [v5.8] Fixed Statistics & Button Colors */
-    let currentLang = 'en', currentId = "GUEST", balance = 1000000;
-    let isSpinning = false, myBet = null, globalHistory = [], stats = { black: 0, red: 0, blue: 0, gold: 0 };
+    let currentLang = 'en', currentId = "GUEST", balance = 1000000, isSpinning = false, myBet = null, globalHistory = [], stats = { black: 0, red: 0, blue: 0, gold: 0 };
     let myGameStats = { total: 0, wins: 0 }, isMuted = false, audioInitialized = false, liveBoardTotals = { black:0, red:0, blue:0, gold:0 };
     
     const i18n = {
-        ko: { 
-            welcome: "환영합니다", buy: "구매", closed: "마감", live: "실시간 배팅 현황", home: "홈", how: "사용법", stats: "통계", login: "로그인", pick: "선택", bet: "금액", res: "결과", win: "당첨색",
-            howTitle: "Spin4 게임 가이드", 
-            howText: `<div class="step"><b>1. 게임 소개:</b> Spin4는 블록체인 기반의 공정 추첨 시스템을 사용하는 휠 게임입니다. 모든 결과는 미리 결정된 시드값에 의해 투명하게 공개됩니다.</div>
-                      <div class="step"><b>2. 배팅 방법:</b> 화면 하단의 배팅 판에서 원하는 색상을 선택하세요. <br> - BLACK (2배) | RED (3배) | BLUE (5배) | GOLD (50배)</div>
-                      <div class="step"><b>3. 진행 순서:</b> 매 20초마다 새로운 라운드가 시작됩니다. <br> - 배팅(11.5초) -> 마감(1초) -> 회전(6.5초) -> 결과확인(1초)</div>
-                      <div class="step"><b>4. 포인트 시스템:</b> 최소 배팅액은 10,000P이며 보유한 포인트 내에서 자유롭게 참여 가능합니다.</div>
-                      <div class="step"><b>5. 데이터 보존:</b> 모든 승리 기록과 잔액은 브라우저에 자동 저장되어 언제든 다시 접속해도 유지됩니다.</div>`,
-            totalSpins: "총 라운드 (24H)", winRate: "나의 승률", sync: "데이터 동기화", loginPlaceholder: "텔레그램 ID 입력", btnBlack: "BLACK x2", btnRed: "RED x3", btnBlue: "BLUE x5", btnGold: "GOLD x50",
-            statRange: "실시간 24시간 분석", statHot: "최근 핫 컬러", statMySpins: "나의 참여 횟수", statDist: "색상 출현 빈도 (24H)"
-        },
-        en: { 
-            welcome: "Welcome", buy: "BUY", closed: "CLOSED", live: "LIVE BETTING USER", home: "Home", how: "How", stats: "Stats", login: "Login", pick: "Pick", bet: "Bet", res: "Result", win: "Winner",
-            howTitle: "Spin4 Game Guide",
-            howText: `<div class="step"><b>1. Introduction:</b> Spin4 is a wheel game using a Provably Fair draw system. All results are transparently determined by pre-fixed seeds.</div>
-                      <div class="step"><b>2. How to Bet:</b> Select a color from the betting board at the bottom. <br> - BLACK (x2) | RED (x3) | BLUE (x5) | GOLD (x50)</div>
-                      <div class="step"><b>3. Cycle:</b> A new round starts every 20 seconds. <br> - Bet(11.5s) -> Close(1s) -> Spin(6.5s) -> Result(1s)</div>
-                      <div class="step"><b>4. Points:</b> Min bet is 10,000P. You can participate freely within your balance.</div>
-                      <div class="step"><b>5. Persistence:</b> All wins and balances are auto-saved to your browser for continuous play.</div>`,
-            totalSpins: "TOTAL ROUNDS (24H)", winRate: "WIN RATE", sync: "Sync Data", loginPlaceholder: "Telegram ID", btnBlack: "BLACK x2", btnRed: "RED x3", btnBlue: "BLUE x5", btnGold: "GOLD x50",
-            statRange: "REAL-TIME 24H ANALYTICS", statHot: "HOT COLOR", statMySpins: "MY SPINS", statDist: "COLOR FREQUENCY (24H)"
-        }
+        ko: { welcome: "환영합니다", buy: "구매", closed: "마감", live: "실시간 배팅 현황", home: "홈", how: "사용법", stats: "통계", login: "로그인", pick: "선택", bet: "금액", res: "결과", win: "당첨색", howMsg: "공정 추첨 시스템 v5.6 가동 중", btnBlack: "BLACK x2", btnRed: "RED x3", btnBlue: "BLUE x5", btnGold: "GOLD x50" },
+        en: { welcome: "Welcome", buy: "BUY", closed: "CLOSED", live: "LIVE BETTING USER", home: "Home", how: "How", stats: "Stats", login: "Login", pick: "Pick", bet: "Bet", res: "Result", win: "Winner", howMsg: "Provably Fair v5.6 Active", btnBlack: "BLACK x2", btnRed: "RED x3", btnBlue: "BLUE x5", btnGold: "GOLD x50" },
+        cn: { welcome: "欢迎", buy: "购买", closed: "已截止", live: "实时投注", home: "首页", how: "指南", stats: "统计", login: "登录", pick: "选择", bet: "赌注", res: "结果", win: "赢家", howMsg: "公平竞赛系统 v5.6 运行中", btnBlack: "黑色 x2", btnRed: "红色 x3", btnBlue: "蓝色 x5", btnGold: "金色 x50" },
+        jp: { welcome: "ようこそ", buy: "購入", closed: "締切", live: "ライブ状況", home: "ホーム", how: "遊び方", stats: "統計", login: "ログイン", pick: "選択", bet: "ベット", res: "結果", win: "当選者", howMsg: "公正な抽選システム v5.6 稼動中", btnBlack: "BLACK x2", btnRed: "RED x3", btnBlue: "BLUE x5", btnGold: "GOLD x50" }
     };
 
     const CYCLE_MS = 20000, SPIN_DURATION = 6500, RESULT_WAIT = 2000, FREEZE_PERIOD = SPIN_DURATION + RESULT_WAIT, BETTING_PERIOD = CYCLE_MS - FREEZE_PERIOD;
@@ -247,50 +184,43 @@
     }
 
     function applyI18n() {
-        const t = i18n[currentLang] || i18n.en;
+        const t = i18n[currentLang];
         document.getElementById('displayId').innerText = `${t.welcome} ${currentId}`;
-        document.getElementById('btnBuy').innerText = t.buy;
-        document.getElementById('closedTxt').innerText = t.closed;
-        document.getElementById('liveTitle').innerText = t.live;
-        document.getElementById('navHome').innerText = t.home;
-        document.getElementById('navHow').innerText = t.how;
-        document.getElementById('navStats').innerText = t.stats;
-        document.getElementById('navLogin').innerText = t.login;
-        document.getElementById('btnBlack').innerText = t.btnBlack;
-        document.getElementById('btnRed').innerText = t.btnRed;
-        document.getElementById('btnBlue').innerText = t.btnBlue;
-        document.getElementById('btnGold').innerText = t.btnGold;
-        document.querySelector('.th-pick').innerText = t.pick;
-        document.querySelector('.th-bet').innerText = t.bet;
-        document.querySelector('.th-res').innerText = t.res;
-        document.querySelector('.th-win').innerText = t.win;
-        document.getElementById('howTitle').innerText = t.howTitle;
-        document.getElementById('howContentBody').innerHTML = t.howText;
-        document.getElementById('statsTimeRange').innerText = t.statRange;
-        document.getElementById('lblTotalRounds').innerText = t.totalSpins;
-        document.getElementById('lblHotColor').innerText = t.statHot;
-        document.getElementById('lblMyParticipation').innerText = t.statMySpins;
-        document.getElementById('lblMyWinrate').innerText = t.winRate;
-        document.getElementById('lblDistTitle').innerText = t.statDist;
-        document.getElementById('loginTitle').innerText = t.sync;
-        document.getElementById('loginInput').placeholder = t.loginPlaceholder;
-        document.getElementById('btnLogin').innerText = t.login;
+        document.getElementById('btnBuy').innerText = t.buy; document.getElementById('closedTxt').innerText = t.closed;
+        document.getElementById('liveTitle').innerText = t.live; document.getElementById('navHome').innerText = t.home;
+        document.getElementById('navHow').innerText = t.how; document.getElementById('navStats').innerText = t.stats;
+        document.getElementById('navLogin').innerText = t.login; document.getElementById('btnBlack').innerText = t.btnBlack;
+        document.getElementById('btnRed').innerText = t.btnRed; document.getElementById('btnBlue').innerText = t.btnBlue;
+        document.getElementById('btnGold').innerText = t.btnGold; document.getElementById('howMsg').innerText = t.howMsg;
+        document.querySelector('.th-pick').innerText = t.pick; document.querySelector('.th-bet').innerText = t.bet;
+        document.querySelector('.th-res').innerText = t.res; document.querySelector('.th-win').innerText = t.win;
         document.querySelector('.lb-black').innerText = t.btnBlack.split(' ')[0];
         document.querySelector('.lb-red').innerText = t.btnRed.split(' ')[0];
         document.querySelector('.lb-blue').innerText = t.btnBlue.split(' ')[0];
         document.querySelector('.lb-gold').innerText = t.btnGold.split(' ')[0];
     }
 
+    /* 지능형 봇 로직 (v5.6 마스터 버전 고정) */
+    function generateAdvancedBotId() {
+        const adjs = ["Vip", "Pro", "Super", "Lucky", "Cool", "Big", "Ace", "Gold"];
+        const nouns = ["King", "User", "Player", "Dragon", "Star", "Wolf", "Winner"];
+        const p = Math.random();
+        if(p < 0.3) return adjs[Math.floor(Math.random()*adjs.length)] + nouns[Math.floor(Math.random()*nouns.length)];
+        if(p < 0.6) return nouns[Math.floor(Math.random()*nouns.length)] + Math.floor(Math.random()*999);
+        if(p < 0.9) return adjs[Math.floor(Math.random()*adjs.length)] + "_" + Math.floor(Math.random()*99);
+        return Math.random().toString(36).substring(2, 6).toUpperCase();
+    }
+
     function spawnBotBet() {
         const elapsed = Date.now() % CYCLE_MS;
         if(elapsed < FREEZE_PERIOD || elapsed > CYCLE_MS - 2000) return;
-        const botId = "User_" + Math.random().toString(36).substring(2, 5).toUpperCase();
+        const botId = generateAdvancedBotId();
         const strategy = Math.random();
         let type, amt;
         if(strategy < 0.5) { type = Math.random() < 0.6 ? 'black' : 'red'; amt = (Math.floor(Math.random() * 20) + 1) * 10000; }
         else if(strategy < 0.8) { type = 'blue'; amt = (Math.floor(Math.random() * 50) + 10) * 10000; }
         else { type = 'gold'; amt = 10000; }
-        setTimeout(() => { addLiveUI(type, botId, amt); }, Math.random() * 1000); 
+        setTimeout(() => { addLiveUI(type, botId, amt); }, Math.random() * 1500); 
     }
 
     function tick() {
@@ -303,8 +233,14 @@
             timerBar.style.width = (remaining / BETTING_PERIOD) * 100 + "%";
             timerBar.style.backgroundColor = `hsl(${(remaining / BETTING_PERIOD) * 60}, 100%, 50%)`;
             betOverlay.style.display = (remaining < 1000) ? "flex" : "none";
-            if(Math.random() < 0.08) spawnBotBet();
+            if(Math.random() < 0.1) spawnBotBet(); 
         }
+    }
+
+    function saveData() { localStorage.setItem('db_wheel_v56_data', JSON.stringify({ balance, currentId, myGameStats, stats })); }
+    function loadData() {
+        const saved = localStorage.getItem('db_wheel_v56_data');
+        if(saved) { const p = JSON.parse(saved); balance = p.balance; currentId = p.currentId; myGameStats = p.myGameStats; stats = p.stats; }
     }
 
     function getWinIndex(seed) {
@@ -329,7 +265,7 @@
             const row = `<tr><td>${myBet.type.toUpperCase()}</td><td>${myBet.amount.toLocaleString()}</td><td>${myBet.type === win.name ? 'Win' : 'Lost'}</td><td><span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:${win.color}"></span></td></tr>`;
             document.getElementById('myLogBody').insertAdjacentHTML('afterbegin', row);
         }
-        updateHistoryUI(); updateStatsUI(); saveData();
+        updateHistoryUI(); saveData();
         setTimeout(() => {
             myBet = null; liveBoardTotals = { black:0, red:0, blue:0, gold:0 };
             document.querySelectorAll('.bet-list').forEach(l => l.innerHTML = '');
@@ -344,35 +280,10 @@
         globalHistory.slice(-20).reverse().forEach(c => { strip.innerHTML += `<div class="hist-bar" style="background:${c}"></div>`; });
     }
 
-    // [v5.8 수정] 과거 100라운드 데이터를 계산하여 통계 분포 초기화
     function syncHistory() {
         const seed = Math.floor(Date.now() / CYCLE_MS);
-        globalHistory = []; 
-        stats = { black: 0, red: 0, blue: 0, gold: 0 }; // 초기화
-        
-        // 지난 100라운드 결과 시뮬레이션 (통계용)
-        for(let i=100; i>=1; i--) { 
-            const res = wheelMap[getWinIndex(seed - i).index];
-            if(i <= 20) globalHistory.push(res.color); // 최근 20개는 상단 히스토리에 노출
-            stats[res.name]++; // 통계 누적
-        }
-        updateHistoryUI(); updateStatsUI();
-    }
-
-    function updateStatsUI() {
-        document.getElementById('st-my-spins').innerText = myGameStats.total;
-        document.getElementById('st-my-winrate').innerText = (myGameStats.total > 0 ? (myGameStats.wins/myGameStats.total*100).toFixed(1) : 0) + "%";
-        const total = stats.black + stats.red + stats.blue + stats.gold;
-        if(total > 0) {
-            const hot = Object.entries(stats).sort((a,b) => b[1]-a[1])[0][0];
-            document.getElementById('st-hot-color').innerText = hot.toUpperCase();
-            document.getElementById('st-hot-color').style.color = (hot === 'black') ? '#fff' : hot;
-            ['black','red','blue','gold'].forEach(c => {
-                const perc = Math.round((stats[c]/total)*100);
-                document.getElementById(`bar-${c}`).style.width = perc + "%";
-                document.getElementById(`p-${c}`).innerText = perc + "%";
-            });
-        }
+        globalHistory = []; for(let i=20; i>=1; i--) { globalHistory.push(wheelMap[getWinIndex(seed - i).index].color); }
+        updateHistoryUI();
     }
 
     function handleUserBet(type) {
@@ -388,7 +299,6 @@
         liveBoardTotals[type] += amt; total.innerText = liveBoardTotals[type].toLocaleString();
         const item = document.createElement('div'); item.className = 'bet-item';
         item.innerHTML = `<span>${user}</span><b>${(amt/1000).toFixed(0)}k</b>`;
-        item.style.cssText = "display:flex; justify-content:space-between; font-size:0.4rem; background:rgba(255,255,255,0.05); padding:2px; animation: fadeIn 0.3s ease;";
         list.prepend(item); if(list.children.length > 5) list.lastChild.remove();
     }
 
@@ -396,13 +306,9 @@
         document.querySelectorAll('.content-view').forEach(v => v.classList.remove('active'));
         document.getElementById('view-' + id).classList.add('active');
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active');
-        if(id === 'recommend') updateStatsUI();
-    }
-
-    function saveData() { localStorage.setItem('db_wheel_v58_data', JSON.stringify({ balance, currentId, myGameStats })); }
-    function loadData() {
-        const saved = localStorage.getItem('db_wheel_v58_data');
-        if(saved) { const p = JSON.parse(saved); balance = p.balance; currentId = p.currentId; myGameStats = p.myGameStats; }
+        if(id === 'recommend') {
+            document.getElementById('statContent').innerHTML = `<h3>Stats Overview</h3><p>Total Rounds: ${myGameStats.total}</p><p>My Wins: ${myGameStats.wins}</p>`;
+        }
     }
 
     function updateBalUI() { document.getElementById('balance').innerText = balance.toLocaleString(); }
@@ -423,7 +329,7 @@
         if(!id) return; currentId = id; saveData(); applyI18n(); switchTab('home', document.querySelector('.nav-item'));
     }
 
-    loadData(); syncHistory(); drawWheel(); updateBalUI(); applyI18n(); setInterval(tick, 100);
+    loadData(); syncHistory(); drawWheel(); updateBalUI(); setInterval(tick, 100);
 </script>
 </body>
 </html>
