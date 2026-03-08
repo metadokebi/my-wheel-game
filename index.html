@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>DetaBridge Wheel Pro v5.16</title>
+    <title>DetaBridge Wheel Pro v5.17</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
@@ -37,25 +37,31 @@
             display: flex; align-items: center; gap: 15px; cursor: pointer;
         }
 
-        /* 헤더 & 히스토리 */
         header { padding: 12px 18px; background: rgba(0,0,0,0.4); display: flex; justify-content: space-between; align-items: center; z-index: 100; }
         .user-id { font-size: 0.8rem; font-weight: 700; border-left: 3px solid var(--accent); padding-left: 10px; }
         .balance-box { background: rgba(255, 149, 0, 0.05); padding: 5px 10px; border-radius: 6px; border: 1px solid var(--point-color); color: var(--point-color); font-weight: 800; font-size: 0.85rem; }
+
+        /* 타이머 & 히스토리 (수정사항: 세로 길이 복구) */
         .timer-container { width: 100%; height: 6px; background: #000; position: relative; flex-shrink: 0; }
         #timerBar { position: absolute; left: 0; top: 0; height: 100%; width: 0%; transition: width 0.1s linear; }
-        .history-strip { display: flex; gap: 5px; padding: 10px 0; height: 24px; width: 100%; justify-content: center; background: rgba(0,0,0,0.2); flex-shrink: 0; }
-        .hist-bar { width: 8px; height: 100%; border-radius: 1px; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.05); }
+        .history-strip { 
+            display: flex; gap: 5px; padding: 12px 0; 
+            height: 40px; /* v5.16의 24px에서 40px로 증가 */
+            width: 100%; justify-content: center; background: rgba(0,0,0,0.2); flex-shrink: 0; 
+            box-sizing: content-box; 
+        }
+        .hist-bar { width: 8px; height: 100%; border-radius: 2px; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.05); }
 
         .content-view { flex: 1; overflow-y: auto; display: none; padding-bottom: 90px; width: 100%; }
         .content-view.active { display: flex; flex-direction: column; align-items: center; }
 
-        /* 휠 & 포인터 */
+        /* 휠 섹션 */
         .wheel-section { position: relative; margin: 15px 0; width: 230px; height: 230px; flex-shrink: 0; }
         #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
         .pointer { position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%); width: 14px; height: 22px; background: #fff; clip-path: polygon(0 0, 100% 0, 50% 100%); z-index: 20; filter: drop-shadow(0 0 8px var(--accent)); }
         .wheel-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-weight: 900; font-size: 2rem; text-shadow: 0 0 15px var(--accent); }
 
-        /* 배팅 영역 & 레이아웃 안정화 */
+        /* 배팅 영역 */
         .overlay-container { position: relative; width: 95%; margin: 5px auto; }
         .controls { width: 100%; background: var(--card); padding: 10px; border-radius: 12px; position: relative; overflow: hidden; }
         .bet-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; width: 100%; }
@@ -69,7 +75,7 @@
         }
         .closed-text { color: #ddd; font-weight: 900; font-size: 1.6rem; letter-spacing: 4px; animation: pulse 0.8s infinite; }
 
-        /* 라이브 배팅 보드 (v5.12 스타일) */
+        /* 라이브 배팅 보드 */
         .live-betting-area { width: 100%; margin-top: 10px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 12px; }
         .section-title { font-size: 0.85rem; font-weight: 900; color: var(--text-muted); margin-bottom: 8px; text-align: center; }
         .live-feed { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
@@ -78,7 +84,7 @@
         .bet-list { padding: 3px; display: flex; flex-direction: column; gap: 3px; height: 85px; }
         .bet-item { display: flex; justify-content: space-between; font-size: 0.58rem; font-weight: 700; background: rgba(255,255,255,0.05); padding: 2px; border-radius: 3px; }
 
-        /* 네비게이션 */
+        /* 하단 내비게이션 */
         nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; height: 75px; background: var(--nav-bg); display: flex; border-top: 1px solid #222; z-index: 200; padding-bottom: env(safe-area-inset-bottom); }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; }
         .nav-icon { font-size: 1.4rem; margin-bottom: 2px; }
@@ -178,7 +184,7 @@
             <div class="how-section"><div class="how-title" id="ht3">공정성</div><div class="how-text" id="hm3"></div></div>
             <div class="how-section"><div class="how-title" id="ht4">UI 안내</div><div class="how-text" id="hm4"></div></div>
         </div>
-        <div class="version-label">DetaBridge Wheel Pro v5.16</div>
+        <div class="version-label">DetaBridge Wheel Pro v5.17</div>
     </div>
     
     <!-- 통계 탭 -->
@@ -196,7 +202,7 @@
             <div style="background:var(--card); padding:15px; border-radius:12px; text-align:center; border:1px solid #333;"><div id="st-total" style="font-size:1.2rem; font-weight:900; color:var(--accent);">0</div><div class="lbl-total" style="font-size:0.6rem; color:var(--text-muted);">TOTAL SPINS</div></div>
             <div style="background:var(--card); padding:15px; border-radius:12px; text-align:center; border:1px solid #333;"><div id="st-winrate" style="font-size:1.2rem; font-weight:900; color:var(--accent);">0%</div><div class="lbl-winrate" style="font-size:0.6rem; color:var(--text-muted);">WIN RATE</div></div>
         </div>
-        <div class="version-label">DetaBridge Wheel Pro v5.16</div>
+        <div class="version-label">DetaBridge Wheel Pro v5.17</div>
     </div>
     
     <!-- 로그인 탭 -->
@@ -213,7 +219,7 @@
             <h3 id="loggedInMsg" style="color:var(--accent);">Welcome!</h3>
             <button class="btn btn-red" onclick="handleLogout()" style="width:80%; margin:20px auto;">LOGOUT</button>
         </div>
-        <div class="version-label">DetaBridge Wheel Pro v5.16</div>
+        <div class="version-label">DetaBridge Wheel Pro v5.17</div>
     </div>
 
     <nav>
@@ -229,7 +235,7 @@
 <audio id="sndLose" src="https://assets.mixkit.co/active_storage/sfx/2004/2004-preview.mp3"></audio>
 
 <script>
-    /* DetaBridge Wheel Pro v5.16 Final Integrated Master Logic */
+    /* DetaBridge Wheel Pro v5.17 Master Integration Logic */
     const tg = window.Telegram.WebApp;
     tg.expand();
 
@@ -431,9 +437,7 @@
         if(id === 'recommend') {
             document.getElementById('st-total').innerText = myGameStats.total;
             document.getElementById('st-winrate').innerText = (myGameStats.total > 0 ? (myGameStats.wins/myGameStats.total*100).toFixed(1) : 0) + "%";
-            const daySeed = Math.floor(Date.now() / 86400000);
-            const rv = (daySeed * 9301 + 49297) % 233280;
-            const trend = { black: 45, red: 35, blue: 15, gold: 5 }; // 동기화된 예시 트렌드
+            const trend = { black: 45, red: 35, blue: 15, gold: 5 };
             ['black', 'red', 'blue', 'gold'].forEach(c => {
                 document.getElementById(`gb-${c}`).style.width = trend[c] + "%";
                 document.getElementById(`pct-${c}`).innerText = trend[c] + "%";
