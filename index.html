@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>DetaBridge Wheel Pro v5.13</title>
+    <title>DetaBridge Wheel Pro v5.14</title>
+    <!-- 텔레그램 웹앱 SDK 추가 -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
             --bg-top: #1e2128; --bg-bottom: #0e1013;
@@ -62,18 +64,21 @@
         .overlay-container { position: relative; width: 95%; margin: 10px auto 0; }
         .controls { width: 100%; background: var(--card); padding: 12px; border-radius: 12px; }
         .bet-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
-        .btn { height: 55px; border: none; border-radius: 8px; font-weight: 900; font-size: 0.85rem; color: #fff; cursor: pointer; transition: transform 0.1s; }
+        .btn { height: 55px; border: none; border-radius: 8px; font-weight: 900; font-size: 0.85rem; color: #fff; cursor: pointer; transition: transform 0.1s; display: flex; align-items: center; justify-content: center; }
         .btn:active { transform: scale(0.95); }
         .btn-black { background: var(--black); } .btn-red { background: var(--red); } .btn-blue { background: var(--blue); color: #000; } .btn-gold { background: var(--gold); color: #000; }
 
-        /* 라이브 배팅 보드 */
+        .closed-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); border-radius: 12px; z-index: 50; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+        .closed-text { color: #ddd; font-weight: 900; font-size: 1.8rem; letter-spacing: 5px; }
+
+        /* 라이브 배팅 보드 (v5.12 스타일 고정) */
         .live-betting-area { width: 100%; margin-top: 12px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 12px; }
         .section-title { font-size: 0.85rem; font-weight: 900; color: var(--text-muted); margin-bottom: 12px; text-align: center; }
         .live-feed { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
         .live-col { background: rgba(0,0,0,0.4); border-radius: 6px; min-height: 110px; border-top: 2px solid #444; }
         .col-head { padding: 6px 0; font-size: 0.75rem; text-align: center; font-weight: 900; }
         .bet-list { padding: 3px; display: flex; flex-direction: column; gap: 4px; height: 95px; overflow: hidden; }
-        .bet-item { display: flex; justify-content: space-between; font-size: 0.6rem; font-weight: 700; background: rgba(255,255,255,0.05); padding: 3px; border-radius: 4px; }
+        .bet-item { display: flex; justify-content: space-between; font-size: 0.6rem; font-weight: 700; background: rgba(255,255,255,0.05); padding: 3px; border-radius: 4px; animation: fadeIn 0.3s ease; }
 
         /* 하단 내비게이션 */
         nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; height: 80px; background: var(--nav-bg); display: flex; border-top: 1px solid #222; z-index: 200; }
@@ -82,24 +87,21 @@
         .nav-item span { font-size: 0.85rem; font-weight: 700; }
         .nav-item.active { color: var(--accent); }
 
-        /* 로그인 UI (수정사항 1, 2) */
+        /* 로그인 UI */
         .login-box { width: 90%; background: var(--card); padding: 25px; border-radius: 15px; border: 1px solid #333; margin-top: 20px; display: flex; flex-direction: column; gap: 15px; }
         .login-input { width: 100%; padding: 15px; background: #000; border: 1px solid #444; color: var(--accent); border-radius: 8px; font-weight: 700; outline: none; }
-        .login-input:focus { border-color: var(--accent); }
         .login-msg { font-size: 0.7rem; color: #ff3333; text-align: center; min-height: 1rem; }
-        .logout-panel { width: 90%; text-align: center; padding: 40px 0; }
 
-        /* 사용법 및 통계 스타일 유지 */
+        /* 상세 사용법 & 통계 (v5.11 유지) */
         .how-scroll { width: 95%; padding: 15px; background: var(--card); border-radius: 12px; border: 1px solid #333; margin-top: 10px; }
         .how-title { font-size: 0.85rem; font-weight: 900; color: var(--accent); margin-bottom: 8px; border-left: 3px solid var(--accent); padding-left: 8px; }
         .how-text { font-size: 0.72rem; color: #ccc; line-height: 1.6; white-space: pre-wrap; margin-bottom: 20px; }
         .dist-container { width: 95%; background: var(--card); padding: 20px; border-radius: 12px; margin-top: 15px; border: 1px solid #333; }
-        .dist-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
         .dist-bg { flex: 1; height: 8px; background: #000; border-radius: 4px; overflow: hidden; }
-        .dist-fill { height: 100%; transition: width 0.8s ease-in-out; }
+        .dist-fill { height: 100%; transition: width 0.8s ease; }
         .version-label { margin-top: 20px; font-size: 0.65rem; color: #445566; font-weight: 700; text-align: center; width: 100%; padding-bottom: 10px; }
 
-        /* 로그 테이블 */
+        /* 로그 테이블 (v5.12 스타일) */
         .log-table { width: 100%; border-collapse: collapse; font-size: 0.7rem; background: rgba(0,0,0,0.4); border-radius: 10px; overflow: hidden; margin-top: 20px; }
         .log-table th { background: #1a1a1a; padding: 12px 10px; color: var(--text-muted); font-size: 0.85rem; font-weight: 900; }
         .log-table td { padding: 10px; border-bottom: 1px solid #222; text-align: center; }
@@ -115,7 +117,7 @@
         <div class="lang-btn" onclick="setLanguage('en')">🇺🇸 English</div>
         <div class="lang-btn" onclick="setLanguage('ko')">🇰🇷 한국어</div>
         <div class="lang-btn" onclick="setLanguage('cn')">🇨🇳 简体中文</div>
-        <div class="lang-btn" onclick="setLanguage('jp')">🇯🇵 日本語</div>
+        <div class="lang-btn" onclick="setLanguage('jp')">🇯🇵 일본어</div>
     </div>
 </div>
 
@@ -140,7 +142,7 @@
         </div>
 
         <div class="overlay-container">
-            <div id="betOverlay" class="closed-overlay" style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:50; align-items:center; justify-content:center; border-radius:12px; backdrop-filter:blur(2px);"><div id="closedTxt" style="color:#ddd; font-weight:900; font-size:1.8rem; letter-spacing:5px;">CLOSED</div></div>
+            <div id="betOverlay" class="closed-overlay"><div id="closedTxt" style="color:#ddd; font-weight:900; font-size:1.8rem; letter-spacing:5px;">CLOSED</div></div>
             <div class="controls">
                 <div style="display:flex; gap:8px; margin-bottom:10px;">
                     <input type="number" id="betInput" value="10000" style="flex:1; background:#000; border:1px solid #333; color:var(--accent); padding:12px; border-radius:8px; text-align:center; font-weight:900; outline:none;">
@@ -175,7 +177,7 @@
         </div>
     </div>
 
-    <!-- How 탭 -->
+    <!-- 상세 사용법 탭 (v5.11 버전) -->
     <div id="view-how" class="content-view">
         <div class="how-scroll">
             <div class="how-title" id="ht1">게임 소개</div><div class="how-text" id="hm1"></div>
@@ -183,25 +185,25 @@
             <div class="how-title" id="ht3">공정성 시스템</div><div class="how-text" id="hm3"></div>
             <div class="how-title" id="ht4">UI/인터페이스 설명</div><div class="how-text" id="hm4"></div>
         </div>
-        <div class="version-label">DetaBridge Wheel Pro v5.13</div>
+        <div class="version-label">DetaBridge Wheel Pro v5.14</div>
     </div>
     
-    <!-- Stats 탭 -->
+    <!-- Stats 탭 (v5.10 글로벌 통계) -->
     <div id="view-recommend" class="content-view">
         <div class="dist-container">
             <div id="lblGlobalTrend" style="font-size:0.75rem; font-weight:900; color:var(--accent); text-align:center;">24H GLOBAL TREND</div>
-            <div style="margin-top:15px;">
-                <div class="dist-row"><span style="width:50px; font-size:0.6rem;">BLACK</span><div class="dist-bg"><div id="gb-black" class="dist-fill" style="background:var(--black)"></div></div><span id="pct-black" style="width:30px; font-size:0.6rem; text-align:right;">0%</span></div>
-                <div class="dist-row"><span style="width:50px; font-size:0.6rem;">RED</span><div class="dist-bg"><div id="gb-red" class="dist-fill" style="background:var(--red)"></div></div><span id="pct-red" style="width:30px; font-size:0.6rem; text-align:right;">0%</span></div>
-                <div class="dist-row"><span style="width:50px; font-size:0.6rem;">BLUE</span><div class="dist-bg"><div id="gb-blue" class="dist-fill" style="background:var(--blue)"></div></div><span id="pct-blue" style="width:30px; font-size:0.6rem; text-align:right;">0%</span></div>
-                <div class="dist-row"><span style="width:50px; font-size:0.6rem;">GOLD</span><div class="dist-bg"><div id="gb-gold" class="dist-fill" style="background:var(--gold)"></div></div><span id="pct-gold" style="width:30px; font-size:0.6rem; text-align:right;">0%</span></div>
+            <div style="margin-top:15px; display:flex; flex-direction:column; gap:10px;">
+                <div style="display:flex; align-items:center; gap:10px;"><span style="width:50px; font-size:0.65rem;">BLACK</span><div class="dist-bg"><div id="gb-black" class="dist-fill" style="background:var(--black)"></div></div><span id="pct-black" style="width:30px; font-size:0.65rem;">0%</span></div>
+                <div style="display:flex; align-items:center; gap:10px;"><span style="width:50px; font-size:0.65rem;">RED</span><div class="dist-bg"><div id="gb-red" class="dist-fill" style="background:var(--red)"></div></div><span id="pct-red" style="width:30px; font-size:0.65rem;">0%</span></div>
+                <div style="display:flex; align-items:center; gap:10px;"><span style="width:50px; font-size:0.65rem;">BLUE</span><div class="dist-bg"><div id="gb-blue" class="dist-fill" style="background:var(--blue)"></div></div><span id="pct-blue" style="width:30px; font-size:0.65rem;">0%</span></div>
+                <div style="display:flex; align-items:center; gap:10px;"><span style="width:50px; font-size:0.65rem;">GOLD</span><div class="dist-bg"><div id="gb-gold" class="dist-fill" style="background:var(--gold)"></div></div><span id="pct-gold" style="width:30px; font-size:0.65rem;">0%</span></div>
             </div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; width:95%; margin-top:10px;">
             <div class="stat-card"><div id="st-total" style="font-size:1.2rem; font-weight:900; color:var(--accent);">0</div><div class="lbl-total" style="font-size:0.6rem; color:var(--text-muted);">TOTAL SPINS</div></div>
             <div class="stat-card"><div id="st-winrate" style="font-size:1.2rem; font-weight:900; color:var(--accent);">0%</div><div class="lbl-winrate" style="font-size:0.6rem; color:var(--text-muted);">WIN RATE</div></div>
         </div>
-        <div class="version-label">DetaBridge Wheel Pro v5.13</div>
+        <div class="version-label">DetaBridge Wheel Pro v5.14</div>
     </div>
     
     <!-- Login 탭 -->
@@ -214,11 +216,11 @@
             <div id="loginMsg" class="login-msg"></div>
             <button id="btnLogin" class="btn btn-gold" onclick="handleLogin()" style="width:100%;">LOGIN / JOIN</button>
         </div>
-        <div id="logoutForm" class="logout-panel" style="display:none;">
-            <h3 id="loggedInMsg" style="color:var(--accent);">You are Logged in</h3>
-            <button class="btn btn-red" onclick="handleLogout()" style="width:80%; margin-top:20px;">LOGOUT</button>
+        <div id="logoutForm" style="display:none; text-align:center; padding:40px 0; width:90%;">
+            <h3 id="loggedInMsg" style="color:var(--accent);">Welcome</h3>
+            <button class="btn btn-red" onclick="handleLogout()" style="width:80%; margin:20px auto;">LOGOUT</button>
         </div>
-        <div class="version-label">DetaBridge Wheel Pro v5.13</div>
+        <div class="version-label">DetaBridge Wheel Pro v5.14</div>
     </div>
 
     <nav>
@@ -234,7 +236,10 @@
 <audio id="sndLose" src="https://assets.mixkit.co/active_storage/sfx/2004/2004-preview.mp3"></audio>
 
 <script>
-    /* DetaBridge Wheel Pro v5.13 Secure Session Master */
+    /* DetaBridge Wheel Pro v5.14 Final Synchronization Master */
+    const tg = window.Telegram.WebApp;
+    tg.expand(); // 웹앱 전체 화면 확장
+
     let currentLang = 'en', currentId = "GUEST", balance = 1000000;
     let isSpinning = false, myBet = null, globalHistory = [], stats = { black: 0, red: 0, blue: 0, gold: 0 };
     let myGameStats = { total: 0, wins: 0 }, isMuted = false, audioInitialized = false, liveBoardTotals = { black:0, red:0, blue:0, gold:0 };
@@ -246,7 +251,8 @@
             ht2: "게임 방법", hm2: "1. 20초마다 새로운 라운드가 시작됩니다.\n2. 마감 전까지 색상을 선택해 배팅하세요.\n3. 배당률: BLACK(2배), RED(3배), BLUE(5배), GOLD(50배).",
             ht3: "공정성 시스템", hm3: "Provably Fair 시스템을 사용합니다. 결과값은 UTC 타임스탬프 시드를 통해 결정되어 조작이 절대 불가능합니다.",
             ht4: "UI 설명", hm4: "- 상단 바: 최근 20회 히스토리\n- 타이머 바: 남은 시간 시각화\n- 라이브 보드: 실시간 유저 배팅 현황",
-            pwRule: "비번은 영문, 숫자, 특수문자 포함 6자 이상이어야 합니다.", loginFail: "아이디 또는 비밀번호가 틀렸습니다.", pwMismatch: "비밀번호 확인이 일치하지 않습니다.", joinSuccess: "회원가입 및 로그인 성공!", logoutMsg: "로그아웃 되었습니다."
+            pwRule: "비번은 영문, 숫자, 특수문자 포함 6자 이상!", loginFail: "ID/PW가 틀렸습니다.", pwMismatch: "비번 확인 불일치!", joinSuccess: "가입 및 로그인 성공!", logoutMsg: "로그아웃 되었습니다.",
+            btnBlack: "BLACK x2", btnRed: "RED x3", btnBlue: "BLUE x5", btnGold: "GOLD x50", globalTrend: "24시간 글로벌 추세", totalSpins: "참여 라운드", winRate: "나의 승률"
         },
         en: { 
             welcome: "Welcome", buy: "BUY", closed: "CLOSED", live: "LIVE BETTING STATUS", home: "Home", how: "How", stats: "Stats", login: "Login", logout: "Logout", sync: "Secure Sync", loginPlaceholder: "Telegram ID", pick: "Pick", bet: "Bet", res: "Result", win: "Winner",
@@ -254,7 +260,8 @@
             ht2: "How to Play", hm2: "1. New rounds every 20 seconds.\n2. Place bets before the deadline.\n3. Multipliers: BLACK(x2), RED(x3), BLUE(x5), GOLD(x50).",
             ht3: "Fairness", hm3: "Uses a Provably Fair system. Results are fixed by UTC seeds, manipulation is impossible.",
             ht4: "UI Guide", hm4: "- Top Bar: Last 20 results\n- Timer Bar: Visual countdown\n- Live Board: Real-time user activities",
-            pwRule: "Password: 6+ chars, letter, number, and special char required.", loginFail: "Invalid ID or Password.", pwMismatch: "Passwords do not match.", joinSuccess: "Joined and Logged in!", logoutMsg: "Logged out."
+            pwRule: "Password: 6+ chars, alpha/num/spec.", loginFail: "Invalid ID or PW.", pwMismatch: "PW mismatch!", joinSuccess: "Joined!", logoutMsg: "Logged out.",
+            btnBlack: "BLACK x2", btnRed: "RED x3", btnBlue: "BLUE x5", btnGold: "GOLD x50", globalTrend: "24H GLOBAL TREND", totalSpins: "TOTAL SPINS", winRate: "MY WIN RATE"
         }
     };
 
@@ -263,103 +270,72 @@
     const wheelMap = []; const sectors = [{color:'#ffcc00',name:'gold',mult:50},{color:'#00e5ff',name:'blue',mult:5},{color:'#ff3333',name:'red',mult:3},{color:'#222222',name:'black',mult:2}];
     for(let i=0; i<54; i++){ if(i===0) wheelMap.push(sectors[0]); else if(i%10===0) wheelMap.push(sectors[1]); else if(i%3===0) wheelMap.push(sectors[2]); else wheelMap.push(sectors[3]); }
 
-    // --- 보안 로그인 로직 (v5.13) ---
+    // --- 텔레그램 연동 아이디 자동 입력 (v5.14) ---
+    function initTelegramUser() {
+        const user = tg.initDataUnsafe?.user;
+        if(user && user.username) {
+            document.getElementById('loginId').value = user.username;
+        } else if(user && user.first_name) {
+            document.getElementById('loginId').value = user.first_name;
+        }
+    }
+
+    // --- 보안 로그인 로직 ---
     function handleLogin() {
         const id = document.getElementById('loginId').value.trim();
         const pw = document.getElementById('loginPw').value;
         const pwChk = document.getElementById('loginPwCheck').value;
         const msg = document.getElementById('loginMsg');
-        const t = i18n[currentLang];
+        const t = i18n[currentLang] || i18n.en;
 
         if(!id || pw.length < 6) { msg.innerText = t.pwRule; return; }
-        
-        // 비밀번호 강도 체크 (영문, 숫자, 특수문자 1개 이상)
         const pwRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/;
         if(!pwRegex.test(pw)) { msg.innerText = t.pwRule; return; }
 
         let users = JSON.parse(localStorage.getItem('db_users') || '{}');
-
         if(users[id]) {
-            // 로그인 시도
             if(users[id].pw === pw) {
-                currentId = id;
-                balance = users[id].balance;
-                myGameStats = users[id].myGameStats;
-                sessionStorage.setItem('loggedInUser', id);
-                updateLoginState(true);
-            } else {
-                msg.innerText = t.loginFail;
-            }
+                currentId = id; balance = users[id].balance; myGameStats = users[id].myGameStats;
+                sessionStorage.setItem('loggedInUser', id); updateLoginState(true);
+            } else { msg.innerText = t.loginFail; }
         } else {
-            // 회원가입 시도
             if(pw !== pwChk) { msg.innerText = t.pwMismatch; return; }
             users[id] = { pw: pw, balance: 1000000, myGameStats: { total: 0, wins: 0 } };
             localStorage.setItem('db_users', JSON.stringify(users));
-            currentId = id;
-            sessionStorage.setItem('loggedInUser', id);
-            alert(t.joinSuccess);
-            updateLoginState(true);
+            currentId = id; sessionStorage.setItem('loggedInUser', id);
+            alert(t.joinSuccess); updateLoginState(true);
         }
     }
 
     function handleLogout() {
-        sessionStorage.removeItem('loggedInUser');
-        currentId = "GUEST";
-        balance = 1000000;
-        myGameStats = { total: 0, wins: 0 };
-        updateLoginState(false);
-        alert(i18n[currentLang].logoutMsg);
-        switchTab('home', document.querySelector('.nav-item'));
+        sessionStorage.removeItem('loggedInUser'); currentId = "GUEST"; balance = 1000000; myGameStats = { total: 0, wins: 0 };
+        updateLoginState(false); alert(i18n[currentLang].logoutMsg); switchTab('home', document.querySelector('.nav-item'));
     }
 
     function updateLoginState(isLogged) {
-        const loginForm = document.getElementById('loginForm');
-        const logoutForm = document.getElementById('logoutForm');
-        const navText = document.querySelector('#navLogin');
-        const t = i18n[currentLang];
-
-        if(isLogged) {
-            loginForm.style.display = 'none';
-            logoutForm.style.display = 'block';
-            navText.innerText = t.logout;
-            document.getElementById('loggedInMsg').innerText = `${currentId}님 반갑습니다.`;
-        } else {
-            loginForm.style.display = 'flex';
-            logoutForm.style.display = 'none';
-            navText.innerText = t.login;
-            document.getElementById('loginId').value = '';
-            document.getElementById('loginPw').value = '';
-            document.getElementById('loginPwCheck').value = '';
-            document.getElementById('loginMsg').innerText = '';
-        }
-        applyI18n();
-        updateBalUI();
+        document.getElementById('loginForm').style.display = isLogged ? 'none' : 'flex';
+        document.getElementById('logoutForm').style.display = isLogged ? 'block' : 'none';
+        if(isLogged) document.getElementById('loggedInMsg').innerText = `${currentId} Welcome!`;
+        applyI18n(); updateBalUI();
     }
 
     function checkSession() {
         const sessionUser = sessionStorage.getItem('loggedInUser');
         if(sessionUser) {
             let users = JSON.parse(localStorage.getItem('db_users') || '{}');
-            if(users[sessionUser]) {
-                currentId = sessionUser;
-                balance = users[sessionUser].balance;
-                myGameStats = users[sessionUser].myGameStats;
-                updateLoginState(true);
-            }
+            if(users[sessionUser]) { currentId = sessionUser; balance = users[sessionUser].balance; myGameStats = users[sessionUser].myGameStats; updateLoginState(true); }
         }
     }
 
-    // 데이터 저장 (회원정보 업데이트)
     function saveData() {
         if(currentId !== "GUEST") {
             let users = JSON.parse(localStorage.getItem('db_users') || '{}');
-            users[currentId].balance = balance;
-            users[currentId].myGameStats = myGameStats;
+            users[currentId].balance = balance; users[currentId].myGameStats = myGameStats;
             localStorage.setItem('db_users', JSON.stringify(users));
         }
     }
 
-    // --- 기존 v5.12 로직 보존 ---
+    // --- UI/배당률/배팅 검수 복구 (v5.14) ---
     function setLanguage(lang) {
         currentLang = lang; localStorage.setItem('db_wheel_lang', lang);
         document.getElementById('langOverlay').style.display = 'none'; applyI18n();
@@ -367,28 +343,28 @@
 
     function applyI18n() {
         const t = i18n[currentLang] || i18n.en;
-        document.getElementById('displayId').innerText = `${t.welcome} ${currentId}`;
-        document.getElementById('btnBuy').innerText = t.buy; 
-        document.getElementById('liveTitle').innerText = t.live; 
-        document.getElementById('navHome').innerText = t.home;
-        document.getElementById('navHow').innerText = t.how; 
-        document.getElementById('navStats').innerText = t.stats;
+        document.getElementById('displayId').innerText = `Welcome ${currentId}`;
+        document.getElementById('liveTitle').innerText = t.live;
+        document.getElementById('navHome').innerText = t.home; document.getElementById('navHow').innerText = t.how; 
+        document.getElementById('navStats').innerText = t.stats; 
         document.getElementById('navLogin').innerText = (currentId === "GUEST") ? t.login : t.logout;
+        
+        // 배팅 버튼 배당률 복구
         document.getElementById('btnBlack').innerText = t.btnBlack;
-        document.getElementById('btnRed').innerText = t.btnRed; 
+        document.getElementById('btnRed').innerText = t.btnRed;
         document.getElementById('btnBlue').innerText = t.btnBlue;
         document.getElementById('btnGold').innerText = t.btnGold;
-        document.querySelector('.th-pick').innerText = t.pick;
-        document.querySelector('.th-bet').innerText = t.bet;
-        document.querySelector('.th-res').innerText = t.res;
-        document.querySelector('.th-win').innerText = t.win;
-        document.querySelector('.lbl-total').innerText = t.totalSpins || "TOTAL SPINS";
-        document.querySelector('.lbl-winrate').innerText = t.winRate || "WIN RATE";
+
+        // 테이블 헤더 & 상세 사용법
+        document.querySelector('.th-pick').innerText = t.pick; document.querySelector('.th-bet').innerText = t.bet;
+        document.querySelector('.th-res').innerText = t.res; document.querySelector('.th-win').innerText = t.win;
         document.getElementById('ht1').innerText = t.ht1; document.getElementById('hm1').innerText = t.hm1;
         document.getElementById('ht2').innerText = t.ht2; document.getElementById('hm2').innerText = t.hm2;
         document.getElementById('ht3').innerText = t.ht3; document.getElementById('hm3').innerText = t.hm3;
         document.getElementById('ht4').innerText = t.ht4; document.getElementById('hm4').innerText = t.hm4;
-        document.getElementById('lblGlobalTrend').innerText = t.globalTrend || "24H GLOBAL TREND";
+        document.getElementById('lblGlobalTrend').innerText = t.globalTrend;
+        document.querySelector('.lbl-total').innerText = t.totalSpins;
+        document.querySelector('.lbl-winrate').innerText = t.winRate;
     }
 
     function tick() {
@@ -415,6 +391,21 @@
             let amt = (Math.floor(rand % 20) + 1) * 10000; if(type === 'gold') amt = 10000;
             addLiveUI(type, botId, amt);
         }
+    }
+
+    function addLiveUI(type, user, amt) {
+        const list = document.getElementById(`l-${type}`), total = document.getElementById(`t-${type}`);
+        if([...list.querySelectorAll('span')].some(s => s.innerText === user)) return;
+        liveBoardTotals[type] += amt; total.innerText = liveBoardTotals[type].toLocaleString();
+        const item = document.createElement('div'); item.className = 'bet-item';
+        item.innerHTML = `<span>${user}</span><b>${(amt/1000).toFixed(0)}k</b>`;
+        list.prepend(item); if(list.children.length > 5) list.lastChild.remove();
+    }
+
+    // --- 휠 & 히스토리 물리 로직 ---
+    function getWinIndex(seed) {
+        const rv = (seed * 9301 + 49297) % 233280;
+        return { index: Math.floor(((360 - ((rv % 360) + 90) % 360) + 360) % 360 / (360 / 54)) % 54, degrees: (rv % 360) + (360 * 10) };
     }
 
     function startSpin() {
@@ -463,20 +454,12 @@
         balance -= amt; updateBalUI(); myBet = { type, amount: amt }; addLiveUI(type, "ME", amt); saveData();
     }
 
-    function addLiveUI(type, user, amt) {
-        const list = document.getElementById(`l-${type}`), total = document.getElementById(`t-${type}`);
-        if([...list.querySelectorAll('span')].some(s => s.innerText === user)) return;
-        liveBoardTotals[type] += amt; total.innerText = liveBoardTotals[type].toLocaleString();
-        const item = document.createElement('div'); item.className = 'bet-item';
-        item.innerHTML = `<span>${user}</span><b>${(amt/1000).toFixed(0)}k</b>`;
-        list.prepend(item); if(list.children.length > 5) list.lastChild.remove();
-    }
-
     function switchTab(id, el) {
         document.querySelectorAll('.content-view').forEach(v => v.classList.remove('active'));
         document.getElementById('view-' + id).classList.add('active');
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active');
         if(id === 'recommend') renderStats();
+        if(id === 'login') initTelegramUser(); // 탭 이동 시 아이디 자동 로드
     }
 
     function getGlobalTrend() {
@@ -494,11 +477,6 @@
             document.getElementById(`gb-${c}`).style.width = trend[c] + "%";
             document.getElementById(`pct-${c}`).innerText = trend[c] + "%";
         });
-    }
-
-    function getWinIndex(seed) {
-        const rv = (seed * 9301 + 49297) % 233280;
-        return { index: Math.floor(((360 - ((rv % 360) + 90) % 360) + 360) % 360 / (360 / 54)) % 54, degrees: (rv % 360) + (360 * 10) };
     }
 
     function updateBalUI() { document.getElementById('balance').innerText = balance.toLocaleString(); }
