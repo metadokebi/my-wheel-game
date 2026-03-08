@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>DetaBridge Wheel Pro v5.10</title>
+    <title>DetaBridge Wheel Pro v5.11</title>
     <style>
         :root {
             --bg-top: #1e2128; --bg-bottom: #0e1013;
@@ -43,7 +43,7 @@
         .user-id { font-size: 0.8rem; font-weight: 700; border-left: 3px solid var(--accent); padding-left: 10px; }
         .balance-box { background: rgba(255, 149, 0, 0.05); padding: 5px 10px; border-radius: 6px; border: 1px solid var(--point-color); color: var(--point-color); font-weight: 800; font-size: 0.85rem; }
 
-        /* 타이머 & 히스토리 (v5.5 유지) */
+        /* 히스토리 & 타이머 */
         .timer-container { width: 100%; height: 6px; background: #000; position: relative; }
         #timerBar { position: absolute; left: 0; top: 0; height: 100%; width: 0%; transition: width 0.1s linear; }
         .history-strip { display: flex; gap: 5px; padding: 10px 0; height: 24px; width: 100%; justify-content: center; background: rgba(0,0,0,0.2); flex-shrink: 0; box-sizing: content-box; }
@@ -52,7 +52,7 @@
         .content-view { flex: 1; overflow-y: auto; display: none; padding-bottom: 90px; width: 100%; }
         .content-view.active { display: flex; flex-direction: column; align-items: center; }
 
-        /* 휠 섹션 (v5.5 포인터 유지) */
+        /* 휠 섹션 */
         .wheel-section { position: relative; margin: 20px 0; width: 240px; height: 240px; flex-shrink: 0; }
         #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
         .wheel-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-weight: 900; font-size: 2rem; text-shadow: 0 0 15px var(--accent); }
@@ -75,7 +75,7 @@
         .live-col { background: rgba(0,0,0,0.4); border-radius: 6px; min-height: 110px; border-top: 2px solid #444; }
         .col-head { padding: 5px 0; font-size: 0.5rem; text-align: center; font-weight: 900; }
         .bet-list { padding: 3px; display: flex; flex-direction: column; gap: 2px; height: 85px; overflow: hidden; }
-        .bet-item { display: flex; justify-content: space-between; font-size: 0.4rem; background: rgba(255,255,255,0.05); padding: 2px; animation: fadeIn 0.3s ease; }
+        .bet-item { display: flex; justify-content: space-between; font-size: 0.4rem; background: rgba(255,255,255,0.05); padding: 2px; }
 
         /* 하단 내비게이션 */
         nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; height: 80px; background: var(--nav-bg); display: flex; border-top: 1px solid #222; z-index: 200; }
@@ -84,19 +84,19 @@
         .nav-item span { font-size: 0.85rem; font-weight: 700; }
         .nav-item.active { color: var(--accent); }
 
-        /* 통계 & How 탭 스타일 */
-        .stat-card-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 95%; margin-top: 20px; }
-        .stat-card { background: var(--card); padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #333; }
-        .dist-container { width: 95%; background: var(--card); padding: 20px; border-radius: 12px; margin-top: 15px; border: 1px solid #333; }
-        .dist-bar-wrapper { margin-top: 15px; display: flex; flex-direction: column; gap: 12px; }
-        .dist-row { display: flex; align-items: center; gap: 10px; }
-        .dist-label { width: 50px; font-size: 0.65rem; font-weight: 800; }
-        .dist-bg { flex: 1; height: 8px; background: #000; border-radius: 4px; overflow: hidden; }
-        .dist-fill { height: 100%; width: 0%; transition: width 0.8s cubic-bezier(0.1, 0, 0.2, 1); }
-        .dist-pct { width: 35px; font-size: 0.65rem; color: var(--accent); font-weight: 800; text-align: right; }
+        /* 상세 사용법 스타일 (v5.11) */
+        .how-scroll { width: 95%; padding: 15px; background: var(--card); border-radius: 12px; border: 1px solid #333; margin-top: 10px; }
+        .how-section { margin-bottom: 20px; }
+        .how-title { font-size: 0.85rem; font-weight: 900; color: var(--accent); margin-bottom: 8px; border-left: 3px solid var(--accent); padding-left: 8px; }
+        .how-text { font-size: 0.72rem; color: #ccc; line-height: 1.6; white-space: pre-wrap; }
 
-        .how-content { width: 90%; margin-top: 20px; color: #ccc; line-height: 1.8; font-size: 0.85rem; }
-        .version-label { margin-top: 30px; font-size: 0.65rem; color: #445566; font-weight: 700; text-align: center; }
+        /* 통계 뷰 */
+        .dist-container { width: 95%; background: var(--card); padding: 20px; border-radius: 12px; margin-top: 15px; border: 1px solid #333; }
+        .dist-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+        .dist-bg { flex: 1; height: 8px; background: #000; border-radius: 4px; overflow: hidden; }
+        .dist-fill { height: 100%; transition: width 0.8s ease-in-out; }
+
+        .version-label { margin-top: 20px; font-size: 0.65rem; color: #445566; font-weight: 700; text-align: center; width: 100%; padding-bottom: 10px; }
 
         .log-table { width: 100%; border-collapse: collapse; font-size: 0.7rem; background: rgba(0,0,0,0.4); border-radius: 10px; overflow: hidden; margin-top: 20px; }
         .log-table th { background: #1a1a1a; padding: 10px; color: var(--text-muted); }
@@ -175,34 +175,50 @@
         </div>
     </div>
 
-    <!-- How 탭 (v5.10 복구) -->
+    <!-- 상세 사용법 탭 (v5.11 업데이트) -->
     <div id="view-how" class="content-view">
-        <div class="how-content">
-            <h2 id="howTitle" style="color:var(--accent); border-bottom:1px solid #333; padding-bottom:10px;">How to Play</h2>
-            <p id="howMsg1">20초마다 새로운 라운드가 자동으로 시작됩니다.</p>
-            <p id="howMsg2">원하는 색상에 배팅을 하세요. (최소 10,000 P)</p>
-            <p id="howMsg3">결과값은 시간 기반 시드로 미리 결정되어 조작이 불가능합니다.</p>
-            <p id="howMsg4">통계 탭에서 지난 24시간 동안의 글로벌 출현율을 확인하세요.</p>
+        <div class="how-scroll">
+            <div class="how-section">
+                <div class="how-title" id="ht1">게임 소개</div>
+                <div class="how-text" id="hm1">DetaBridge Wheel은 실시간 멀티플레이어 행운의 바퀴 게임입니다. 모든 결과는 암호화된 시간 기반 알고리즘을 통해 생성되며, 전 세계 모든 유저가 동일한 공정한 결과를 공유합니다.</div>
+            </div>
+            <div class="how-section">
+                <div class="how-title" id="ht2">게임 방법</div>
+                <div class="how-text" id="hm2">1. 20초마다 새로운 라운드가 시작됩니다.
+2. 마감 1초 전까지 원하는 색상에 배팅하세요.
+3. 배당률: BLACK(2배), RED(3배), BLUE(5배), GOLD(50배).
+4. 포인트는 기기에 자동 저장되어 언제든 다시 즐길 수 있습니다.</div>
+            </div>
+            <div class="how-section">
+                <div class="how-title" id="ht3">공정성 시스템</div>
+                <div class="how-text" id="hm3">본 게임은 Provably Fair 시스템을 사용합니다. 결과값은 서버 시간이 아닌, UTC 기준 타임스탬프 시드(Seed)를 통해 물리적으로 결정됩니다. 그 어떤 운영자나 유저도 결과값을 임의로 조작하거나 변경할 수 없습니다.</div>
+            </div>
+            <div class="how-section">
+                <div class="how-title" id="ht4">UI/인터페이스 설명</div>
+                <div class="how-text" id="hm4">- 상단 바: 최근 20회의 결과 히스토리를 보여줍니다.
+- 타이머 바: 현재 배팅 가능한 남은 시간을 시각화합니다.
+- 라이브 보드: 현재 참여 중인 다른 유저들의 배팅 현황을 실시간으로 확인합니다.
+- 내 정보: 로그인 탭을 통해 고유 ID를 설정하고 데이터를 연동할 수 있습니다.</div>
+            </div>
         </div>
-        <div class="version-label">DetaBridge Wheel Pro v5.10</div>
+        <div class="version-label">DetaBridge Wheel Pro v5.11</div>
     </div>
     
-    <!-- Stats 탭 (v5.10 글로벌 통계 도입) -->
     <div id="view-recommend" class="content-view">
         <div class="dist-container">
             <div id="lblGlobalTrend" style="font-size:0.75rem; font-weight:900; color:var(--accent); text-align:center;">24H GLOBAL TREND</div>
-            <div class="dist-bar-wrapper">
-                <div class="dist-row"><div class="dist-label">BLACK</div><div class="dist-bg"><div id="gb-black" class="dist-fill" style="background:var(--black)"></div></div><div class="dist-pct" id="pct-black">0%</div></div>
-                <div class="dist-row"><div class="dist-label">RED</div><div class="dist-bg"><div id="gb-red" class="dist-fill" style="background:var(--red)"></div></div><div class="dist-pct" id="pct-red">0%</div></div>
-                <div class="dist-row"><div class="dist-label">BLUE</div><div class="dist-bg"><div id="gb-blue" class="dist-fill" style="background:var(--blue)"></div></div><div class="dist-pct" id="pct-blue">0%</div></div>
-                <div class="dist-row"><div class="dist-label">GOLD</div><div class="dist-bg"><div id="gb-gold" class="dist-fill" style="background:var(--gold)"></div></div><div class="dist-pct" id="pct-gold">0%</div></div>
+            <div style="margin-top:15px;">
+                <div class="dist-row"><span style="width:50px; font-size:0.6rem;">BLACK</span><div class="dist-bg"><div id="gb-black" class="dist-fill" style="background:var(--black)"></div></div><span id="pct-black" style="width:30px; font-size:0.6rem; text-align:right;">0%</span></div>
+                <div class="dist-row"><span style="width:50px; font-size:0.6rem;">RED</span><div class="dist-bg"><div id="gb-red" class="dist-fill" style="background:var(--red)"></div></div><span id="pct-red" style="width:30px; font-size:0.6rem; text-align:right;">0%</span></div>
+                <div class="dist-row"><span style="width:50px; font-size:0.6rem;">BLUE</span><div class="dist-bg"><div id="gb-blue" class="dist-fill" style="background:var(--blue)"></div></div><span id="pct-blue" style="width:30px; font-size:0.6rem; text-align:right;">0%</span></div>
+                <div class="dist-row"><span style="width:50px; font-size:0.6rem;">GOLD</span><div class="dist-bg"><div id="gb-gold" class="dist-fill" style="background:var(--gold)"></div></div><span id="pct-gold" style="width:30px; font-size:0.6rem; text-align:right;">0%</span></div>
             </div>
         </div>
-        <div class="stat-card-row">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; width:95%; margin-top:10px;">
             <div class="stat-card"><div id="st-total" style="font-size:1.2rem; font-weight:900; color:var(--accent);">0</div><div class="lbl-total" style="font-size:0.6rem; color:var(--text-muted);">TOTAL SPINS</div></div>
-            <div class="stat-card"><div id="st-winrate" style="font-size:1.2rem; font-weight:900; color:var(--accent);">0%</div><div class="lbl-winrate" style="font-size:0.6rem; color:var(--text-muted);">MY WIN RATE</div></div>
+            <div class="stat-card"><div id="st-winrate" style="font-size:1.2rem; font-weight:900; color:var(--accent);">0%</div><div class="lbl-winrate" style="font-size:0.6rem; color:var(--text-muted);">WIN RATE</div></div>
         </div>
-        <div class="version-label">DetaBridge Wheel Pro v5.10</div>
+        <div class="version-label">DetaBridge Wheel Pro v5.11</div>
     </div>
     
     <div id="view-login" class="content-view">
@@ -226,16 +242,40 @@
 <audio id="sndLose" src="https://assets.mixkit.co/active_storage/sfx/2004/2004-preview.mp3"></audio>
 
 <script>
-    /* DetaBridge Wheel Pro v5.10 Global Master Logic */
+    /* DetaBridge Wheel Pro v5.11 Global Synchronization Master */
     let currentLang = 'en', currentId = "GUEST", balance = 1000000;
     let isSpinning = false, myBet = null, globalHistory = [], stats = { black: 0, red: 0, blue: 0, gold: 0 };
     let myGameStats = { total: 0, wins: 0 }, isMuted = false, audioInitialized = false, liveBoardTotals = { black:0, red:0, blue:0, gold:0 };
     
     const i18n = {
-        ko: { welcome: "환영합니다", buy: "구매", closed: "마감", live: "실시간 배팅 현황", home: "홈", how: "사용법", stats: "통계", login: "로그인", pick: "선택", bet: "금액", res: "결과", win: "당첨색", howTitle: "게임 방법", h1: "20초마다 라운드가 시작됩니다.", h2: "원하는 색상에 배팅하세요. (최소 1만)", h3: "공정 추첨 시스템으로 조작이 없습니다.", h4: "글로벌 통계는 24시간 실시간 기준입니다.", totalSpins: "참여 라운드", winRate: "나의 승률", globalTrend: "24시간 글로벌 추세", sync: "데이터 동기화", loginPlaceholder: "텔레그램 ID 입력", btnBlack: "BLACK x2", btnRed: "RED x3", btnBlue: "BLUE x5", btnGold: "GOLD x50" },
-        en: { welcome: "Welcome", buy: "BUY", closed: "CLOSED", live: "LIVE BETTING USER", home: "Home", how: "How", stats: "Stats", login: "Login", pick: "Pick", bet: "Bet", res: "Result", win: "Winner", howTitle: "How to Play", h1: "New rounds every 20 seconds.", h2: "Place bets on colors (Min 10k).", h3: "Provably Fair - No manipulation.", h4: "Global Trend is based on last 24H.", totalSpins: "TOTAL SPINS", winRate: "MY WIN RATE", globalTrend: "24H GLOBAL TREND", sync: "Sync Data", loginPlaceholder: "Telegram ID", btnBlack: "BLACK x2", btnRed: "RED x3", btnBlue: "BLUE x5", btnGold: "GOLD x50" },
-        cn: { welcome: "欢迎", buy: "购买", closed: "已截止", live: "实时投注", home: "首页", how: "指南", stats: "统计", login: "登录", pick: "选择", bet: "赌注", res: "结果", win: "赢家", howTitle: "玩法指南", h1: "每20秒开始一轮新游戏。", h2: "选择颜色进行投注（最小1万）。", h3: "公平竞赛系统，结果不可操控。", h4: "全球趋势基于过去24小时。", totalSpins: "总局数", winRate: "胜率", globalTrend: "24小时全球趋势", sync: "同步数据", loginPlaceholder: "输入电报 ID", btnBlack: "黑色 x2", btnRed: "红色 x3", btnBlue: "蓝色 x5", btnGold: "金色 x50" },
-        jp: { welcome: "ようこそ", buy: "購入", closed: "締切", live: "ライブ状況", home: "ホーム", how: "遊び方", stats: "統計", login: "ログイン", pick: "選択", bet: "ベット", res: "結果", win: "当選者", howTitle: "遊び方ガイド", h1: "20秒ごとに新しいラウンドが始まります。", h2: "色を選んでベットしてください（最小1万）。", h3: "公正な抽選システムを採用しています。", h4: "グローバル統計は24時間基準です。", totalSpins: "総回転数", winRate: "勝率", globalTrend: "24時間トレンド", sync: "同期", loginPlaceholder: "IDを入力", btnBlack: "BLACK x2", btnRed: "RED x3", btnBlue: "BLUE x5", btnGold: "GOLD x50" }
+        ko: { 
+            welcome: "환영합니다", buy: "구매", closed: "마감", live: "실시간 배팅 현황", home: "홈", how: "사용법", stats: "통계", login: "로그인", pick: "선택", bet: "금액", res: "결과", win: "당첨색", sync: "데이터 동기화", loginPlaceholder: "텔레그램 ID 입력", btnBlack: "BLACK x2", btnRed: "RED x3", btnBlue: "BLUE x5", btnGold: "GOLD x50", globalTrend: "24시간 글로벌 추세", totalSpins: "참여 라운드", winRate: "나의 승률",
+            ht1: "게임 소개", hm1: "DetaBridge Wheel은 실시간 멀티플레이어 행운의 바퀴 게임입니다. 모든 결과는 암호화된 시간 기반 알고리즘을 통해 생성되며, 전 세계 모든 유저가 동일하고 공정한 결과를 공유합니다.",
+            ht2: "게임 방법", hm2: "1. 20초마다 새로운 라운드가 시작됩니다.\n2. 마감 1초 전까지 색상을 선택해 배팅하세요.\n3. 배당률: BLACK(2배), RED(3배), BLUE(5배), GOLD(50배).\n4. 포인트는 기기에 자동 저장됩니다.",
+            ht3: "공정성 시스템", hm3: "본 게임은 Provably Fair 시스템을 사용합니다. 결과값은 서버 시간이 아닌, UTC 타임스탬프 시드(Seed)를 통해 물리적으로 결정됩니다. 결과 조작은 절대 불가능합니다.",
+            ht4: "UI 설명", hm4: "- 상단 바: 최근 20회의 히스토리.\n- 타이머 바: 남은 시간 시각화.\n- 라이브 보드: 타 유저의 실시간 배팅 현황.\n- 로그인: 데이터 연동 및 ID 설정."
+        },
+        en: { 
+            welcome: "Welcome", buy: "BUY", closed: "CLOSED", live: "LIVE BETTING USER", home: "Home", how: "How", stats: "Stats", login: "Login", pick: "Pick", bet: "Bet", res: "Result", win: "Winner", sync: "Sync Data", loginPlaceholder: "Telegram ID", btnBlack: "BLACK x2", btnRed: "RED x3", btnBlue: "BLUE x5", btnGold: "GOLD x50", globalTrend: "24H GLOBAL TREND", totalSpins: "TOTAL SPINS", winRate: "MY WIN RATE",
+            ht1: "About Game", hm1: "DetaBridge Wheel is a real-time multiplayer lucky wheel. All results are generated via encrypted time-based algorithms, ensuring fair results for all players worldwide.",
+            ht2: "How to Play", hm2: "1. New rounds every 20 seconds.\n2. Bet on a color before the 1-second deadline.\n3. Multipliers: BLACK(x2), RED(x3), BLUE(x5), GOLD(x50).\n4. Points are auto-saved to your device.",
+            ht3: "Fairness", hm3: "Uses a Provably Fair system. Results are fixed by UTC timestamp seeds, not server-side manual input. Manipulation is impossible.",
+            ht4: "UI Guide", hm4: "- Top Bar: Last 20 results.\n- Timer: Visual countdown.\n- Live Board: Real-time user activities.\n- Login: Data sync and ID settings."
+        },
+        cn: { 
+            welcome: "欢迎", buy: "购买", closed: "已截止", live: "实时投注", home: "首页", how: "指南", stats: "统计", login: "登录", pick: "选择", bet: "赌注", res: "结果", win: "赢家", sync: "同步数据", loginPlaceholder: "电报 ID", btnBlack: "黑色 x2", btnRed: "红色 x3", btnBlue: "蓝色 x5", btnGold: "金色 x50", globalTrend: "24小时趋势", totalSpins: "参与局数", winRate: "我的胜率",
+            ht1: "游戏介绍", hm1: "DetaBridge Wheel 是一款实时多人轮盘游戏。所有结果均通过基于时间的加密算法生成，确保全球玩家共享公平的结果。",
+            ht2: "游戏玩法", hm2: "1. 每20秒开始一轮新游戏。\n2. 在截止前1秒对颜色进行投注。\n3. 倍率：黑色(2x), 红色(3x), 蓝色(5x), 金色(50x)。\n4. 积分会自动保存到您的设备中。",
+            ht3: "公平性", hm3: "采用 Provably Fair 系统。结果由 UTC 时间戳种子决定，而非服务器端人工干预。绝对无法作弊。",
+            ht4: "UI 说明", hm4: "- 顶部栏：最近20次历史记录。\n- 计时条：投注剩余时间。\n- 实时板：其他玩家的投注状态。\n- 登录：同步数据和 ID 设置。"
+        },
+        jp: { 
+            welcome: "ようこそ", buy: "購入", closed: "締切", live: "ライブ状況", home: "ホーム", how: "遊び方", stats: "統計", login: "ログイン", pick: "選択", bet: "ベット", res: "結果", win: "当選者", sync: "同期", loginPlaceholder: "IDを入力", btnBlack: "BLACK x2", btnRed: "RED x3", btnBlue: "BLUE x5", btnGold: "GOLD x50", globalTrend: "24時間トレンド", totalSpins: "総回転数", winRate: "勝率",
+            ht1: "ゲーム紹介", hm1: "DetaBridge Wheelはリアルタイムマルチプレイヤーのラッキーホイールです。全ての結果は暗号化された時間ベースのアルゴリズムによって生成され、公平性が保証されます。",
+            ht2: "遊び方", hm2: "1. 20秒ごとに新しいラウンドが始まります。\n2. 締切1秒前までに色を選んでベットしてください。\n3. 倍率：BLACK(2倍), RED(3배), BLUE(5倍), GOLD(50倍)。\n4. ポイントは自動的に保存されます。",
+            ht3: "公平性", hm3: "Provably Fairシステムを使用。結果はUTCタイムスタンプシードによって物理的に決定され、操作は一切不可能です。",
+            ht4: "UI説明", hm4: "- 上部バー：最近20回の履歴。\n- タイマー：残り時間の可視化。\n- ライブボード：他ユーザーのベット状況。\n- ログイン：データ同期とID設定。"
+        }
     };
 
     const CYCLE_MS = 20000, SPIN_DURATION = 6500, RESULT_WAIT = 2000, FREEZE_PERIOD = SPIN_DURATION + RESULT_WAIT, BETTING_PERIOD = CYCLE_MS - FREEZE_PERIOD;
@@ -265,29 +305,23 @@
         document.querySelector('.lb-black').innerText = t.btnBlack.split(' ')[0]; document.querySelector('.lb-red').innerText = t.btnRed.split(' ')[0];
         document.querySelector('.lb-blue').innerText = t.btnBlue.split(' ')[0]; document.querySelector('.lb-gold').innerText = t.btnGold.split(' ')[0];
         
-        // How 탭 내용 번역 (v5.10)
-        document.getElementById('howTitle').innerText = t.howTitle;
-        document.getElementById('howMsg1').innerText = t.h1; document.getElementById('howMsg2').innerText = t.h2;
-        document.getElementById('howMsg3').innerText = t.h3; document.getElementById('howMsg4').innerText = t.h4;
+        // 상세 사용법 번역 (v5.11)
+        document.getElementById('ht1').innerText = t.ht1; document.getElementById('hm1').innerText = t.hm1;
+        document.getElementById('ht2').innerText = t.ht2; document.getElementById('hm2').innerText = t.hm2;
+        document.getElementById('ht3').innerText = t.ht3; document.getElementById('hm3').innerText = t.hm3;
+        document.getElementById('ht4').innerText = t.ht4; document.getElementById('hm4').innerText = t.hm4;
     }
 
-    /* 전 기기 글로벌 동기화 (배팅 + 통계) */
     function getGlobalTrend() {
-        // 날짜를 시드로 사용하여 24시간 동안 모든 유저에게 동일한 통계 제공
         const daySeed = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
         const rv = (daySeed * 9301 + 49297) % 233280;
-        const g = (rv % 3) + 1; // Gold (1~3%)
-        const b = (rv % 10) + 5; // Blue (5~15%)
-        const remaining = 100 - g - b;
-        const r = Math.floor(remaining * 0.4); // Red
-        const bl = 100 - g - b - r; // Black
+        const g = (rv % 3) + 1, b = (rv % 10) + 5, rem = 100 - g - b, r = Math.floor(rem * 0.4), bl = 100 - g - b - r;
         return { black: bl, red: r, blue: b, gold: g };
     }
 
     function renderStats() {
         document.getElementById('st-total').innerText = myGameStats.total;
         document.getElementById('st-winrate').innerText = (myGameStats.total > 0 ? (myGameStats.wins/myGameStats.total*100).toFixed(1) : 0) + "%";
-        
         const trend = getGlobalTrend();
         ['black', 'red', 'blue', 'gold'].forEach(c => {
             document.getElementById(`gb-${c}`).style.width = trend[c] + "%";
@@ -296,17 +330,13 @@
     }
 
     function deterministicGlobalSpawn() {
-        const now = Date.now();
-        const elapsed = now % CYCLE_MS;
+        const now = Date.now(), elapsed = now % CYCLE_MS;
         if(elapsed < FREEZE_PERIOD || elapsed > CYCLE_MS - 1500) return;
-        const timeSeed = Math.floor(now / 1000); 
-        const rand = (timeSeed * 9301 + 49297) % 233280;
+        const tSeed = Math.floor(now / 1000), rand = (tSeed * 9301 + 49297) % 233280;
         if((rand % 100) < 25) { 
-            const adjs = ["Vip", "Pro", "Lucky", "Top", "Ace"];
-            const nouns = ["King", "Star", "Wolf", "Winner", "Boss"];
+            const adjs = ["Vip", "Pro", "Lucky", "Top", "Ace"], nouns = ["King", "Star", "Wolf", "Winner", "Boss"];
             const botId = adjs[rand % adjs.length] + nouns[(rand + 5) % nouns.length] + (rand % 99);
-            const typeRand = (rand % 100);
-            let type = typeRand < 40 ? 'black' : (typeRand < 75 ? 'red' : (typeRand < 95 ? 'blue' : 'gold'));
+            const tR = (rand % 100), type = tR < 40 ? 'black' : (tR < 75 ? 'red' : (tR < 95 ? 'blue' : 'gold'));
             let amt = (Math.floor(rand % 20) + 1) * 10000; if(type === 'gold') amt = 10000;
             addLiveUI(type, botId, amt);
         }
@@ -326,9 +356,9 @@
         }
     }
 
-    function saveData() { localStorage.setItem('db_wheel_v510_data', JSON.stringify({ balance, currentId, myGameStats, stats })); }
+    function saveData() { localStorage.setItem('db_wheel_v511_data', JSON.stringify({ balance, currentId, myGameStats, stats })); }
     function loadData() {
-        const saved = localStorage.getItem('db_wheel_v510_data');
+        const saved = localStorage.getItem('db_wheel_v511_data');
         if(saved) { const p = JSON.parse(saved); balance = p.balance; currentId = p.currentId; myGameStats = p.myGameStats; stats = p.stats; }
     }
 
