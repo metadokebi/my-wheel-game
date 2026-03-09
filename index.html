@@ -40,7 +40,7 @@
         .user-id { font-size: 0.8rem; font-weight: 700; border-left: 3px solid var(--accent); padding-left: 10px; }
         .balance-box { background: rgba(255, 149, 0, 0.05); padding: 5px 10px; border-radius: 6px; border: 1px solid var(--point-color); color: var(--point-color); font-weight: 800; font-size: 0.85rem; }
 
-        /* 히스토리 바 (최신 왼쪽 적재) */
+        /* 히스토리 바 영역 */
         .rolls-wrapper { width: 100%; padding: 10px 15px; background: rgba(0,0,0,0.2); border-bottom: 1px solid #333; flex-shrink: 0; }
         .rolls-header-title { font-size: 0.75rem; font-weight: 800; color: #667788; letter-spacing: 1px; margin-bottom: 8px; }
         .history-strip { display: flex; gap: 3px; height: 40px; width: 100%; align-items: center; justify-content: flex-start; overflow: hidden; }
@@ -52,6 +52,7 @@
         .last100-title { font-size: 0.7rem; font-weight: 900; color: #556677; }
         .last100-stats { display: flex; gap: 8px; }
         .stat-box { background: rgba(0,0,0,0.3); border: 1px solid #2a2d35; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 800; text-align: center; min-width: 40px; }
+        .stat-box.s-black { color: #888; } .stat-box.s-red { color: var(--red); } .stat-box.s-blue { color: var(--blue); } .stat-box.s-gold { color: var(--gold); }
 
         .timer-container { width: 100%; height: 6px; background: #000; position: relative; flex-shrink: 0; }
         #timerBar { position: absolute; left: 0; top: 0; height: 100%; width: 0%; transition: width 0.1s linear; }
@@ -59,7 +60,7 @@
         .content-view { flex: 1; overflow-y: auto; display: none; padding-bottom: 90px; width: 100%; }
         .content-view.active { display: flex; flex-direction: column; align-items: center; }
 
-        /* 휠 & 포인터 정밀 배치 */
+        /* 휠 & 초정밀 포인터 */
         .wheel-section { position: relative; margin: 30px 0; width: 230px; height: 230px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; }
         .wheel-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-weight: 900; font-size: 1.8rem; color: var(--accent); text-shadow: 0 0 15px var(--accent); opacity: 0.8; pointer-events: none; }
@@ -70,7 +71,7 @@
             transition: background-color 0.1s ease;
         }
 
-        /* 배팅 버튼 (v5.25 사양 고정) */
+        /* 배팅 버튼 */
         .overlay-container { position: relative; width: 95%; margin: 5px auto; }
         .controls { width: 100%; background: var(--card); padding: 12px; border-radius: 12px; position: relative; }
         .bet-buttons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; }
@@ -78,7 +79,6 @@
             height: 65px; background: transparent; border: 1.5px solid transparent; 
             border-radius: 4px; font-weight: 900; font-size: 1.1rem; color: #fff; 
             cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center;
-            position: relative; z-index: 10;
         }
         .btn-black { border-color: #555; color: #777; }
         .btn-red { border-color: var(--red); color: var(--red); }
@@ -92,30 +92,37 @@
         .closed-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); z-index: 100; display: none; align-items: center; justify-content: center; border-radius: 12px; backdrop-filter: blur(2px); pointer-events: none; }
         .closed-text { color: #ddd; font-weight: 900; font-size: 1.6rem; letter-spacing: 4px; animation: pulse 0.8s infinite; }
 
-        /* 라이브 배팅 UI (복원) */
-        .live-betting-area { width: 100%; margin-top: 10px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid #222; }
-        .live-feed { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
-        .live-col { background: rgba(0,0,0,0.4); border-radius: 6px; min-height: 110px; border-top: 3px solid #333; overflow: hidden; }
-        .col-head { padding: 6px 0; font-size: 0.65rem; text-align: center; font-weight: 900; color: #aaa; background: rgba(0,0,0,0.2); }
-        .col-total { font-size: 0.7rem; color: var(--accent); display: block; margin-top: 2px; }
-        .bet-list { padding: 4px; display: flex; flex-direction: column; gap: 4px; height: 85px; }
-        .bet-item { display: flex; justify-content: space-between; font-size: 0.58rem; font-weight: 700; background: rgba(255,255,255,0.05); padding: 3px 4px; border-radius: 3px; }
+        /* 라이브 배팅 보드 (복구 및 개선) */
+        .live-betting-area { width: 100%; margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid #333; }
+        .live-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+        .live-col { background: rgba(0,0,0,0.4); border-radius: 8px; min-height: 120px; border-top: 3px solid #444; overflow: hidden; display: flex; flex-direction: column; }
+        .col-head { padding: 6px 2px; text-align: center; background: rgba(255,255,255,0.03); }
+        .col-label { font-size: 0.6rem; font-weight: 900; color: var(--text-muted); display: block; margin-bottom: 2px; }
+        .col-total { font-size: 0.7rem; font-weight: 800; color: var(--accent); }
+        .bet-list { padding: 4px; flex: 1; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; max-height: 100px; }
+        .bet-item { display: flex; justify-content: space-between; font-size: 0.55rem; font-weight: 700; background: rgba(255,255,255,0.05); padding: 3px; border-radius: 3px; animation: fadeIn 0.3s ease; }
+        .bet-item b { color: var(--gold); }
 
-        /* 로그 테이블 (v5.32 사양 고정) */
-        .log-table { width: 95%; border-collapse: collapse; font-size: 0.7rem; background: rgba(0,0,0,0.4); border-radius: 10px; overflow: hidden; margin: 15px auto; }
+        /* 로그 테이블 */
+        .log-table { width: 95%; border-collapse: collapse; font-size: 0.7rem; background: rgba(0,0,0,0.4); border-radius: 10px; overflow: hidden; margin: 20px auto; }
         .log-table th { background: #1a1a1a; padding: 12px 10px; color: var(--text-muted); font-size: 0.8rem; font-weight: 900; border-bottom: 1px solid #333; }
         .log-table td { padding: 10px 8px; border-bottom: 1px solid #222; text-align: center; font-weight: 700; }
         .winner-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
 
+        /* 네비게이션 */
         nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; height: 75px; background: var(--nav-bg); display: flex; border-top: 1px solid #222; z-index: 200; padding-bottom: env(safe-area-inset-bottom); }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; }
         .nav-item span { font-size: 0.8rem; font-weight: 700; margin-top: 2px; }
         .nav-item.active { color: var(--accent); }
 
-        .login-box { width: 90%; background: var(--card); padding: 25px; border-radius: 15px; border: 1px solid #333; margin-top: 20px; display: flex; flex-direction: column; gap: 15px; }
-        .login-input { width: 100%; padding: 15px; background: #000; border: 1px solid #444; color: var(--accent); border-radius: 8px; font-weight: 700; outline: none; }
-        #pwConfirmGroup { display: none; flex-direction: column; gap: 15px; }
+        /* 사용법 탭 스타일 강화 */
+        .how-card { width: 94%; background: var(--card); border-radius: 12px; border: 1px solid #333; padding: 20px; margin-top: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .how-section { margin-bottom: 25px; }
+        .how-title { font-size: 1rem; font-weight: 900; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .how-text { font-size: 0.8rem; color: #bbb; line-height: 1.7; white-space: pre-wrap; }
+        .how-badge { background: rgba(0,242,255,0.1); color: var(--accent); padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; }
 
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
     </style>
 </head>
@@ -181,15 +188,14 @@
                     <button class="btn btn-gold" onclick="handleUserBet('gold')" id="btnGold">50×</button>
                 </div>
             </div>
-
-            <!-- 라이브 배팅 UI 복원 -->
+            
             <div class="live-betting-area">
-                <div id="liveTitle" class="section-title">LIVE STATUS</div>
-                <div class="live-feed">
-                    <div class="live-col" style="border-top-color:var(--black);"><div class="col-head"><span id="l-bl">BLACK</span><span id="t-black" class="col-total">0</span></div><div id="l-black" class="bet-list"></div></div>
-                    <div class="live-col" style="border-top-color:var(--red);"><div class="col-head"><span id="l-re">RED</span><span id="t-red" class="col-total">0</span></div><div id="l-red" class="bet-list"></div></div>
-                    <div class="live-col" style="border-top-color:var(--blue);"><div class="col-head"><span id="l-blu">BLUE</span><span id="t-blue" class="col-total">0</span></div><div id="l-blue" class="bet-list"></div></div>
-                    <div class="live-col" style="border-top-color:var(--gold);"><div class="col-head"><span id="l-go">GOLD</span><span id="t-gold" class="col-total">0</span></div><div id="l-gold" class="bet-list"></div></div>
+                <div id="liveTitle" class="section-title" style="margin-bottom:12px; font-size:0.8rem; color:#aaa;">LIVE BETTING</div>
+                <div class="live-grid">
+                    <div class="live-col" style="border-top-color:var(--black);"><div class="col-head"><span class="col-label" id="cl1">BLACK</span><span id="t-black" class="col-total">0</span></div><div id="l-black" class="bet-list"></div></div>
+                    <div class="live-col" style="border-top-color:var(--red);"><div class="col-head"><span class="col-label" id="cl2">RED</span><span id="t-red" class="col-total">0</span></div><div id="l-red" class="bet-list"></div></div>
+                    <div class="live-col" style="border-top-color:var(--blue);"><div class="col-head"><span class="col-label" id="cl3">BLUE</span><span id="t-blue" class="col-total">0</span></div><div id="l-blue" class="bet-list"></div></div>
+                    <div class="live-col" style="border-top-color:var(--gold);"><div class="col-head"><span class="col-label" id="cl4">GOLD</span><span id="t-gold" class="col-total">0</span></div><div id="l-gold" class="bet-list"></div></div>
                 </div>
             </div>
         </div>
@@ -200,35 +206,52 @@
         </table>
     </div>
 
-    <!-- 메뉴 탭 고정 -->
+    <!-- 메뉴 탭 사양 고정 -->
     <div id="view-how" class="content-view">
-        <div style="padding:20px; font-size:0.75rem; line-height:1.6; color:#ccc;">
-            <div style="color:var(--accent); font-weight:900; margin-bottom:10px;" id="ht1">About</div><div id="hm1"></div><br>
-            <div style="color:var(--accent); font-weight:900; margin-bottom:10px;" id="ht2">How to Play</div><div id="hm2"></div><br>
-            <div style="color:var(--accent); font-weight:900; margin-bottom:10px;" id="ht3">Fairness</div><div id="hm3"></div>
+        <div class="how-card">
+            <div class="how-section">
+                <div class="how-title" id="ht1">게임 소개 <span class="how-badge">Fairness</span></div>
+                <div class="how-text" id="hm1"></div>
+            </div>
+            <div class="how-section">
+                <div class="how-title" id="ht2">배팅 규칙 <span class="how-badge">Multipliers</span></div>
+                <div class="how-text" id="hm2"></div>
+            </div>
+            <div class="how-section">
+                <div class="how-title" id="ht3">시스템 구조 <span class="how-badge">RNG</span></div>
+                <div class="how-text" id="hm3"></div>
+            </div>
+            <div class="how-section">
+                <div class="how-title" id="ht4">사용자 인터페이스 <span class="how-badge">UI</span></div>
+                <div class="how-text" id="hm4"></div>
+            </div>
         </div>
         <div class="version-label">DetaBridge Wheel Pro v5.36</div>
     </div>
+
     <div id="view-recommend" class="content-view">
-        <div style="padding:30px; text-align:center;">
-            <div style="font-size:0.85rem; font-weight:900; color:var(--accent);" id="lblGlobalTrend">GLOBAL TREND</div>
-            <div style="margin-top:20px; font-size:0.75rem; color:#888;">실시간 글로벌 데이터 동기화 완료</div>
+        <div style="padding:20px; text-align:center;">
+            <div style="font-size:0.8rem; font-weight:900; color:var(--accent);" id="lblGlobalTrend">GLOBAL TREND</div>
+            <div style="margin-top:20px; font-size:0.7rem; color:#888;">Real-time synchronized data.</div>
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; width:94%;">
-            <div style="background:var(--card); padding:15px; border-radius:12px; text-align:center; border:1px solid #333;"><div id="st-total" style="font-size:1.3rem; font-weight:900; color:var(--accent);">0</div><div id="lbl-total" style="font-size:0.6rem; color:#666;">TOTAL SPINS</div></div>
-            <div style="background:var(--card); padding:15px; border-radius:12px; text-align:center; border:1px solid #333;"><div id="st-winrate" style="font-size:1.3rem; font-weight:900; color:var(--accent);">0%</div><div id="lbl-winrate" style="font-size:0.6rem; color:#666;">WIN RATE</div></div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; width:94%; margin-top:10px;">
+            <div style="background:var(--card); padding:15px; border-radius:12px; text-align:center; border:1px solid #333;"><div id="st-total" style="font-size:1.2rem; font-weight:900; color:var(--accent);">0</div><div id="lbl-total">TOTAL SPINS</div></div>
+            <div style="background:var(--card); padding:15px; border-radius:12px; text-align:center; border:1px solid #333;"><div id="st-winrate" style="font-size:1.2rem; font-weight:900; color:var(--accent);">0%</div><div id="lbl-winrate">WIN RATE</div></div>
         </div>
+        <div class="version-label">DetaBridge Wheel Pro v5.36</div>
     </div>
+
     <div id="view-login" class="content-view">
         <div id="loginForm" class="login-box">
             <h3 id="loginFormTitle" style="color:var(--accent); text-align:center; margin:0;">Secure Login</h3>
             <input type="text" id="loginId" class="login-input" placeholder="ID" oninput="handleIdInput()">
             <input type="password" id="loginPw" class="login-input" placeholder="PW">
             <div id="pwConfirmGroup"><input type="password" id="loginPwCheck" class="login-input" placeholder="Confirm PW"></div>
-            <div id="loginMsg" style="font-size:0.7rem; color:var(--red); text-align:center;"></div>
+            <div id="loginMsg" style="font-size:0.7rem; color:var(--red); text-align:center; min-height:1.2rem;"></div>
             <button id="btnLoginBtn" onclick="handleLoginSubmit()" style="width:100%; height:50px; background:var(--gold); color:#000; border:none; border-radius:8px; font-weight:900;">LOGIN</button>
         </div>
-        <div id="logoutForm" style="display:none; text-align:center; padding:40px 0; width:90%;"><h3 id="loggedInMsg" style="color:var(--accent);">Welcome!</h3><button onclick="handleLogout()" style="width:80%; height:50px; background:var(--red); color:#fff; border:none; border-radius:8px; font-weight:900; margin-top:20px;">LOGOUT</button></div>
+        <div id="logoutForm" style="display:none; text-align:center; padding:40px 0; width:90%;"><h3 id="loggedInMsg" style="color:var(--accent);">Welcome!</h3><button onclick="handleLogout()" style="width:80%; height:50px; background:var(--red); color:#fff; border:none; border-radius:8px; font-weight:900;">LOGOUT</button></div>
+        <div class="version-label">DetaBridge Wheel Pro v5.36</div>
     </div>
 
     <nav>
@@ -257,14 +280,48 @@
     ];
     const wheelMap = [];
     sectors.forEach(s => { for(let i=0; i<s.weight; i++) wheelMap.push(s); });
-    function shuffleWheel() { const seed = 123; for (let i = wheelMap.length - 1; i > 0; i--) { const j = (seed * (i + 1)) % wheelMap.length; [wheelMap[i], wheelMap[j]] = [wheelMap[j], wheelMap[i]]; } }
+    function shuffleWheel() {
+        const seed = 123;
+        for (let i = wheelMap.length - 1; i > 0; i--) {
+            const j = (seed * (i + 1)) % wheelMap.length;
+            [wheelMap[i], wheelMap[j]] = [wheelMap[j], wheelMap[i]];
+        }
+    }
     shuffleWheel();
 
     const i18n = {
-        ko: { welcome: "환영합니다", buy: "구매", closed: "마감", live: "실시간 현황", home: "홈", how: "사용법", stats: "통계", login: "로그인", logout: "로그아웃", pick: "선택", bet: "금액", res: "결과", win: "당첨", ht1: "소개", hm1: "공정한 행운의 바퀴 게임입니다.", ht2: "방법", hm2: "색상을 선택해 배팅하세요.", ht3: "공정성", hm3: "조작이 불가능한 알고리즘을 사용합니다.", pwRule: "비번: 영문+숫자+특수문자 6자 이상!", loginFail: "ID/비번 오류", pwMismatch: "비번 불일치", joinSuccess: "가입 성공!", btnLogin: "로그인", btnJoin: "회원가입", idPlaceholder: "텔레그램 ID", pwPlaceholder: "비밀번호", pwChkPlaceholder: "비밀번호 재확인", langTitle: "언어 선택", globalTrend: "데이터 동기화", totalSpins: "참여 라운드", winRate: "승률", prevRolls: "이전 결과", last100: "최근 100회" },
-        en: { welcome: "Welcome", buy: "BUY", closed: "CLOSED", live: "LIVE STATUS", home: "Home", how: "How", stats: "Stats", login: "Login", logout: "Logout", pick: "Pick", bet: "Bet", res: "Result", win: "Winner", ht1: "About", hm1: "Encrypted fair multiplayer luck game.", ht2: "How to Play", hm2: "Pick a color and place your bet.", ht3: "Fairness", hm3: "Uses Provably Fair algorithms.", pwRule: "PW: Letter+Num+Special, 6+ chars.", loginFail: "Invalid ID/PW", pwMismatch: "PW mismatch", joinSuccess: "Joined!", btnLogin: "LOGIN", btnJoin: "JOIN", idPlaceholder: "Telegram ID", pwPlaceholder: "Password", pwChkPlaceholder: "Confirm PW", langTitle: "SELECT LANGUAGE", globalTrend: "GLOBAL SYNC", totalSpins: "TOTAL SPINS", winRate: "WIN RATE", prevRolls: "PREVIOUS ROLLS", last100: "LAST 100" },
-        cn: { welcome: "欢迎", buy: "购买", closed: "已截止", live: "实时投注", home: "首页", how: "指南", stats: "统计", login: "登录", logout: "登出", pick: "选择", bet: "赌注", res: "结果", win: "赢家", ht1: "游戏介绍", hm1: "公平结果的轮盘游戏。", ht2: "游戏玩法", hm2: "选择颜色并下注。", ht3: "公平性", hm3: "加密算法，无法操控。", pwRule: "密码：6位以上。", loginFail: "ID或密码错误", pwMismatch: "密码不匹配", joinSuccess: "注册成功！", logoutMsg: "已登出", btnLogin: "登录", btnJoin: "注册", idPlaceholder: "电报 ID", pwPlaceholder: "密码", pwChkPlaceholder: "确认密码", langTitle: "选择语言", globalTrend: "全球数据同步", totalSpins: "参与局数", winRate: "我的胜率", prevRolls: "历史记录", last100: "最近100次" },
-        jp: { welcome: "ようこそ", buy: "購入", closed: "締切", live: "ライブ状況", home: "ホーム", how: "遊び方", stats: "統計", login: "ログイン", logout: "ログアウト", pick: "選択", bet: "ベット", res: "結果", win: "当選", ht1: "紹介", hm1: "公平なホイールゲーム。", ht2: "遊び方", hm2: "色を選んでベットしてください。", ht3: "公平性", hm3: "操作不可能。", pwRule: "英数字+記号 6文字以上.", loginFail: "ログインミス", pwMismatch: "パスワード不一致", joinSuccess: "成功!", logoutMsg: "ログアウト完了", btnLogin: "ログイン", btnJoin: "新規登録", idPlaceholder: "テレ ID", pwPlaceholder: "パスワード", pwChkPlaceholder: "パス確認", langTitle: "言語選択", globalTrend: "同期済み", totalSpins: "総回転数", winRate: "勝率", prevRolls: "前回結果", last100: "直近100回" }
+        ko: { 
+            welcome: "환영합니다", buy: "구매", closed: "마감", live: "실시간 배팅", home: "홈", how: "사용법", stats: "통계", login: "로그인", logout: "로그아웃", pick: "선택", bet: "금액", res: "결과", win: "당첨", 
+            ht1: "게임 소개", hm1: "Spin4는 정교한 알고리즘을 기반으로 한 실시간 멀티플레이어 행운의 바퀴 게임입니다. 모든 유저는 동일한 타임라인에서 공정하게 경쟁합니다.",
+            ht2: "배팅 규칙", hm2: "- 라운드는 20초 주기로 무한 진행됩니다.\n- 배팅 마감 전까지 원하는 색상에 칩을 거세요.\n- 배당: Black(2배), Red(3배), Blue(5배), Gold(50배).",
+            ht3: "시스템 공정성", hm3: "UTC 타임스탬프를 시드로 사용하는 Provably Fair 시스템을 채택하여 결과 조작이 절대 불가능합니다. 난수 생성기는 수학적으로 검증된 공식을 따릅니다.",
+            ht4: "사용자 인터페이스 가이드", hm4: "- 상단 바: 최근 100회의 당첨 기록을 시각화합니다.\n- 라이브 보드: 현재 라운드에서 다른 유저들의 배팅 현황을 실시간 확인 가능합니다.",
+            pwRule: "비번: 영문+숫자+특수문자 6자 이상!", loginFail: "ID 또는 비번 오류", pwMismatch: "비번 확인 불일치", joinSuccess: "가입 성공!", btnLogin: "로그인", btnJoin: "회원가입", idPlaceholder: "텔레그램 ID", pwPlaceholder: "비밀번호", pwChkPlaceholder: "비밀번호 재확인", langTitle: "언어 선택", globalTrend: "데이터 동기화", totalSpins: "참여 라운드", winRate: "승률", prevRolls: "이전 라운드 결과", last100: "최근 100회" 
+        },
+        en: { 
+            welcome: "Welcome", buy: "BUY", closed: "CLOSED", live: "LIVE BETS", home: "Home", how: "How", stats: "Stats", login: "Login", logout: "Logout", pick: "Pick", bet: "Bet", res: "Result", win: "Winner", 
+            ht1: "About Game", hm1: "Spin4 is a real-time multiplayer wheel game based on sophisticated fair algorithms. All players compete on a shared global timeline.",
+            ht2: "Betting Rules", hm2: "- Rounds repeat every 20 seconds.\n- Place your bets before the 'CLOSED' status appears.\n- Multipliers: Black(2x), Red(3x), Blue(5x), Gold(50x).",
+            ht3: "Fairness", hm3: "Uses a Provably Fair system with UTC timestamp seeds. Outcomes are mathematically determined and impossible to manipulate.",
+            ht4: "UI Guide", hm4: "- History Bar: Visualizes the last 100 results.\n- Live Board: Displays real-time betting activities of other global users.",
+            pwRule: "PW: Letter+Num+Special, 6+ chars.", loginFail: "Invalid ID/PW", pwMismatch: "PW mismatch", joinSuccess: "Joined!", btnLogin: "LOGIN", btnJoin: "JOIN", idPlaceholder: "Telegram ID", pwPlaceholder: "Password", pwChkPlaceholder: "Confirm PW", langTitle: "SELECT LANGUAGE", globalTrend: "GLOBAL SYNC", totalSpins: "TOTAL SPINS", winRate: "WIN RATE", prevRolls: "PREVIOUS ROLLS", last100: "LAST 100" 
+        },
+        cn: { 
+            welcome: "欢迎", buy: "购买", closed: "已截止", live: "实时投注", home: "首页", how: "指南", stats: "统计", login: "登录", logout: "登出", pick: "选择", bet: "赌注", res: "结果", win: "赢家", 
+            ht1: "游戏介绍", hm1: "Spin4 是一款基于精密算法的实时多人轮盘游戏。全球玩家共享公平结果。",
+            ht2: "游戏规则", hm2: "- 每20秒开始一轮新游戏。\n- 在截止前选择颜色并投注。\n- 倍率：黑色(2x), 红色(3x), 蓝色(5x), 金色(50x)。",
+            ht3: "公平性系统", hm3: "采用基于 UTC 时间戳的 Provably Fair 系统。结果由算法锁定，无法操纵。",
+            ht4: "UI 说明", hm4: "- 历史条：显示最近100次历史记录。\n- 实时板：查看全球其他玩家的实时投注情况。",
+            pwRule: "密码：字母+数字+符号，6位以上。", loginFail: "ID或密码错误", pwMismatch: "密码不匹配", joinSuccess: "注册成功！", btnLogin: "登录", btnJoin: "注册", idPlaceholder: "电报 ID", pwPlaceholder: "密码", pwChkPlaceholder: "确认密码", langTitle: "选择语言", globalTrend: "全球同步", totalSpins: "局数", winRate: "胜率", prevRolls: "历史记录", last100: "最近100次" 
+        },
+        jp: { 
+            welcome: "ようこそ", buy: "購入", closed: "締切", live: "ライブ状況", home: "ホーム", how: "遊び方", stats: "統計", login: "ログイン", logout: "ログアウト", pick: "選択", bet: "ベット", res: "結果", win: "当選者", 
+            ht1: "ゲーム紹介", hm1: "Spin4は、高度なアルゴリズムに基づくリアルタイムマルチプレイヤー・ホイールゲームです。全てのユーザーに公平な結果を提供します。",
+            ht2: "遊び方", hm2: "- 20秒ごとに新しいラウンドが開始されます。\n- 締切前にチップをベットしてください。\n- 倍率：2倍(Black), 3倍(Red), 5倍(Blue), 50倍(Gold)。",
+            ht3: "公平性", hm3: "UTCタイムスタンプをシードとするProvably Fairシステムを採用。操作は不可能です。",
+            ht4: "UIガイド", hm4: "- 履歴バー：最近100回の結果を可視化します。\n- ライブボード：他のユーザーのベット状況をリアルタイムで確認できます。",
+            pwRule: "英数字+記号 6文字以上。", loginFail: "ID/パスミス", pwMismatch: "不一致", joinSuccess: "登録完了！", btnLogin: "ログイン", btnJoin: "新規登録", idPlaceholder: "テレ ID", pwPlaceholder: "パスワード", pwChkPlaceholder: "パス確認", langTitle: "言語選択", globalTrend: "同期済み", totalSpins: "総回転数", winRate: "勝率", prevRolls: "前回結果", last100: "直近100回" 
+        }
     };
 
     const CYCLE_MS = 20000, SPIN_DURATION = 6500, RESULT_WAIT = 2000, FREEZE_PERIOD = SPIN_DURATION + RESULT_WAIT, BETTING_PERIOD = CYCLE_MS - FREEZE_PERIOD;
@@ -277,23 +334,25 @@
         document.getElementById('displayId').innerText = `${t.welcome} ${currentId}`;
         document.getElementById('btnBuyTop').innerText = t.buy; document.getElementById('closedTxt').innerText = t.closed;
         document.getElementById('liveTitle').innerText = t.live; document.getElementById('navHome').innerText = t.home; 
-        document.getElementById('navHow').innerText = t.how; document.getElementById('navStats').innerText = t.stats; 
-        document.getElementById('navLogin').innerText = (currentId === "GUEST") ? t.login : t.logout;
+        document.getElementById('navHow').innerText = t.how; document.getElementById('navStats').innerText = t.stats; document.getElementById('navLogin').innerText = (currentId === "GUEST") ? t.login : t.logout;
         document.getElementById('th-pick').innerText = t.pick; document.getElementById('th-bet').innerText = t.bet;
         document.getElementById('th-res').innerText = t.res; document.getElementById('th-win').innerText = t.win;
-        document.getElementById('ht1').innerText = t.ht1; document.getElementById('hm1').innerText = t.hm1;
-        document.getElementById('ht2').innerText = t.ht2; document.getElementById('hm2').innerText = t.hm2;
-        document.getElementById('ht3').innerText = t.ht3; document.getElementById('hm3').innerText = t.hm3;
+        document.getElementById('ht1').innerHTML = t.ht1 + ' <span class="how-badge">Fairness</span>'; document.getElementById('hm1').innerText = t.hm1;
+        document.getElementById('ht2').innerHTML = t.ht2 + ' <span class="how-badge">Multipliers</span>'; document.getElementById('hm2').innerText = t.hm2;
+        document.getElementById('ht3').innerHTML = t.ht3 + ' <span class="how-badge">RNG</span>'; document.getElementById('hm3').innerText = t.hm3;
+        document.getElementById('ht4').innerHTML = t.ht4 + ' <span class="how-badge">UI Guide</span>'; document.getElementById('hm4').innerText = t.hm4;
         document.getElementById('lblGlobalTrend').innerText = t.globalTrend;
         document.getElementById('lbl-total').innerText = t.totalSpins; document.getElementById('lbl-winrate').innerText = t.winRate;
         document.getElementById('langSelTitle').innerText = t.langTitle;
-        document.getElementById('loginId').placeholder = t.idPlaceholder; document.getElementById('loginPw').placeholder = t.pwPlaceholder;
+        document.getElementById('loginId').placeholder = t.idPlaceholder;
+        document.getElementById('loginPw').placeholder = t.pwPlaceholder;
         document.getElementById('loginPwCheck').placeholder = t.pwChkPlaceholder;
-        document.getElementById('lblPreviousRolls').innerText = t.prevRolls; document.getElementById('lblLast100').innerText = t.last100;
-        document.getElementById('l-bl').innerText = currentLang === 'ko' ? "블랙" : "BLACK";
-        document.getElementById('l-re').innerText = currentLang === 'ko' ? "레드" : "RED";
-        document.getElementById('l-blu').innerText = currentLang === 'ko' ? "블루" : "BLUE";
-        document.getElementById('l-go').innerText = currentLang === 'ko' ? "골드" : "GOLD";
+        document.getElementById('lblPreviousRolls').innerText = t.prevRolls;
+        document.getElementById('lblLast100').innerText = t.last100;
+        document.getElementById('cl1').innerText = currentLang === 'ko' ? "블랙" : "BLACK";
+        document.getElementById('cl2').innerText = currentLang === 'ko' ? "레드" : "RED";
+        document.getElementById('cl3').innerText = currentLang === 'ko' ? "블루" : "BLUE";
+        document.getElementById('cl4').innerText = currentLang === 'ko' ? "골드" : "GOLD";
         handleIdInput(); 
     }
 
@@ -337,13 +396,13 @@
         const pw = document.getElementById('loginPw').value;
         const pwChk = document.getElementById('loginPwCheck').value;
         const t = i18n[currentLang] || i18n.en;
-        if(!id || pw.length < 6) { alert(t.pwRule); return; }
+        if(!id || pw.length < 6) { document.getElementById('loginMsg').innerText = t.pwRule; return; }
         let users = JSON.parse(localStorage.getItem('db_users') || '{}');
         if(users[id]) {
             if(users[id].pw === pw) { currentId = id; balance = users[id].balance; myGameStats = users[id].myGameStats; sessionStorage.setItem('loggedInUser', id); updateLoginState(true); }
-            else { alert(t.loginFail); }
+            else { document.getElementById('loginMsg').innerText = t.loginFail; }
         } else {
-            if(pw !== pwChk) { alert(t.pwMismatch); return; }
+            if(pw !== pwChk) { document.getElementById('loginMsg').innerText = t.pwMismatch; return; }
             users[id] = { pw: pw, balance: 1000000, myGameStats: { total: 0, wins: 0 } };
             localStorage.setItem('db_users', JSON.stringify(users));
             currentId = id; sessionStorage.setItem('loggedInUser', id); alert(t.joinSuccess); updateLoginState(true);
@@ -351,7 +410,7 @@
     }
 
     function handleLogout() { sessionStorage.removeItem('loggedInUser'); currentId = "GUEST"; balance = 1000000; myGameStats = { total: 0, wins: 0 }; updateLoginState(false); switchTab('home', document.querySelector('.nav-item')); }
-    function updateLoginState(isLogged) { document.getElementById('loginForm').style.display = isLogged ? 'none' : 'flex'; document.getElementById('logoutForm').style.display = isLogged ? 'block' : 'none'; if(isLogged) document.getElementById('loggedInMsg').innerText = `${currentId}님 반갑습니다.`; applyI18n(); updateBalUI(); }
+    function updateLoginState(isLogged) { document.getElementById('loginForm').style.display = isLogged ? 'none' : 'flex'; document.getElementById('logoutForm').style.display = isLogged ? 'block' : 'none'; if(isLogged) document.getElementById('loggedInMsg').innerText = `${currentId} Welcome!`; applyI18n(); updateBalUI(); }
     function checkSession() { const sUser = sessionStorage.getItem('loggedInUser'); if(sUser) { let users = JSON.parse(localStorage.getItem('db_users') || '{}'); if(users[sUser]) { currentId = sUser; balance = users[sUser].balance; myGameStats = users[sUser].myGameStats; updateLoginState(true); } } }
     function initTelegramUser() { const user = tg.initDataUnsafe?.user; if(user && (user.username || user.first_name)) { document.getElementById('loginId').value = user.username || user.first_name; handleIdInput(); } }
 
@@ -372,7 +431,6 @@
             if (elapsed < 200 && !isSpinning) startSpin();
             if(isSpinning) {
                 const rotation = getCurrentRotation();
-                // 포인터 색상과 실제 결과 인덱스(56슬롯)를 하단 270도 기준으로 수학적 완벽 동기화
                 const index = Math.floor(((270 - rotation) % 360 + 360) % 360 / (360 / 56)) % 56;
                 pointer.style.backgroundColor = wheelMap[index].color;
             }
@@ -390,7 +448,8 @@
         const st = window.getComputedStyle(canvas, null); const tr = st.getPropertyValue("transform");
         if(tr === "none") return 0;
         const values = tr.split('(')[1].split(')')[0].split(',');
-        return (Math.round(Math.atan2(values[1], values[0]) * (180/Math.PI)) + 360) % 360;
+        const angle = Math.round(Math.atan2(values[1], values[0]) * (180/Math.PI));
+        return (angle + 360) % 360;
     }
 
     function startSpin() {
@@ -423,20 +482,21 @@
         }, RESULT_WAIT);
     }
 
+    /* 초정밀 포인터 로직 (세그먼트 정중앙 멈춤 보정) */
     function getWinIndex(seed) { 
-        const rv = (seed * 9301 + 49297) % 233280; const deg = (rv % 360);
-        const idx = Math.floor(((270 - deg) % 360 + 360) % 360 / (360 / 56)) % 56;
-        return { index: idx, degrees: deg + (360 * 10) }; 
+        const rv = (seed * 9301 + 49297) % 233280;
+        const targetIdx = (rv % 56);
+        const arc = 360 / 56;
+        // targetIdx가 포인터(270도) 위치에 올 때, 해당 세그먼트의 정중앙이 포인터에 닿도록 각도 계산
+        // Degree = Offset(270) - (Index * Arc + Arc/2)
+        const targetDeg = (270 - (targetIdx * arc + arc / 2) + 360) % 360;
+        return { index: targetIdx, degrees: targetDeg + (360 * 10) }; 
     }
     
     function switchTab(id, el) {
         document.querySelectorAll('.content-view').forEach(v => v.classList.remove('active'));
         document.getElementById('view-' + id).classList.add('active');
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active');
-        if(id === 'recommend') {
-            document.getElementById('st-total').innerText = myGameStats.total;
-            document.getElementById('st-winrate').innerText = (myGameStats.total > 0 ? (myGameStats.wins/myGameStats.total*100).toFixed(1) : 0) + "%";
-        }
         if(id === 'login') initTelegramUser();
     }
     
@@ -457,7 +517,7 @@
     function deterministicGlobalSpawn() {
         const now = Date.now(); const tSeed = Math.floor(now / 1000), rand = (tSeed * 9301 + 49297) % 233280;
         if((rand % 100) < 28) { 
-            const botId = ["VipBig", "ProLucky", "LuckyAce", "StarKing"][rand % 4] + (rand % 99);
+            const botId = ["VipKing", "LuckyTop", "WinStar", "ProAce"][rand % 4] + (rand % 99);
             const type = (rand % 100) < 40 ? 'black' : ((rand % 100) < 75 ? 'red' : ((rand % 100) < 95 ? 'blue' : 'gold'));
             addLiveUI(type, botId, (Math.floor(rand % 15) + 1) * 10000); 
         }
