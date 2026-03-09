@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>DetaBridge Wheel Pro v5.27</title>
+    <title>DetaBridge Wheel Pro v5.28</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
@@ -49,26 +49,26 @@
         .content-view { flex: 1; overflow-y: auto; display: none; padding-bottom: 90px; width: 100%; }
         .content-view.active { display: flex; flex-direction: column; align-items: center; }
 
-        /* 휠 섹션 & 포인터 보정 (수정 핵심) */
+        /* 휠 섹션 & 포인터 정밀 보정 */
         .wheel-section { position: relative; margin: 30px 0; width: 280px; height: 280px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; }
         .wheel-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-weight: 900; font-size: 2.2rem; color: var(--accent); text-shadow: 0 0 15px var(--accent); opacity: 0.8; pointer-events: none; }
         
-        /* 화살표: 내부(Inside)에서 아래(휠링)를 가리킴 */
+        /* 화살표: 휠에 가깝게 하되 닿지는 않는 위치 (bottom: 24px) */
         .pointer { 
             position: absolute; 
-            bottom: 35px; /* 휠 안쪽 영역에 배치 */
+            bottom: 24px; /* v5.27의 35px에서 하향 조정하여 휠에 가깝게 배치 */
             left: 50%; 
-            transform: translateX(-50%) rotate(0deg); /* 0도 유지 (아래 방향) */
+            transform: translateX(-50%) rotate(0deg); 
             width: 16px; 
             height: 24px; 
             background: #fff; 
-            clip-path: polygon(50% 100%, 0% 0%, 100% 0%); /* 끝(Tip)이 아래로 향하는 삼각형 */
+            clip-path: polygon(50% 100%, 0% 0%, 100% 0%); /* 아래를 향하는 삼각형 */
             z-index: 25; 
-            transition: background-color 0.2s ease;
+            transition: background-color 0.2s ease, bottom 0.2s ease;
         }
 
-        /* 배팅 버튼 (이미지 사양 고정) */
+        /* 배팅 버튼 디자인 */
         .overlay-container { position: relative; width: 95%; margin: 5px auto; }
         .controls { width: 100%; background: var(--card); padding: 12px; border-radius: 12px; position: relative; overflow: hidden; }
         .bet-buttons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; }
@@ -105,17 +105,20 @@
         .nav-item span { font-size: 0.8rem; font-weight: 700; margin-top: 2px; }
         .nav-item.active { color: var(--accent); }
 
-        /* 로그인 & 비밀번호 재확인 시스템 */
+        /* 로그인 시스템 UI */
         .login-box { width: 90%; background: var(--card); padding: 25px; border-radius: 15px; border: 1px solid #333; margin-top: 20px; display: flex; flex-direction: column; gap: 15px; }
         .login-input { width: 100%; padding: 15px; background: #000; border: 1px solid #444; color: var(--accent); border-radius: 8px; font-weight: 700; outline: none; }
         .login-msg { font-size: 0.72rem; color: #ff3333; text-align: center; min-height: 1.5rem; line-height: 1.4; }
         #pwConfirmGroup { display: none; flex-direction: column; gap: 15px; }
 
-        /* 사용법 및 통계 */
+        /* 상세 사용법 & 글로벌 통계 */
         .how-scroll { width: 94%; padding: 15px; background: var(--card); border-radius: 12px; border: 1px solid #333; margin-top: 10px; }
         .how-title { font-size: 0.85rem; font-weight: 900; color: var(--accent); margin-bottom: 6px; border-left: 3px solid var(--accent); padding-left: 8px; }
         .how-text { font-size: 0.72rem; color: #ccc; line-height: 1.6; white-space: pre-wrap; margin-bottom: 20px; }
         .dist-container { width: 94%; background: var(--card); padding: 20px; border-radius: 12px; margin-top: 10px; border: 1px solid #333; }
+        .dist-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+        .dist-bg { flex: 1; height: 8px; background: #000; border-radius: 4px; overflow: hidden; }
+        .dist-fill { height: 100%; transition: width 0.8s ease; }
         .version-label { margin-top: 20px; font-size: 0.65rem; color: #445566; font-weight: 700; text-align: center; padding-bottom: 10px; width: 100%; }
 
         .log-table { width: 95%; border-collapse: collapse; font-size: 0.7rem; background: rgba(0,0,0,0.4); border-radius: 10px; overflow: hidden; margin: 15px auto; }
@@ -192,7 +195,7 @@
         </table>
     </div>
 
-    <!-- 메뉴 탭 사양 고정 -->
+    <!-- 메뉴 탭 (Golden Master) -->
     <div id="view-how" class="content-view">
         <div class="how-scroll">
             <div class="how-section"><div class="how-title" id="ht1">소개</div><div class="how-text" id="hm1"></div></div>
@@ -200,23 +203,23 @@
             <div class="how-section"><div class="how-title" id="ht3">공정성</div><div class="how-text" id="hm3"></div></div>
             <div class="how-section"><div class="how-title" id="ht4">UI 안내</div><div class="how-text" id="hm4"></div></div>
         </div>
-        <div class="version-label">DetaBridge Wheel Pro v5.27</div>
+        <div class="version-label">DetaBridge Wheel Pro v5.28</div>
     </div>
     <div id="view-recommend" class="content-view">
         <div class="dist-container">
             <div id="lblGlobalTrend" style="font-size:0.75rem; font-weight:900; color:var(--accent); text-align:center;">24H GLOBAL TREND</div>
             <div style="margin-top:15px; display:flex; flex-direction:column; gap:12px;">
-                <div class="dist-row"><span id="lb1">BLACK</span><div style="flex:1; height:8px; background:#000; border-radius:4px; overflow:hidden;"><div id="gb-black" style="height:100%; width:0%; transition:width 0.8s; background:var(--black)"></div></div><span id="pct-black">0%</span></div>
-                <div class="dist-row"><span id="lb2">RED</span><div style="flex:1; height:8px; background:#000; border-radius:4px; overflow:hidden;"><div id="gb-red" style="height:100%; width:0%; transition:width 0.8s; background:var(--red)"></div></div><span id="pct-red">0%</span></div>
-                <div class="dist-row"><span id="lb3">BLUE</span><div style="flex:1; height:8px; background:#000; border-radius:4px; overflow:hidden;"><div id="gb-blue" style="height:100%; width:0%; transition:width 0.8s; background:var(--blue)"></div></div><span id="pct-blue">0%</span></div>
-                <div class="dist-row"><span id="lb4">GOLD</span><div style="flex:1; height:8px; background:#000; border-radius:4px; overflow:hidden;"><div id="gb-gold" style="height:100%; width:0%; transition:width 0.8s; background:var(--gold)"></div></div><span id="pct-gold">0%</span></div>
+                <div class="dist-row"><span id="stb1">BLACK</span><div style="flex:1; height:8px; background:#000; border-radius:4px; overflow:hidden;"><div id="gb-black" style="height:100%; width:0%; transition:width 0.8s; background:var(--black)"></div></div><span id="pct-black">0%</span></div>
+                <div class="dist-row"><span id="stb2">RED</span><div style="flex:1; height:8px; background:#000; border-radius:4px; overflow:hidden;"><div id="gb-red" style="height:100%; width:0%; transition:width 0.8s; background:var(--red)"></div></div><span id="pct-red">0%</span></div>
+                <div class="dist-row"><span id="stb3">BLUE</span><div style="flex:1; height:8px; background:#000; border-radius:4px; overflow:hidden;"><div id="gb-blue" style="height:100%; width:0%; transition:width 0.8s; background:var(--blue)"></div></div><span id="pct-blue">0%</span></div>
+                <div class="dist-row"><span id="stb4">GOLD</span><div style="flex:1; height:8px; background:#000; border-radius:4px; overflow:hidden;"><div id="gb-gold" style="height:100%; width:0%; transition:width 0.8s; background:var(--gold)"></div></div><span id="pct-gold">0%</span></div>
             </div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; width:94%; margin-top:10px;">
             <div style="background:var(--card); padding:15px; border-radius:12px; text-align:center; border:1px solid #333;"><div id="st-total" style="font-size:1.2rem; font-weight:900; color:var(--accent);">0</div><div class="lbl-total" id="lbl-total">TOTAL SPINS</div></div>
             <div style="background:var(--card); padding:15px; border-radius:12px; text-align:center; border:1px solid #333;"><div id="st-winrate" style="font-size:1.2rem; font-weight:900; color:var(--accent);">0%</div><div class="lbl-winrate" id="lbl-winrate">WIN RATE</div></div>
         </div>
-        <div class="version-label">DetaBridge Wheel Pro v5.27</div>
+        <div class="version-label">DetaBridge Wheel Pro v5.28</div>
     </div>
     <div id="view-login" class="content-view">
         <div id="loginForm" class="login-box">
@@ -228,7 +231,7 @@
             <button id="btnLoginBtn" class="btn btn-gold" onclick="handleLoginSubmit()" style="width:100%; height:50px; background:var(--gold); color:#000;">LOGIN</button>
         </div>
         <div id="logoutForm" style="display:none; text-align:center; padding:40px 0; width:90%;"><h3 id="loggedInMsg" style="color:var(--accent);">Welcome!</h3><button class="btn btn-red" onclick="handleLogout()" style="width:80%; height:50px; background:var(--red); color:#fff; margin:20px auto;">LOGOUT</button></div>
-        <div class="version-label">DetaBridge Wheel Pro v5.27</div>
+        <div class="version-label">DetaBridge Wheel Pro v5.28</div>
     </div>
 
     <nav>
@@ -244,13 +247,14 @@
 <audio id="sndLose" src="https://assets.mixkit.co/active_storage/sfx/2004/2004-preview.mp3"></audio>
 
 <script>
+    /* DetaBridge Wheel Pro v5.28 Golden Master Master Logic */
     const tg = window.Telegram.WebApp; tg.expand();
     let currentLang = 'en', currentId = "GUEST", balance = 1000000;
     let isSpinning = false, myBet = null, globalHistory = [], stats = { black: 0, red: 0, blue: 0, gold: 0 };
     let myGameStats = { total: 0, wins: 0 }, isMuted = false, audioInitialized = false, liveBoardTotals = { black:0, red:0, blue:0, gold:0 };
     
     const i18n = {
-        ko: { welcome: "환영합니다", buy: "구매", closed: "마감", live: "실시간 현황", home: "홈", how: "사용법", stats: "통계", login: "로그인", logout: "로그아웃", pick: "선택", bet: "금액", res: "결과", win: "당첨", ht1: "소개", hm1: "DetaBridge Wheel은 공정한 알고리즘의 행운의 바퀴 게임입니다.", ht2: "방법", hm2: "1. 20초마다 라운드 진행\n2. 색상 선택 배팅\n3. 2x, 3x, 5x, 50x 배당 적용", ht3: "공정성", hm3: "UTC 타임스탬프 시드로 조작이 불가능합니다.", ht4: "UI 안내", hm4: "- 상단: 최근 히스토리\n- 하단 화살표: 실시간 결과 추적", pwRule: "비번: 영문+숫자+특수문자 6자 이상!", loginFail: "ID/PW 오류", pwMismatch: "비번 불일치", joinSuccess: "가입 및 로그인!", logoutMsg: "로그아웃 되었습니다.", btnLogin: "로그인", btnJoin: "회원가입", idPlaceholder: "텔레그램 ID", pwPlaceholder: "비밀번호", pwChkPlaceholder: "비밀번호 재확인", langTitle: "언어 선택", globalTrend: "24시간 글로벌 추세", totalSpins: "참여 라운드", winRate: "나의 승률" },
+        ko: { welcome: "환영합니다", buy: "구매", closed: "마감", live: "실시간 현황", home: "홈", how: "사용법", stats: "통계", login: "로그인", logout: "로그아웃", pick: "선택", bet: "금액", res: "결과", win: "당첨", ht1: "소개", hm1: "DetaBridge Wheel은 공정한 알고리즘의 행운의 바퀴 게임입니다.", ht2: "방법", hm2: "1. 20초마다 라운드 진행\n2. 색상 선택 배팅\n3. 2x, 3x, 5x, 50x 배당 적용", ht3: "공정성", hm3: "UTC 타임스탬프 시드로 조작이 불가능합니다.", ht4: "UI 안내", hm4: "- 상단: 최근 히스토리\n- 화살표: 실시간 결과 추적", pwRule: "비번: 영문+숫자+특수문자 6자 이상!", loginFail: "ID/PW 오류", pwMismatch: "비번 불일치", joinSuccess: "가입 및 로그인!", logoutMsg: "로그아웃 되었습니다.", btnLogin: "로그인", btnJoin: "회원가입", idPlaceholder: "텔레그램 ID", pwPlaceholder: "비밀번호", pwChkPlaceholder: "비밀번호 재확인", langTitle: "언어 선택", globalTrend: "24시간 글로벌 추세", totalSpins: "참여 라운드", winRate: "나의 승률" },
         en: { welcome: "Welcome", buy: "BUY", closed: "CLOSED", live: "LIVE STATUS", home: "Home", how: "How", stats: "Stats", login: "Login", logout: "Logout", pick: "Pick", bet: "Bet", res: "Result", win: "Winner", ht1: "About", hm1: "DetaBridge Wheel is an multiplayer luck game.", ht2: "How to Play", hm2: "1. New round every 20s\n2. Select color to bet\n3. 2x, 3x, 5x, 50x Multipliers", ht3: "Fairness", hm3: "Fixed by UTC seeds, no manipulation.", ht4: "UI Guide", hm4: "- Top Bar: Last results\n- Arrow: Real-time tracking", pwRule: "PW: Letter+Num+Special, 6+ chars.", loginFail: "Invalid ID/PW", pwMismatch: "PW mismatch", joinSuccess: "Joined!", logoutMsg: "Logged out!", btnLogin: "LOGIN", btnJoin: "JOIN", idPlaceholder: "Telegram ID", pwPlaceholder: "Password", pwChkPlaceholder: "Confirm Password", langTitle: "SELECT LANGUAGE", globalTrend: "24H GLOBAL TREND", totalSpins: "TOTAL SPINS", winRate: "WIN RATE" }
     };
 
@@ -289,15 +293,20 @@
         document.getElementById('loginId').placeholder = t.idPlaceholder;
         document.getElementById('loginPw').placeholder = t.pwPlaceholder;
         document.getElementById('loginPwCheck').placeholder = t.pwChkPlaceholder;
-        document.getElementById('lblBlack').innerText = currentLang === 'ko' ? "블랙" : "BLACK";
-        document.getElementById('lblRed').innerText = currentLang === 'ko' ? "레드" : "RED";
-        document.getElementById('lblBlue').innerText = currentLang === 'ko' ? "블루" : "BLUE";
-        document.getElementById('lblGold').innerText = currentLang === 'ko' ? "골드" : "GOLD";
+        
+        const bl = currentLang === 'ko' ? "블랙" : "BLACK";
+        document.getElementById('lblBlack').innerText = bl; document.getElementById('stb1').innerText = bl;
+        const rd = currentLang === 'ko' ? "레드" : "RED";
+        document.getElementById('lblRed').innerText = rd; document.getElementById('stb2').innerText = rd;
+        const bu = currentLang === 'ko' ? "블루" : "BLUE";
+        document.getElementById('lblBlue').innerText = bu; document.getElementById('stb3').innerText = bu;
+        const gd = currentLang === 'ko' ? "골드" : "GOLD";
+        document.getElementById('lblGold').innerText = gd; document.getElementById('stb4').innerText = gd;
+        
         handleIdInput(); 
     }
 
     function resetBtnDesign() { document.querySelectorAll('.bet-buttons .btn').forEach(b => b.classList.remove('selected')); }
-
     function handleIdInput() {
         const id = document.getElementById('loginId').value.trim();
         const users = JSON.parse(localStorage.getItem('db_users') || '{}');
@@ -330,7 +339,7 @@
     }
 
     function handleLogout() { sessionStorage.removeItem('loggedInUser'); currentId = "GUEST"; balance = 1000000; myGameStats = { total: 0, wins: 0 }; updateLoginState(false); switchTab('home', document.querySelector('.nav-item')); }
-    function updateLoginState(isLogged) { document.getElementById('loginForm').style.display = isLogged ? 'none' : 'flex'; document.getElementById('logoutForm').style.display = isLogged ? 'block' : 'none'; applyI18n(); updateBalUI(); }
+    function updateLoginState(isLogged) { document.getElementById('loginForm').style.display = isLogged ? 'none' : 'flex'; document.getElementById('logoutForm').style.display = isLogged ? 'block' : 'none'; if(isLogged) document.getElementById('loggedInMsg').innerText = `${currentId} Welcome!`; applyI18n(); updateBalUI(); }
     function checkSession() { const sUser = sessionStorage.getItem('loggedInUser'); if(sUser) { let users = JSON.parse(localStorage.getItem('db_users') || '{}'); if(users[sUser]) { currentId = sUser; balance = users[sUser].balance; myGameStats = users[sUser].myGameStats; updateLoginState(true); } } }
     function initTelegramUser() { const user = tg.initDataUnsafe?.user; if(user && (user.username || user.first_name)) { document.getElementById('loginId').value = user.username || user.first_name; handleIdInput(); } }
 
@@ -340,8 +349,7 @@
         ctx.clearRect(0,0,560,560);
         ctx.lineWidth = 14; 
         for (let i = 0; i < 54; i++) {
-            ctx.beginPath();
-            ctx.strokeStyle = wheelMap[i].color;
+            ctx.beginPath(); ctx.strokeStyle = wheelMap[i].color;
             ctx.arc(280, 280, radius, i * arc + 0.02, (i + 1) * arc - 0.02);
             ctx.stroke();
         }
