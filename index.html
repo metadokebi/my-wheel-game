@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>DetaBridge Wheel Pro v5.24</title>
+    <title>DetaBridge Wheel Pro v5.25</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
             --bg-top: #1e2128; --bg-bottom: #0e1013;
             --card: #1a1d23; --accent: #00f2ff;
             --gold: #ffcc00; --blue: #00e5ff;
-            --red: #ff3333; --black: #444444; /* 사진의 다크그레이 느낌 */
+            --red: #ff3333; --black: #444444; 
             --text-muted: #8899aa; --nav-bg: #16191e;
             --point-color: #ff9500; --buy-color: #ff00ff;
         }
@@ -18,7 +18,7 @@
         html, body { 
             margin: 0; padding: 0; width: 100%; height: 100dvh; 
             overflow: hidden; touch-action: manipulation;
-            background: #1e2128; /* 사진 배경색과 유사하게 고정 */
+            background: #1e2128; 
             color: white; font-family: 'Pretendard', sans-serif;
         }
         .main-container { width: 100%; max-width: 500px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
@@ -50,34 +50,59 @@
         .content-view { flex: 1; overflow-y: auto; display: none; padding-bottom: 90px; width: 100%; }
         .content-view.active { display: flex; flex-direction: column; align-items: center; }
 
-        /* 사진 기반 휠 섹션 & 포인터 위치 수정 */
+        /* 휠 섹션 & 포인터 위치 보정 */
         .wheel-section { position: relative; margin: 30px 0; width: 280px; height: 280px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; }
-        .wheel-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-weight: 900; font-size: 2.2rem; color: var(--accent); text-shadow: 0 0 15px var(--accent); opacity: 0.8; }
+        .wheel-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-weight: 900; font-size: 2.2rem; color: var(--accent); text-shadow: 0 0 15px var(--accent); opacity: 0.8; pointer-events: none; }
         
-        /* 사진 속 하단 중앙 화살표 모양 및 위치 */
+        /* 화살표 위치 보정 (휠에 닿지 않게 bottom 값 조정) */
         .pointer { 
             position: absolute; 
-            bottom: -5px; /* 사진과 같이 휠 하단 경계에 배치 */
+            bottom: -15px; /* 기존 -5px에서 -15px로 이동하여 휠과 거리 확보 */
             left: 50%; 
-            transform: translateX(-50%) rotate(180deg); /* 위쪽을 향하도록 반전 */
+            transform: translateX(-50%) rotate(180deg);
             width: 16px; 
             height: 24px; 
             background: #fff; 
-            clip-path: polygon(50% 0%, 0% 100%, 100% 100%); /* 삼각형 모양 */
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
             z-index: 25; 
             filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
-            transition: background-color 0.2s ease;
+            transition: background-color 0.2s ease, bottom 0.3s ease;
         }
 
-        /* 배팅 영역 & 레이아웃 안정성 */
+        /* 이미지 기반 배팅 버튼 디자인 수정 */
         .overlay-container { position: relative; width: 95%; margin: 5px auto; }
-        .controls { width: 100%; background: var(--card); padding: 10px; border-radius: 12px; position: relative; overflow: hidden; }
-        .bet-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; width: 100%; }
-        .btn { height: 50px; border: none; border-radius: 6px; font-weight: 900; font-size: 0.72rem; color: #fff; cursor: pointer; transition: transform 0.1s; }
-        .btn-black { background: #222; } .btn-red { background: var(--red); } .btn-blue { background: var(--blue); color: #000; } .btn-gold { background: var(--gold); color: #000; }
+        .controls { width: 100%; background: var(--card); padding: 12px; border-radius: 12px; position: relative; overflow: hidden; }
+        .bet-buttons { display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); gap: 10px; width: 100%; }
         
-        .closed-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.65); z-index: 50; display: none; align-items: center; justify-content: center; border-radius: 12px; backdrop-filter: blur(2px); }
+        .btn { 
+            height: 65px; 
+            background: transparent; /* 기본 투명 */
+            border: 1px solid transparent; 
+            border-radius: 4px; 
+            font-weight: 900; 
+            font-size: 1.1rem; 
+            color: #fff; 
+            cursor: pointer; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+        }
+
+        /* 버튼 테두리 색상 */
+        .btn-black { border-color: #555; color: #777; }
+        .btn-red { border-color: var(--red); color: var(--red); }
+        .btn-blue { border-color: var(--blue); color: var(--blue); }
+        .btn-gold { border-color: var(--gold); color: var(--gold); }
+
+        /* 이미지 우측처럼 선택 시 채워지는 효과 */
+        .btn.selected.btn-black { background: #222; border-color: #222; color: #fff; box-shadow: 0 0 15px rgba(0,0,0,0.5); }
+        .btn.selected.btn-red { background: var(--red); border-color: var(--red); color: #fff; box-shadow: 0 0 15px rgba(255,51,51,0.4); }
+        .btn.selected.btn-blue { background: var(--blue); border-color: var(--blue); color: #000; box-shadow: 0 0 15px rgba(0,229,255,0.4); }
+        .btn.selected.btn-gold { background: var(--gold); border-color: var(--gold); color: #000; box-shadow: 0 0 15px rgba(255,204,0,0.4); }
+
+        .closed-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 50; display: none; align-items: center; justify-content: center; border-radius: 12px; backdrop-filter: blur(2px); }
         .closed-text { color: #ddd; font-weight: 900; font-size: 1.6rem; letter-spacing: 4px; animation: pulse 0.8s infinite; }
 
         /* 라이브 배팅 보드 */
@@ -96,22 +121,19 @@
         .nav-item span { font-size: 0.8rem; font-weight: 700; }
         .nav-item.active { color: var(--accent); }
 
-        /* 로그인 & 비밀번호 재확인 (v5.23 로직 유지) */
+        /* 로그인 & 가입 */
         .login-box { width: 90%; background: var(--card); padding: 25px; border-radius: 15px; border: 1px solid #333; margin-top: 20px; display: flex; flex-direction: column; gap: 15px; }
-        .login-input { width: 100%; padding: 15px; background: #000; border: 1px solid #444; color: var(--accent); border-radius: 8px; font-weight: 700; outline: none; transition: border 0.3s; }
-        .login-input:focus { border-color: var(--accent); }
+        .login-input { width: 100%; padding: 15px; background: #000; border: 1px solid #444; color: var(--accent); border-radius: 8px; font-weight: 700; outline: none; }
         .login-msg { font-size: 0.72rem; color: #ff3333; text-align: center; min-height: 1.5rem; }
         #pwConfirmGroup { display: none; flex-direction: column; gap: 15px; }
 
-        /* 통계 및 사용법 */
+        /* 통계 & 사용법 */
         .how-scroll { width: 94%; padding: 15px; background: var(--card); border-radius: 12px; border: 1px solid #333; margin-top: 10px; }
         .how-title { font-size: 0.85rem; font-weight: 900; color: var(--accent); margin-bottom: 6px; border-left: 3px solid var(--accent); padding-left: 8px; }
         .how-text { font-size: 0.72rem; color: #ccc; line-height: 1.6; white-space: pre-wrap; margin-bottom: 20px; }
         .dist-container { width: 94%; background: var(--card); padding: 20px; border-radius: 12px; margin-top: 10px; border: 1px solid #333; }
-        .dist-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-        .dist-bg { flex: 1; height: 8px; background: #000; border-radius: 4px; overflow: hidden; }
         .dist-fill { height: 100%; transition: width 0.8s ease; }
-        .version-label { margin-top: 20px; font-size: 0.65rem; color: #445566; font-weight: 700; text-align: center; width: 100%; padding-bottom: 10px; }
+        .version-label { margin-top: 20px; font-size: 0.65rem; color: #445566; font-weight: 700; text-align: center; padding-bottom: 10px; width: 100%; }
 
         .log-table { width: 95%; border-collapse: collapse; font-size: 0.7rem; background: rgba(0,0,0,0.4); border-radius: 10px; overflow: hidden; margin: 15px auto; }
         .log-table th { background: #1a1a1a; padding: 10px; color: var(--text-muted); font-size: 0.8rem; font-weight: 900; }
@@ -155,18 +177,19 @@
         <div class="overlay-container">
             <div class="controls">
                 <div id="betOverlay" class="closed-overlay"><div id="closedTxt" class="closed-text">CLOSED</div></div>
-                <div style="display:flex; gap:8px; margin-bottom:8px;">
+                <div style="display:flex; gap:8px; margin-bottom:12px;">
                     <input type="number" id="betInput" value="10000" style="flex:1; background:#000; border:1px solid #333; color:var(--accent); padding:10px; border-radius:8px; text-align:center; font-weight:900; outline:none;">
                     <div style="display:flex; flex-direction:column; gap:2px;">
                         <button onclick="adjBet(10000)" style="width:40px; height:22px; background:#333; border:none; color:#fff; border-radius:4px; font-weight:bold;">+</button>
                         <button onclick="adjBet(-10000)" style="width:40px; height:22px; background:#333; border:none; color:#fff; border-radius:4px; font-weight:bold;">-</button>
                     </div>
                 </div>
+                <!-- 이미지 스타일 버튼 영역 -->
                 <div class="bet-buttons">
-                    <button class="btn btn-black" onclick="handleUserBet('black')" id="btnBlack">BLACK x2</button>
-                    <button class="btn btn-red" onclick="handleUserBet('red')" id="btnRed">RED x3</button>
-                    <button class="btn btn-blue" onclick="handleUserBet('blue')" id="btnBlue">BLUE x5</button>
-                    <button class="btn btn-gold" onclick="handleUserBet('gold')" id="btnGold">GOLD x50</button>
+                    <button class="btn btn-black" onclick="handleUserBet('black')" id="btnBlack">2×</button>
+                    <button class="btn btn-red" onclick="handleUserBet('red')" id="btnRed">3×</button>
+                    <button class="btn btn-blue" onclick="handleUserBet('blue')" id="btnBlue">5×</button>
+                    <button class="btn btn-gold" onclick="handleUserBet('gold')" id="btnGold">50×</button>
                 </div>
             </div>
             <div class="live-betting-area">
@@ -186,7 +209,7 @@
         </table>
     </div>
 
-    <!-- 사용법 & 통계 & 로그인 (로직 및 UI v5.23 고정) -->
+    <!-- 사용법 & 통계 & 로그인 (v5.21~5.24 로직 보존) -->
     <div id="view-how" class="content-view">
         <div class="how-scroll">
             <div class="how-section"><div class="how-title" id="ht1">소개</div><div class="how-text" id="hm1"></div></div>
@@ -194,23 +217,23 @@
             <div class="how-section"><div class="how-title" id="ht3">공정성</div><div class="how-text" id="hm3"></div></div>
             <div class="how-section"><div class="how-title" id="ht4">UI 안내</div><div class="how-text" id="hm4"></div></div>
         </div>
-        <div class="version-label">DetaBridge Wheel Pro v5.24</div>
+        <div class="version-label">DetaBridge Wheel Pro v5.25</div>
     </div>
     <div id="view-recommend" class="content-view">
         <div class="dist-container">
             <div id="lblGlobalTrend" style="font-size:0.75rem; font-weight:900; color:var(--accent); text-align:center;">24H GLOBAL TREND</div>
             <div style="margin-top:15px; display:flex; flex-direction:column; gap:12px;">
-                <div class="dist-row"><span style="width:50px; font-size:0.6rem;">BLACK</span><div class="dist-bg"><div id="gb-black" class="dist-fill" style="background:var(--black)"></div></div><span id="pct-black" style="width:30px; font-size:0.6rem; text-align:right;">0%</span></div>
-                <div class="dist-row"><span style="width:50px; font-size:0.6rem;">RED</span><div class="dist-bg"><div id="gb-red" class="dist-fill" style="background:var(--red)"></div></div><span id="pct-red" style="width:30px; font-size:0.6rem; text-align:right;">0%</span></div>
-                <div class="dist-row"><span style="width:50px; font-size:0.6rem;">BLUE</span><div class="dist-bg"><div id="gb-blue" class="dist-fill" style="background:var(--blue)"></div></div><span id="pct-blue" style="width:30px; font-size:0.6rem; text-align:right;">0%</span></div>
-                <div class="dist-row"><span style="width:50px; font-size:0.6rem;">GOLD</span><div class="dist-bg"><div id="gb-gold" class="dist-fill" style="background:var(--gold)"></div></div><span id="pct-gold" style="width:30px; font-size:0.6rem; text-align:right;">0%</span></div>
+                <div style="display:flex; align-items:center; gap:10px;"><span style="width:50px; font-size:0.6rem;">BLACK</span><div style="flex:1; height:8px; background:#000; border-radius:4px; overflow:hidden;"><div id="gb-black" style="height:100%; width:0%; transition:width 0.8s; background:var(--black)"></div></div><span id="pct-black" style="width:30px; font-size:0.6rem;">0%</span></div>
+                <div style="display:flex; align-items:center; gap:10px;"><span style="width:50px; font-size:0.6rem;">RED</span><div style="flex:1; height:8px; background:#000; border-radius:4px; overflow:hidden;"><div id="gb-red" style="height:100%; width:0%; transition:width 0.8s; background:var(--red)"></div></div><span id="pct-red" style="width:30px; font-size:0.6rem;">0%</span></div>
+                <div style="display:flex; align-items:center; gap:10px;"><span style="width:50px; font-size:0.6rem;">BLUE</span><div style="flex:1; height:8px; background:#000; border-radius:4px; overflow:hidden;"><div id="gb-blue" style="height:100%; width:0%; transition:width 0.8s; background:var(--blue)"></div></div><span id="pct-blue" style="width:30px; font-size:0.6rem;">0%</span></div>
+                <div style="display:flex; align-items:center; gap:10px;"><span style="width:50px; font-size:0.6rem;">GOLD</span><div style="flex:1; height:8px; background:#000; border-radius:4px; overflow:hidden;"><div id="gb-gold" style="height:100%; width:0%; transition:width 0.8s; background:var(--gold)"></div></div><span id="pct-gold" style="width:30px; font-size:0.6rem;">0%</span></div>
             </div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; width:94%; margin-top:10px;">
             <div style="background:var(--card); padding:15px; border-radius:12px; text-align:center; border:1px solid #333;"><div id="st-total" style="font-size:1.2rem; font-weight:900; color:var(--accent);">0</div><div class="lbl-total" style="font-size:0.6rem; color:var(--text-muted);">TOTAL SPINS</div></div>
             <div style="background:var(--card); padding:15px; border-radius:12px; text-align:center; border:1px solid #333;"><div id="st-winrate" style="font-size:1.2rem; font-weight:900; color:var(--accent);">0%</div><div class="lbl-winrate" style="font-size:0.6rem; color:var(--text-muted);">WIN RATE</div></div>
         </div>
-        <div class="version-label">DetaBridge Wheel Pro v5.24</div>
+        <div class="version-label">DetaBridge Wheel Pro v5.25</div>
     </div>
     <div id="view-login" class="content-view">
         <div id="loginForm" class="login-box">
@@ -219,10 +242,10 @@
             <input type="password" id="loginPw" class="login-input" placeholder="Password">
             <div id="pwConfirmGroup"><input type="password" id="loginPwCheck" class="login-input" placeholder="Confirm PW"></div>
             <div id="loginMsg" class="login-msg"></div>
-            <button id="btnLoginBtn" class="btn btn-gold" onclick="handleLoginSubmit()" style="width:100%;">LOGIN</button>
+            <button id="btnLoginBtn" class="btn btn-gold" onclick="handleLoginSubmit()" style="width:100%; height:50px; background:var(--gold); color:#000;">LOGIN</button>
         </div>
-        <div id="logoutForm" style="display:none; text-align:center; padding:40px 0; width:90%;"><h3 id="loggedInMsg" style="color:var(--accent);">Welcome!</h3><button class="btn btn-red" onclick="handleLogout()" style="width:80%; margin:20px auto;">LOGOUT</button></div>
-        <div class="version-label">DetaBridge Wheel Pro v5.24</div>
+        <div id="logoutForm" style="display:none; text-align:center; padding:40px 0; width:90%;"><h3 id="loggedInMsg" style="color:var(--accent);">Welcome!</h3><button class="btn btn-red" onclick="handleLogout()" style="width:80%; height:50px; background:var(--red); color:#fff; margin:20px auto;">LOGOUT</button></div>
+        <div class="version-label">DetaBridge Wheel Pro v5.25</div>
     </div>
 
     <nav>
@@ -244,11 +267,18 @@
     let myGameStats = { total: 0, wins: 0 }, isMuted = false, audioInitialized = false, liveBoardTotals = { black:0, red:0, blue:0, gold:0 };
     
     const i18n = {
-        ko: { welcome: "환영합니다", buy: "구매", closed: "마감", live: "실시간 현황", home: "홈", how: "사용법", stats: "통계", login: "로그인", logout: "로그아웃", pick: "선택", bet: "금액", res: "결과", win: "당첨", ht1: "소개", hm1: "DetaBridge Wheel은 공정한 알고리즘의 행운의 바퀴 게임입니다.", ht2: "방법", hm2: "1. 20초마다 라운드 진행\n2. 색상 선택 배팅\n3. x2, x3, x5, x50 배당 적용", ht3: "공정성", hm3: "UTC 타임스탬프 시드로 조작이 불가능합니다.", ht4: "UI 안내", hm4: "- 상단: 최근 히스토리\n- 하단 화살표: 실시간 결과 추적", pwRule: "비번: 영문+숫자+특수문자 6자 이상!", loginFail: "ID/PW 오류", pwMismatch: "비번 불일치", joinSuccess: "가입 및 로그인!", logoutMsg: "로그아웃!", btnLogin: "로그인", btnJoin: "회원가입", idPlaceholder: "아이디", pwPlaceholder: "비밀번호", pwChkPlaceholder: "비밀번호 확인", langTitle: "언어 선택" },
-        en: { welcome: "Welcome", buy: "BUY", closed: "CLOSED", live: "LIVE STATUS", home: "Home", how: "How", stats: "Stats", login: "Login", logout: "Logout", pick: "Pick", bet: "Bet", res: "Result", win: "Winner", ht1: "About", hm1: "DetaBridge Wheel is an encrypted multiplayer luck game.", ht2: "How to Play", hm2: "1. New round every 20s\n2. Select color to bet\n3. x2, x3, x5, x50 Multipliers", ht3: "Fairness", hm3: "Fixed by UTC seeds, no manipulation.", ht4: "UI Guide", hm4: "- Top Bar: Last results\n- Arrow: Real-time tracking", pwRule: "PW: Letter+Num+Special, 6+ chars.", loginFail: "Invalid ID/PW", pwMismatch: "PW mismatch", joinSuccess: "Joined!", logoutMsg: "Logged out!", btnLogin: "LOGIN", btnJoin: "JOIN", idPlaceholder: "Telegram ID", pwPlaceholder: "Password", pwChkPlaceholder: "Confirm Password", langTitle: "SELECT LANGUAGE" }
+        ko: { welcome: "환영합니다", buy: "구매", closed: "마감", live: "실시간 현황", home: "홈", how: "사용법", stats: "통계", login: "로그인", logout: "로그아웃", pick: "선택", bet: "금액", res: "결과", win: "당첨", ht1: "소개", hm1: "DetaBridge Wheel은 공정한 알고리즘의 행운의 바퀴 게임입니다.", ht2: "방법", hm2: "1. 20초마다 라운드 진행\n2. 색상 선택 배팅\n3. 2x, 3x, 5x, 50x 배당 적용", ht3: "공정성", hm3: "UTC 타임스탬프 시드로 조작이 불가능합니다.", ht4: "UI 안내", hm4: "- 상단: 최근 히스토리\n- 버튼: 배팅 시 색상이 채워짐", pwRule: "비번: 영문+숫자+특수문자 6자 이상!", loginFail: "ID/PW 오류", pwMismatch: "비번 불일치", joinSuccess: "가입 및 로그인!", logoutMsg: "로그아웃!", btnLogin: "로그인", btnJoin: "회원가입", idPlaceholder: "아이디", pwPlaceholder: "비밀번호", pwChkPlaceholder: "비밀번호 확인", langTitle: "언어 선택" },
+        en: { welcome: "Welcome", buy: "BUY", closed: "CLOSED", live: "LIVE STATUS", home: "Home", how: "How", stats: "Stats", login: "Login", logout: "Logout", pick: "Pick", bet: "Bet", res: "Result", win: "Winner", ht1: "About", hm1: "DetaBridge Wheel is an encrypted multiplayer luck game.", ht2: "How to Play", hm2: "1. New round every 20s\n2. Select color to bet\n3. 2x, 3x, 5x, 50x Multipliers", ht3: "Fairness", hm3: "Fixed by UTC seeds, no manipulation.", ht4: "UI Guide", hm4: "- Top Bar: Last results\n- Buttons: Fills color on bet", pwRule: "PW: Letter+Num+Special, 6+ chars.", loginFail: "Invalid ID/PW", pwMismatch: "PW mismatch", joinSuccess: "Joined!", logoutMsg: "Logged out!", btnLogin: "LOGIN", btnJoin: "JOIN", idPlaceholder: "Telegram ID", pwPlaceholder: "Password", pwChkPlaceholder: "Confirm Password", langTitle: "SELECT LANGUAGE" }
     };
 
-    const wheelMap = []; const sectors = [{color:'#ffcc00',name:'gold',mult:50},{color:'#00e5ff',name:'blue',mult:5},{color:'#ff3333',name:'red',mult:3},{color:'#333333',name:'black',mult:2}];
+    const wheelMap = []; 
+    // 이미지 버튼 배율에 맞게 섹션 정의 (v5.25 색상 팔레트 이미지 기반 최적화)
+    const sectors = [
+        {color:'#ffcc00',name:'gold',mult:50, label: '50×'},
+        {color:'#00e5ff',name:'blue',mult:5, label: '5×'},
+        {color:'#ff3333',name:'red',mult:3, label: '3×'},
+        {color:'#444444',name:'black',mult:2, label: '2×'}
+    ];
     for(let i=0; i<54; i++){ if(i===0) wheelMap.push(sectors[0]); else if(i%10===0) wheelMap.push(sectors[1]); else if(i%3===0) wheelMap.push(sectors[2]); else wheelMap.push(sectors[3]); }
     
     const CYCLE_MS = 20000, SPIN_DURATION = 6500, RESULT_WAIT = 2000, FREEZE_PERIOD = SPIN_DURATION + RESULT_WAIT, BETTING_PERIOD = CYCLE_MS - FREEZE_PERIOD;
@@ -263,10 +293,8 @@
         document.getElementById('liveTitle').innerText = t.live; document.getElementById('navHome').innerText = t.home; 
         document.getElementById('navHow').innerText = t.how; document.getElementById('navStats').innerText = t.stats;
         document.getElementById('navLogin').innerText = (currentId === "GUEST") ? t.login : t.logout;
-        document.getElementById('btnBlack').innerText = (currentLang === 'ko' ? "블랙 x2" : "BLACK x2");
-        document.getElementById('btnRed').innerText = (currentLang === 'ko' ? "레드 x3" : "RED x3");
-        document.getElementById('btnBlue').innerText = (currentLang === 'ko' ? "블루 x5" : "BLUE x5");
-        document.getElementById('btnGold').innerText = (currentLang === 'ko' ? "골드 x50" : "GOLD x50");
+        
+        // 버튼 텍스트는 이미지처럼 배율(2x, 3x..)만 표시하도록 고정
         document.querySelector('.th-pick').innerText = t.pick; document.querySelector('.th-bet').innerText = t.bet;
         document.querySelector('.th-res').innerText = t.res; document.querySelector('.th-win').innerText = t.win;
         document.getElementById('ht1').innerText = t.ht1; document.getElementById('hm1').innerText = t.hm1;
@@ -280,6 +308,11 @@
         document.getElementById('loginPw').placeholder = t.pwPlaceholder;
         document.getElementById('loginPwCheck').placeholder = t.pwChkPlaceholder;
         handleIdInput(); 
+    }
+
+    /* 버튼 상태 초기화 */
+    function resetBtnDesign() {
+        document.querySelectorAll('.bet-buttons .btn').forEach(b => b.classList.remove('selected'));
     }
 
     function handleIdInput() {
@@ -317,22 +350,20 @@
     function checkSession() { const sUser = sessionStorage.getItem('loggedInUser'); if(sUser) { let users = JSON.parse(localStorage.getItem('db_users') || '{}'); if(users[sUser]) { currentId = sUser; balance = users[sUser].balance; myGameStats = users[sUser].myGameStats; updateLoginState(true); } } }
     function initTelegramUser() { const user = tg.initDataUnsafe?.user; if(user && (user.username || user.first_name)) { document.getElementById('loginId').value = user.username || user.first_name; handleIdInput(); } }
 
-    /* 휠 세그먼트 사진 기반 디자인 (Stroked Line) */
+    /* 휠 세그먼트 사진 기반 디자인 */
     function drawWheel() {
         const arc = (Math.PI * 2) / 54;
         const radius = 260; 
         ctx.clearRect(0,0,560,560);
-        ctx.lineWidth = 12; // 사진 속 얇은 두께 재현
+        ctx.lineWidth = 14; 
         for (let i = 0; i < 54; i++) {
             ctx.beginPath();
             ctx.strokeStyle = wheelMap[i].color;
-            // 세그먼트 간 약간의 틈을 주어 사진 느낌 구현
             ctx.arc(280, 280, radius, i * arc + 0.02, (i + 1) * arc - 0.02);
             ctx.stroke();
         }
     }
 
-    /* 봇 동기화 & 포인터 색상 로직 (v5.24 신규) */
     function deterministicGlobalSpawn() {
         const now = Date.now(), elapsed = now % CYCLE_MS;
         if(elapsed < FREEZE_PERIOD || elapsed > CYCLE_MS - 1500) return;
@@ -340,7 +371,8 @@
         if((rand % 100) < 28) { 
             const adjs = ["Vip", "Pro", "Lucky", "Top", "Ace", "Big", "Cool"], nouns = ["King", "Star", "Wolf", "Winner", "Boss", "User", "Player"];
             const botId = adjs[rand % adjs.length] + nouns[(rand + 7) % nouns.length] + (rand % 99);
-            const tR = (rand % 100), type = tR < 40 ? 'black' : (tR < 75 ? 'red' : (tR < 95 ? 'blue' : 'gold'));
+            const tR = (rand % 100);
+            let type = tR < 40 ? 'black' : (tR < 75 ? 'red' : (tR < 95 ? 'blue' : 'gold'));
             let amt = (Math.floor(rand % 15) + 1) * 10000; if(type === 'gold') amt = 10000;
             setTimeout(() => addLiveUI(type, botId, amt), (rand % 1200)); 
         }
@@ -361,7 +393,6 @@
         if (elapsed < FREEZE_PERIOD) {
             timerBar.style.width = "0%"; betOverlay.style.display = "flex";
             if (elapsed < 200 && !isSpinning) startSpin();
-            // 회전 중 현재 가리키는 칸의 색상 감지 (하단 포인터 위치 보정)
             if(isSpinning) {
                 const rotation = getCurrentRotation();
                 const index = Math.floor(((rotation + 270) % 360) / (360 / 54)) % 54;
@@ -372,7 +403,8 @@
             timerBar.style.width = (remaining / BETTING_PERIOD) * 100 + "%";
             timerBar.style.backgroundColor = `hsl(${(remaining / BETTING_PERIOD) * 60}, 100%, 50%)`;
             betOverlay.style.display = (remaining < 1000) ? "flex" : "none";
-            pointer.style.backgroundColor = "#fff"; // 배팅 중 흰색 대기
+            pointer.style.backgroundColor = "#fff"; 
+            if(remaining > BETTING_PERIOD - 500) resetBtnDesign(); // 새 라운드 버튼 초기화
             if(now % 1000 < 100) deterministicGlobalSpawn(); 
         }
     }
@@ -382,8 +414,7 @@
         const tr = st.getPropertyValue("transform");
         if(tr === "none") return 0;
         const values = tr.split('(')[1].split(')')[0].split(',');
-        const a = values[0], b = values[1];
-        let angle = Math.round(Math.atan2(b, a) * (180/Math.PI));
+        let angle = Math.round(Math.atan2(values[1], values[0]) * (180/Math.PI));
         return (angle < 0) ? angle + 360 : angle;
     }
 
@@ -431,12 +462,24 @@
         if(id === 'recommend') {
             document.getElementById('st-total').innerText = myGameStats.total;
             document.getElementById('st-winrate').innerText = (myGameStats.total > 0 ? (myGameStats.wins/myGameStats.total*100).toFixed(1) : 0) + "%";
+            const daySeed = Math.floor(Date.now() / 86400000);
+            const rv = (daySeed * 9301 + 49297) % 233280;
             const trend = { black: 45, red: 35, blue: 15, gold: 5 };
             ['black', 'red', 'blue', 'gold'].forEach(c => { document.getElementById(`gb-${c}`).style.width = trend[c] + "%"; document.getElementById(`pct-${c}`).innerText = trend[c] + "%"; });
         }
         if(id === 'login') initTelegramUser();
     }
-    function handleUserBet(type) { const elapsed = Date.now() % CYCLE_MS; if(elapsed < FREEZE_PERIOD || elapsed > CYCLE_MS - 1000 || myBet) return; const amt = parseInt(document.getElementById('betInput').value); if(amt > balance || amt < 10000) return; balance -= amt; updateBalUI(); myBet = { type, amount: amt }; addLiveUI(type, "ME", amt); }
+    function handleUserBet(type) { 
+        const elapsed = Date.now() % CYCLE_MS; 
+        if(elapsed < FREEZE_PERIOD || elapsed > CYCLE_MS - 1000 || myBet) return; 
+        const amt = parseInt(document.getElementById('betInput').value); 
+        if(amt > balance || amt < 10000) return; 
+        balance -= amt; updateBalUI(); myBet = { type, amount: amt }; 
+        addLiveUI(type, "ME", amt); 
+        // 버튼 채우기 효과 적용
+        resetBtnDesign();
+        document.getElementById('btn' + type.charAt(0).toUpperCase() + type.slice(1)).classList.add('selected');
+    }
     function updateBalUI() { document.getElementById('balance').innerText = balance.toLocaleString(); }
     function adjBet(v) { let input = document.getElementById('betInput'), n = parseInt(input.value) + v; if(n >= 10000) input.value = n; }
     function initAudio() { audioInitialized = true; }
