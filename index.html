@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>DetaBridge Wheel Pro v5.37</title>
+    <title>DetaBridge Wheel Pro v5.38</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
@@ -40,7 +40,7 @@
         .user-id { font-size: 0.8rem; font-weight: 700; border-left: 3px solid var(--accent); padding-left: 10px; }
         .balance-box { background: rgba(255, 149, 0, 0.05); padding: 5px 10px; border-radius: 6px; border: 1px solid var(--point-color); color: var(--point-color); font-weight: 800; font-size: 0.85rem; }
 
-        /* 히스토리 바 (왼쪽부터 적재) */
+        /* 히스토리 바 (v5.35 적재 방향 고정) */
         .rolls-wrapper { width: 100%; padding: 10px 15px; background: rgba(0,0,0,0.2); border-bottom: 1px solid #333; flex-shrink: 0; }
         .rolls-header-title { font-size: 0.75rem; font-weight: 800; color: #667788; letter-spacing: 1px; margin-bottom: 8px; }
         .history-strip { display: flex; gap: 3px; height: 40px; width: 100%; align-items: center; justify-content: flex-start; overflow: hidden; }
@@ -60,7 +60,7 @@
         .content-view { flex: 1; overflow-y: auto; display: none; padding-bottom: 90px; width: 100%; }
         .content-view.active { display: flex; flex-direction: column; align-items: center; }
 
-        /* 휠 & 초정밀 포인터 */
+        /* 휠 & 초정밀 포인터 (v5.38 고정) */
         .wheel-section { position: relative; margin: 30px 0; width: 230px; height: 230px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; }
         .wheel-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-weight: 900; font-size: 1.8rem; color: var(--accent); text-shadow: 0 0 15px var(--accent); opacity: 0.8; pointer-events: none; }
@@ -68,10 +68,10 @@
             position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); 
             width: 14px; height: 20px; background: #fff; 
             clip-path: polygon(50% 100%, 0% 0%, 100% 0%); z-index: 25; 
-            transition: background-color 0.05s linear; /* 색상 동기화 속도 증가 */
+            transition: background-color 0.05s linear; /* 색상 동기화 극대화 */
         }
 
-        /* 배팅 버튼 (v5.25 디자인 고정) */
+        /* 배팅 버튼 */
         .overlay-container { position: relative; width: 95%; margin: 5px auto; }
         .controls { width: 100%; background: var(--card); padding: 12px; border-radius: 12px; position: relative; }
         .bet-buttons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; }
@@ -93,37 +93,33 @@
         .closed-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); z-index: 100; display: none; align-items: center; justify-content: center; border-radius: 12px; backdrop-filter: blur(2px); pointer-events: none; }
         .closed-text { color: #ddd; font-weight: 900; font-size: 1.6rem; letter-spacing: 4px; animation: pulse 0.8s infinite; }
 
-        /* 라이브 배팅 UI (v5.36 복구형) */
+        /* 라이브 배팅 보드 */
         .live-betting-area { width: 100%; margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid #333; }
         .live-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
         .live-col { background: rgba(0,0,0,0.4); border-radius: 8px; min-height: 120px; border-top: 3px solid #444; overflow: hidden; display: flex; flex-direction: column; }
-        .col-head { padding: 6px 2px; text-align: center; background: rgba(255,255,255,0.03); }
-        .col-label { font-size: 0.6rem; font-weight: 900; color: var(--text-muted); display: block; margin-bottom: 2px; }
+        .col-head { padding: 6px 2px; text-align: center; }
+        .col-label { font-size: 0.6rem; font-weight: 900; color: var(--text-muted); display: block; }
         .col-total { font-size: 0.7rem; font-weight: 800; color: var(--accent); }
         .bet-list { padding: 4px; flex: 1; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; max-height: 100px; }
         .bet-item { display: flex; justify-content: space-between; font-size: 0.55rem; font-weight: 700; background: rgba(255,255,255,0.05); padding: 3px; border-radius: 3px; }
 
-        /* 내비게이션 */
+        /* 사용법 카드 */
+        .how-card { width: 94%; background: var(--card); border-radius: 12px; border: 1px solid #333; padding: 20px; margin-top: 10px; }
+        .how-title { font-size: 1rem; font-weight: 900; color: var(--accent); margin-bottom: 10px; }
+        .how-text { font-size: 0.8rem; color: #bbb; line-height: 1.7; white-space: pre-wrap; }
+
+        .log-table { width: 95%; border-collapse: collapse; font-size: 0.7rem; background: rgba(0,0,0,0.4); border-radius: 10px; overflow: hidden; margin: 15px auto; }
+        .log-table th { background: #1a1a1a; padding: 12px 10px; color: var(--text-muted); font-size: 0.8rem; font-weight: 900; }
+        .log-table td { padding: 10px 8px; border-bottom: 1px solid #222; text-align: center; }
+
         nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; height: 75px; background: var(--nav-bg); display: flex; border-top: 1px solid #222; z-index: 200; padding-bottom: env(safe-area-inset-bottom); }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; }
         .nav-item span { font-size: 0.8rem; font-weight: 700; margin-top: 2px; }
         .nav-item.active { color: var(--accent); }
 
-        /* 사용법 카드 */
-        .how-card { width: 94%; background: var(--card); border-radius: 12px; border: 1px solid #333; padding: 20px; margin-top: 10px; }
-        .how-title { font-size: 1rem; font-weight: 900; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-        .how-text { font-size: 0.8rem; color: #bbb; line-height: 1.7; white-space: pre-wrap; }
-        .how-badge { background: rgba(0,242,255,0.1); color: var(--accent); padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; }
-
-        .log-table { width: 95%; border-collapse: collapse; font-size: 0.7rem; background: rgba(0,0,0,0.4); border-radius: 10px; overflow: hidden; margin: 15px auto; }
-        .log-table th { background: #1a1a1a; padding: 12px 10px; color: var(--text-muted); font-size: 0.8rem; font-weight: 900; border-bottom: 1px solid #333; }
-        .log-table td { padding: 10px 8px; border-bottom: 1px solid #222; text-align: center; font-weight: 700; }
-
         .login-box { width: 90%; background: var(--card); padding: 25px; border-radius: 15px; border: 1px solid #333; margin-top: 20px; display: flex; flex-direction: column; gap: 15px; }
         .login-input { width: 100%; padding: 15px; background: #000; border: 1px solid #444; color: var(--accent); border-radius: 8px; font-weight: 700; outline: none; }
         #pwConfirmGroup { display: none; flex-direction: column; gap: 15px; }
-
-        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
     </style>
 </head>
 <body onclick="initAudio()">
@@ -190,7 +186,7 @@
             </div>
             
             <div class="live-betting-area">
-                <div id="liveTitle" class="section-title">LIVE BETTING</div>
+                <div id="liveTitle" class="section-title" style="margin-bottom:8px; font-size:0.75rem; color:#777;">LIVE STATUS</div>
                 <div class="live-grid">
                     <div class="live-col" style="border-top-color:var(--black);"><div class="col-head"><span class="col-label" id="cl1">BLACK</span><span id="t-black" class="col-total">0</span></div><div id="l-black" class="bet-list"></div></div>
                     <div class="live-col" style="border-top-color:var(--red);"><div class="col-head"><span class="col-label" id="cl2">RED</span><span id="t-red" class="col-total">0</span></div><div id="l-red" class="bet-list"></div></div>
@@ -206,24 +202,23 @@
         </table>
     </div>
 
-    <!-- 메뉴 탭 사양 -->
+    <!-- 고정 사양 탭 -->
     <div id="view-how" class="content-view">
         <div class="how-card">
-            <div class="how-section"><div class="how-title" id="ht1">소개 <span class="how-badge">Fairness</span></div><div class="how-text" id="hm1"></div></div>
-            <div class="how-section"><div class="how-title" id="ht2">배팅 규칙 <span class="how-badge">Multipliers</span></div><div class="how-text" id="hm2"></div></div>
-            <div class="how-section"><div class="how-title" id="ht3">시스템 구조 <span class="how-badge">RNG</span></div><div class="how-text" id="hm3"></div></div>
-            <div class="how-section"><div class="how-title" id="ht4">인터페이스 <span class="how-badge">UI Guide</span></div><div class="how-text" id="hm4"></div></div>
+            <div class="how-section"><div class="how-title" id="ht1">소개</div><div class="how-text" id="hm1"></div></div>
+            <div class="how-section"><div class="how-title" id="ht2">규칙</div><div class="how-text" id="hm2"></div></div>
+            <div class="how-section"><div class="how-title" id="ht3">공정성</div><div class="how-text" id="hm3"></div></div>
+            <div class="how-section"><div class="how-title" id="ht4">UI 안내</div><div class="how-text" id="hm4"></div></div>
         </div>
-        <div class="version-label" style="text-align:center; padding:20px; font-size:0.6rem; color:#444;">DetaBridge Wheel Pro v5.37</div>
     </div>
     <div id="view-recommend" class="content-view">
         <div style="padding:40px 20px; text-align:center;">
             <div style="font-size:0.85rem; font-weight:900; color:var(--accent);" id="lblGlobalTrend">GLOBAL TREND</div>
-            <div style="margin-top:20px; font-size:0.75rem; color:#888;">Real-time stats based on current UTC seed.</div>
+            <div style="margin-top:20px; font-size:0.75rem; color:#888;">Live statistics synchronization active.</div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; width:94%;">
-            <div style="background:var(--card); padding:20px; border-radius:12px; text-align:center; border:1px solid #333;"><div id="st-total" style="font-size:1.4rem; font-weight:900; color:var(--accent);">0</div><div id="lbl-total" style="font-size:0.65rem; color:#666; margin-top:5px;">TOTAL SPINS</div></div>
-            <div style="background:var(--card); padding:20px; border-radius:12px; text-align:center; border:1px solid #333;"><div id="st-winrate" style="font-size:1.4rem; font-weight:900; color:var(--accent);">0%</div><div id="lbl-winrate" style="font-size:0.65rem; color:#666; margin-top:5px;">WIN RATE</div></div>
+            <div style="background:var(--card); padding:20px; border-radius:12px; text-align:center; border:1px solid #333;"><div id="st-total" style="font-size:1.4rem; font-weight:900; color:var(--accent);">0</div><div id="lbl-total" style="font-size:0.65rem; color:#666;">TOTAL SPINS</div></div>
+            <div style="background:var(--card); padding:20px; border-radius:12px; text-align:center; border:1px solid #333;"><div id="st-winrate" style="font-size:1.4rem; font-weight:900; color:var(--accent);">0%</div><div id="lbl-winrate" style="font-size:0.65rem; color:#666;">WIN RATE</div></div>
         </div>
     </div>
     <div id="view-login" class="content-view">
@@ -256,6 +251,7 @@
     let isSpinning = false, myBet = null, globalHistory = [], stats = { black: 0, red: 0, blue: 0, gold: 0 };
     let myGameStats = { total: 0, wins: 0 }, isMuted = false, audioInitialized = false, liveBoardTotals = { black:0, red:0, blue:0, gold:0 };
     
+    /* 56슬롯 RTP 90% 시스템 */
     const sectors = [
         {color:'#ffcc00', name:'gold', mult:50, weight: 1},
         {color:'#00e5ff', name:'blue', mult:5,  weight: 10},
@@ -276,18 +272,18 @@
     const i18n = {
         ko: { 
             welcome: "환영합니다", buy: "구매", closed: "마감", live: "실시간 현황", home: "홈", how: "사용법", stats: "통계", login: "로그인", logout: "로그아웃", pick: "선택", bet: "금액", res: "결과", win: "당첨", 
-            ht1: "게임 소개", hm1: "Spin4는 정교한 알고리즘을 기반으로 한 실시간 멀티플레이어 행운의 바퀴 게임입니다.",
-            ht2: "배팅 규칙", hm2: "20초마다 라운드가 진행되며, Black(2배), Red(3배), Blue(5배), Gold(50배) 배당이 적용됩니다.",
-            ht3: "시스템 공정성", hm3: "UTC 타임스탬프를 시드로 사용하는 Provably Fair 시스템을 채택하여 조작이 불가능합니다.",
-            ht4: "인터페이스 안내", hm4: "상단 히스토리 막대에서 최근 기록을, 하단 라이브 보드에서 유저들의 배팅을 확인하세요.",
-            pwRule: "비번: 영문+숫자+특수문자 6자 이상!", loginFail: "ID/비번 오류", pwMismatch: "비번 불일치", joinSuccess: "가입 성공!", btnLogin: "로그인", btnJoin: "회원가입", idPlaceholder: "텔레그램 ID", pwPlaceholder: "비밀번호", pwChkPlaceholder: "비밀번호 재확인", langTitle: "언어 선택", globalTrend: "데이터 동기화", totalSpins: "참여 라운드", winRate: "승률", prevRolls: "이전 라운드 결과", last100: "최근 100회" 
+            ht1: "게임 소개", hm1: "Spin4는 정교한 공정 알고리즘을 기반으로 한 실시간 멀티플레이어 휠 게임입니다.",
+            ht2: "배팅 규칙", hm2: "20초마다 라운드가 진행되며, 배당은 2x, 3x, 5x, 50x가 적용됩니다.",
+            ht3: "공정성", hm3: "UTC 타임스탬프 시드를 사용하여 조작이 불가능한 결과를 보장합니다.",
+            ht4: "UI 안내", hm4: "상단 히스토리 막대에서 최근 기록을 확인하세요.",
+            pwRule: "비번: 영문+숫자+특수문자 6자 이상!", loginFail: "ID/비번 오류", pwMismatch: "비번 확인 불일치", joinSuccess: "가입 성공!", btnLogin: "로그인", btnJoin: "회원가입", idPlaceholder: "텔레그램 ID", pwPlaceholder: "비밀번호", pwChkPlaceholder: "비밀번호 재확인", langTitle: "언어 선택", globalTrend: "데이터 동기화", totalSpins: "참여 라운드", winRate: "승률", prevRolls: "이전 결과", last100: "최근 100회" 
         },
         en: { 
             welcome: "Welcome", buy: "BUY", closed: "CLOSED", live: "LIVE STATUS", home: "Home", how: "How", stats: "Stats", login: "Login", logout: "Logout", pick: "Pick", bet: "Bet", res: "Result", win: "Winner", 
             ht1: "About Game", hm1: "Spin4 is a real-time multiplayer wheel game based on sophisticated fair algorithms.",
-            ht2: "Rules", hm2: "Rounds every 20s. Multipliers: Black(2x), Red(3x), Blue(5x), Gold(50x).",
-            ht3: "Fairness", hm3: "Provably Fair with UTC seeds. Outcomes are mathematically determined.",
-            ht4: "UI Guide", hm4: "Check the top bar for history and the live board for other users' activities.",
+            ht2: "Rules", hm2: "Rounds every 20s. Multipliers: 2x, 3x, 5x, 50x.",
+            ht3: "Fairness", hm3: "Provably Fair with UTC seeds. Manipulations are impossible.",
+            ht4: "UI Guide", hm4: "Check the vertical history bars for recent results.",
             pwRule: "PW: Letter+Num+Special, 6+ chars.", loginFail: "Invalid ID/PW", pwMismatch: "PW mismatch", joinSuccess: "Joined!", btnLogin: "LOGIN", btnJoin: "JOIN", idPlaceholder: "Telegram ID", pwPlaceholder: "Password", pwChkPlaceholder: "Confirm PW", langTitle: "SELECT LANGUAGE", globalTrend: "GLOBAL SYNC", totalSpins: "TOTAL SPINS", winRate: "WIN RATE", prevRolls: "PREVIOUS ROLLS", last100: "LAST 100" 
         }
     };
@@ -305,10 +301,10 @@
         document.getElementById('navHow').innerText = t.how; document.getElementById('navStats').innerText = t.stats; document.getElementById('navLogin').innerText = (currentId === "GUEST") ? t.login : t.logout;
         document.getElementById('th-pick').innerText = t.pick; document.getElementById('th-bet').innerText = t.bet;
         document.getElementById('th-res').innerText = t.res; document.getElementById('th-win').innerText = t.win;
-        document.getElementById('ht1').innerHTML = t.ht1 + ' <span class="how-badge">Fairness</span>'; document.getElementById('hm1').innerText = t.hm1;
-        document.getElementById('ht2').innerHTML = t.ht2 + ' <span class="how-badge">Rules</span>'; document.getElementById('hm2').innerText = t.hm2;
-        document.getElementById('ht3').innerHTML = t.ht3 + ' <span class="how-badge">RNG</span>'; document.getElementById('hm3').innerText = t.hm3;
-        document.getElementById('ht4').innerHTML = t.ht4 + ' <span class="how-badge">UI</span>'; document.getElementById('hm4').innerText = t.hm4;
+        document.getElementById('ht1').innerText = t.ht1; document.getElementById('hm1').innerText = t.hm1;
+        document.getElementById('ht2').innerText = t.ht2; document.getElementById('hm2').innerText = t.hm2;
+        document.getElementById('ht3').innerText = t.ht3; document.getElementById('hm3').innerText = t.hm3;
+        document.getElementById('ht4').innerText = t.ht4; document.getElementById('hm4').innerText = t.hm4;
         document.getElementById('lblGlobalTrend').innerText = t.globalTrend;
         document.getElementById('lbl-total').innerText = t.totalSpins; document.getElementById('lbl-winrate').innerText = t.winRate;
         document.getElementById('langSelTitle').innerText = t.langTitle;
@@ -378,7 +374,7 @@
     }
 
     function handleLogout() { sessionStorage.removeItem('loggedInUser'); currentId = "GUEST"; balance = 1000000; myGameStats = { total: 0, wins: 0 }; updateLoginState(false); switchTab('home', document.querySelector('.nav-item')); }
-    function updateLoginState(isLogged) { document.getElementById('loginForm').style.display = isLogged ? 'none' : 'flex'; document.getElementById('logoutForm').style.display = isLogged ? 'block' : 'none'; if(isLogged) document.getElementById('loggedInMsg').innerText = `${currentId} Welcome!`; applyI18n(); updateBalUI(); }
+    function updateLoginState(isLogged) { document.getElementById('loginForm').style.display = isLogged ? 'none' : 'flex'; document.getElementById('logoutForm').style.display = isLogged ? 'block' : 'none'; if(isLogged) document.getElementById('loggedInMsg').innerText = `${currentId}님 반갑습니다.`; applyI18n(); updateBalUI(); }
     function checkSession() { const sUser = sessionStorage.getItem('loggedInUser'); if(sUser) { let users = JSON.parse(localStorage.getItem('db_users') || '{}'); if(users[sUser]) { currentId = sUser; balance = users[sUser].balance; myGameStats = users[sUser].myGameStats; updateLoginState(true); } } }
     function initTelegramUser() { const user = tg.initDataUnsafe?.user; if(user && (user.username || user.first_name)) { document.getElementById('loginId').value = user.username || user.first_name; handleIdInput(); } }
 
@@ -391,7 +387,7 @@
         }
     }
 
-    /* --- 초정밀 포인터 로직 보정 --- */
+    /* --- 초정밀 포인터 로직 (270도 하단 타겟팅) --- */
     function tick() {
         const now = Date.now(), elapsed = now % CYCLE_MS;
         const pointer = document.getElementById('wheelPointer');
@@ -400,7 +396,7 @@
             if (elapsed < 200 && !isSpinning) startSpin();
             if(isSpinning) {
                 const rotation = getCurrentRotation();
-                // 하단 포인터(270도) 위치에서의 인덱스 실시간 감지
+                // 270도(하단)에 위치한 인덱스 계산: (Target - CurrentRotation)
                 const arc = 360 / 56;
                 const index = Math.floor(((270 - rotation) % 360 + 360) % 360 / arc) % 56;
                 pointer.style.backgroundColor = wheelMap[index].color;
@@ -419,14 +415,16 @@
         const st = window.getComputedStyle(canvas, null); const tr = st.getPropertyValue("transform");
         if(tr === "none") return 0;
         const values = tr.split('(')[1].split(')')[0].split(',');
-        return (Math.round(Math.atan2(values[1], values[0]) * (180/Math.PI)) + 360) % 360;
+        const a = parseFloat(values[0]), b = parseFloat(values[1]);
+        let angle = Math.round(Math.atan2(b, a) * (180/Math.PI));
+        return (angle + 360) % 360;
     }
 
     function startSpin() {
         isSpinning = true; const res = getWinIndex(Math.floor(Date.now() / CYCLE_MS));
         canvas.style.transition = `transform ${SPIN_DURATION}ms cubic-bezier(0.15, 0, 0.1, 1)`;
         canvas.style.transform = `rotate(${res.degrees}deg)`;
-        let tC = 0; const tI = setInterval(() => { if(tC < 45 && isSpinning) { playSound('sndTick'); tC++; } else clearInterval(tI); }, 140);
+        let tC = 0; const tI = setInterval(() => { if(tC < 35 && isSpinning) { playSound('sndTick'); tC++; } else clearInterval(tI); }, 180);
         setTimeout(() => resolve(wheelMap[res.index]), SPIN_DURATION);
     }
 
@@ -452,12 +450,13 @@
         }, RESULT_WAIT);
     }
 
-    /* 당첨 인덱스가 화살표 하단(270도) 정중앙에 멈추도록 각도 정밀 계산 */
+    /* 당첨 인덱스가 화살표 하단(270도) 정중앙에 '절대 오차 없이' 멈추도록 보정 */
     function getWinIndex(seed) { 
         const rv = (seed * 9301 + 49297) % 233280;
         const targetIdx = (rv % 56);
         const arc = 360 / 56;
-        // 화살표(270도) - (인덱스 * 각도 + 각도절반) = 정지 각도
+        // 핵심 보정: 포인터(270도) - (인덱스 각도 + 한 칸의 절반) = 최종 회전값
+        // 이렇게 하면 화살표 끝이 무조건 해당 칸의 정중앙 스트로크 위에 옵니다.
         const targetDeg = (270 - (targetIdx * arc + arc / 2) + 360) % 360;
         return { index: targetIdx, degrees: targetDeg + (360 * 10) }; 
     }
@@ -466,10 +465,6 @@
         document.querySelectorAll('.content-view').forEach(v => v.classList.remove('active'));
         document.getElementById('view-' + id).classList.add('active');
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active');
-        if(id === 'recommend') {
-            document.getElementById('st-total').innerText = myGameStats.total;
-            document.getElementById('st-winrate').innerText = (myGameStats.total > 0 ? (myGameStats.wins/myGameStats.total*100).toFixed(1) : 0) + "%";
-        }
         if(id === 'login') initTelegramUser();
     }
     
