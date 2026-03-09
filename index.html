@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>DetaBridge Wheel Pro v5.28</title>
+    <title>DetaBridge Wheel Pro v5.29</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
@@ -22,7 +22,7 @@
         }
         .main-container { width: 100%; max-width: 500px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
 
-        /* 글로벌 언어 선택 */
+        /* 글로벌 언어 선택 오버레이 */
         #langOverlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.95); z-index: 2000;
@@ -40,7 +40,7 @@
         .user-id { font-size: 0.8rem; font-weight: 700; border-left: 3px solid var(--accent); padding-left: 10px; }
         .balance-box { background: rgba(255, 149, 0, 0.05); padding: 5px 10px; border-radius: 6px; border: 1px solid var(--point-color); color: var(--point-color); font-weight: 800; font-size: 0.85rem; }
 
-        /* 히스토리 바 (20px) */
+        /* 히스토리 바 (20px 고정) */
         .timer-container { width: 100%; height: 6px; background: #000; position: relative; flex-shrink: 0; }
         #timerBar { position: absolute; left: 0; top: 0; height: 100%; width: 0%; transition: width 0.1s linear; }
         .history-strip { display: flex; gap: 4px; padding: 5px 0; height: 20px; width: 100%; justify-content: center; background: rgba(0,0,0,0.3); flex-shrink: 0; }
@@ -49,26 +49,19 @@
         .content-view { flex: 1; overflow-y: auto; display: none; padding-bottom: 90px; width: 100%; }
         .content-view.active { display: flex; flex-direction: column; align-items: center; }
 
-        /* 휠 섹션 & 초정밀 포인터 (수정) */
-        .wheel-section { position: relative; margin: 30px 0; width: 220px; height: 220px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        /* 휠 섹션 & 초정밀 포인터 */
+        .wheel-section { position: relative; margin: 30px 0; width: 230px; height: 230px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; }
         .wheel-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-weight: 900; font-size: 1.8rem; color: var(--accent); text-shadow: 0 0 15px var(--accent); opacity: 0.8; pointer-events: none; }
         
-        /* 화살표: 휠 경계면에 바짝 붙여 정확성 증대 */
         .pointer { 
-            position: absolute; 
-            bottom: 12px; /* 휠 링에 아주 가깝게 전진 배치 */
-            left: 50%; 
-            transform: translateX(-50%); 
-            width: 14px; 
-            height: 20px; 
-            background: #fff; 
-            clip-path: polygon(50% 100%, 0% 0%, 100% 0%); /* 정교한 결과 지칭을 위해 날카로운 삼각형 */
-            z-index: 25; 
+            position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); 
+            width: 14px; height: 20px; background: #fff; 
+            clip-path: polygon(50% 100%, 0% 0%, 100% 0%); z-index: 25; 
             transition: background-color 0.15s ease;
         }
 
-        /* 배팅 버튼 (v5.25 이미지 사양 고정) */
+        /* 배팅 버튼 (v5.25 사양 유지) */
         .overlay-container { position: relative; width: 95%; margin: 5px auto; }
         .controls { width: 100%; background: var(--card); padding: 12px; border-radius: 12px; position: relative; overflow: hidden; }
         .bet-buttons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; }
@@ -105,7 +98,7 @@
         .nav-item span { font-size: 0.8rem; font-weight: 700; margin-top: 2px; }
         .nav-item.active { color: var(--accent); }
 
-        /* 로그인 시스템 UI */
+        /* 로그인 & 비밀번호 확인 */
         .login-box { width: 90%; background: var(--card); padding: 25px; border-radius: 15px; border: 1px solid #333; margin-top: 20px; display: flex; flex-direction: column; gap: 15px; }
         .login-input { width: 100%; padding: 15px; background: #000; border: 1px solid #444; color: var(--accent); border-radius: 8px; font-weight: 700; outline: none; }
         .login-msg { font-size: 0.72rem; color: #ff3333; text-align: center; min-height: 1.5rem; line-height: 1.4; }
@@ -192,23 +185,23 @@
             <div class="how-section"><div class="how-title" id="ht3">공정성</div><div class="how-text" id="hm3"></div></div>
             <div class="how-section"><div class="how-title" id="ht4">UI 안내</div><div class="how-text" id="hm4"></div></div>
         </div>
-        <div class="version-label">DetaBridge Wheel Pro v5.28</div>
+        <div class="version-label">DetaBridge Wheel Pro v5.29</div>
     </div>
     <div id="view-recommend" class="content-view">
         <div class="dist-container">
             <div id="lblGlobalTrend" style="font-size:0.75rem; font-weight:900; color:var(--accent); text-align:center;">24H GLOBAL TREND</div>
             <div style="margin-top:15px; display:flex; flex-direction:column; gap:12px;">
-                <div class="dist-row"><span>BLACK</span><div style="flex:1; height:8px; background:#000; border-radius:4px; overflow:hidden;"><div id="gb-black" style="height:100%; width:0%; transition:width 0.8s; background:var(--black)"></div></div><span id="pct-black">0%</span></div>
-                <div class="dist-row"><span>RED</span><div style="flex:1; height:8px; background:#000; border-radius:4px; overflow:hidden;"><div id="gb-red" style="height:100%; width:0%; transition:width 0.8s; background:var(--red)"></div></div><span id="pct-red">0%</span></div>
-                <div class="dist-row"><span>BLUE</span><div style="flex:1; height:8px; background:#000; border-radius:4px; overflow:hidden;"><div id="gb-blue" style="height:100%; width:0%; transition:width 0.8s; background:var(--blue)"></div></div><span id="pct-blue">0%</span></div>
-                <div class="dist-row"><span>GOLD</span><div style="flex:1; height:8px; background:#000; border-radius:4px; overflow:hidden;"><div id="gb-gold" style="height:100%; width:0%; transition:width 0.8s; background:var(--gold)"></div></div><span id="pct-gold">0%</span></div>
+                <div class="dist-row"><span id="lbt1">BLACK</span><div style="flex:1; height:8px; background:#000; border-radius:4px; overflow:hidden;"><div id="gb-black" style="height:100%; width:0%; transition:width 0.8s; background:var(--black)"></div></div><span id="pct-black">0%</span></div>
+                <div class="dist-row"><span id="lbt2">RED</span><div style="flex:1; height:8px; background:#000; border-radius:4px; overflow:hidden;"><div id="gb-red" style="height:100%; width:0%; transition:width 0.8s; background:var(--red)"></div></div><span id="pct-red">0%</span></div>
+                <div class="dist-row"><span id="lbt3">BLUE</span><div style="flex:1; height:8px; background:#000; border-radius:4px; overflow:hidden;"><div id="gb-blue" style="height:100%; width:0%; transition:width 0.8s; background:var(--blue)"></div></div><span id="pct-blue">0%</span></div>
+                <div class="dist-row"><span id="lbt4">GOLD</span><div style="flex:1; height:8px; background:#000; border-radius:4px; overflow:hidden;"><div id="gb-gold" style="height:100%; width:0%; transition:width 0.8s; background:var(--gold)"></div></div><span id="pct-gold">0%</span></div>
             </div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; width:94%; margin-top:10px;">
             <div style="background:var(--card); padding:15px; border-radius:12px; text-align:center; border:1px solid #333;"><div id="st-total" style="font-size:1.2rem; font-weight:900; color:var(--accent);">0</div><div class="lbl-total" id="lbl-total">TOTAL SPINS</div></div>
             <div style="background:var(--card); padding:15px; border-radius:12px; text-align:center; border:1px solid #333;"><div id="st-winrate" style="font-size:1.2rem; font-weight:900; color:var(--accent);">0%</div><div class="lbl-winrate" id="lbl-winrate">WIN RATE</div></div>
         </div>
-        <div class="version-label">DetaBridge Wheel Pro v5.28</div>
+        <div class="version-label">DetaBridge Wheel Pro v5.29</div>
     </div>
     <div id="view-login" class="content-view">
         <div id="loginForm" class="login-box">
@@ -217,10 +210,10 @@
             <input type="password" id="loginPw" class="login-input" placeholder="Password">
             <div id="pwConfirmGroup"><input type="password" id="loginPwCheck" class="login-input" placeholder="Confirm PW"></div>
             <div id="loginMsg" class="login-msg"></div>
-            <button id="btnLoginBtn" class="btn btn-gold" onclick="handleLoginSubmit()" style="width:100%; height:50px; background:var(--gold); color:#000;">LOGIN</button>
+            <button id="btnLoginBtn" class="btn btn-gold" onclick="handleLoginSubmit()" style="width:100%; height:50px; background:var(--gold); color:#000; border:none; border-radius:8px; font-weight:900;">LOGIN</button>
         </div>
-        <div id="logoutForm" style="display:none; text-align:center; padding:40px 0; width:90%;"><h3 id="loggedInMsg" style="color:var(--accent);">Welcome!</h3><button class="btn btn-red" onclick="handleLogout()" style="width:80%; height:50px; background:var(--red); color:#fff; margin:20px auto;">LOGOUT</button></div>
-        <div class="version-label">DetaBridge Wheel Pro v5.28</div>
+        <div id="logoutForm" style="display:none; text-align:center; padding:40px 0; width:90%;"><h3 id="loggedInMsg" style="color:var(--accent);">Welcome!</h3><button class="btn btn-red" onclick="handleLogout()" style="width:80%; height:50px; background:var(--red); color:#fff; margin:20px auto; border:none; border-radius:8px; font-weight:900;">LOGOUT</button></div>
+        <div class="version-label">DetaBridge Wheel Pro v5.29</div>
     </div>
 
     <nav>
@@ -242,8 +235,10 @@
     let myGameStats = { total: 0, wins: 0 }, isMuted = false, audioInitialized = false, liveBoardTotals = { black:0, red:0, blue:0, gold:0 };
     
     const i18n = {
-        ko: { welcome: "환영합니다", buy: "구매", closed: "마감", live: "실시간 현황", home: "홈", how: "사용법", stats: "통계", login: "로그인", logout: "로그아웃", pick: "선택", bet: "금액", res: "결과", win: "당첨", ht1: "소개", hm1: "DetaBridge Wheel은 공정한 알고리즘의 행운의 바퀴 게임입니다.", ht2: "방법", hm2: "1. 20초마다 라운드 진행\n2. 색상 선택 배팅\n3. 2x, 3x, 5x, 50x 배당 적용", ht3: "공정성", hm3: "UTC 타임스탬프 시드로 조작이 불가능합니다.", ht4: "UI 안내", hm4: "- 상단: 최근 히스토리\n- 하단 화살표: 실시간 결과 추적", pwRule: "비번: 영문+숫자+특수문자 6자 이상!", loginFail: "ID/PW 오류", pwMismatch: "비번 불일치", joinSuccess: "가입 및 로그인!", logoutMsg: "로그아웃 되었습니다.", btnLogin: "로그인", btnJoin: "회원가입", idPlaceholder: "텔레그램 ID", pwPlaceholder: "비밀번호", pwChkPlaceholder: "비밀번호 재확인", langTitle: "언어 선택", globalTrend: "24시간 글로벌 추세", totalSpins: "참여 라운드", winRate: "나의 승률" },
-        en: { welcome: "Welcome", buy: "BUY", closed: "CLOSED", live: "LIVE STATUS", home: "Home", how: "How", stats: "Stats", login: "Login", logout: "Logout", pick: "Pick", bet: "Bet", res: "Result", win: "Winner", ht1: "About", hm1: "DetaBridge Wheel is a multiplayer luck game.", ht2: "How to Play", hm2: "1. New round every 20s\n2. Select color to bet\n3. 2x, 3x, 5x, 50x Multipliers", ht3: "Fairness", hm3: "Fixed by UTC seeds, no manipulation.", ht4: "UI Guide", hm4: "- Top Bar: Last results\n- Arrow: Real-time tracking", pwRule: "PW: Letter+Num+Special, 6+ chars.", loginFail: "Invalid ID/PW", pwMismatch: "PW mismatch", joinSuccess: "Joined!", logoutMsg: "Logged out!", btnLogin: "LOGIN", btnJoin: "JOIN", idPlaceholder: "Telegram ID", pwPlaceholder: "Password", pwChkPlaceholder: "Confirm Password", langTitle: "SELECT LANGUAGE", globalTrend: "24H GLOBAL TREND", totalSpins: "TOTAL SPINS", winRate: "WIN RATE" }
+        ko: { welcome: "환영합니다", buy: "구매", closed: "마감", live: "실시간 현황", home: "홈", how: "사용법", stats: "통계", login: "로그인", logout: "로그아웃", pick: "선택", bet: "금액", res: "결과", win: "당첨", ht1: "소개", hm1: "DetaBridge Wheel은 공정한 알고리즘의 행운의 바퀴 게임입니다.", ht2: "방법", hm2: "1. 20초마다 라운드 진행\n2. 색상 선택 배팅\n3. 2x, 3x, 5x, 50x 배당 적용", ht3: "공정성", hm3: "UTC 타임스탬프 시드로 조작이 불가능합니다.", ht4: "UI 안내", hm4: "- 상단: 최근 히스토리\n- 하단 화살표: 실시간 결과 추적", pwRule: "비번: 영문+숫자+특수문자 6자 이상!", loginFail: "ID 또는 비번 오류", pwMismatch: "비번 확인 불일치", joinSuccess: "가입 및 로그인!", logoutMsg: "로그아웃 되었습니다.", btnLogin: "로그인", btnJoin: "회원가입", idPlaceholder: "텔레그램 ID", pwPlaceholder: "비밀번호", pwChkPlaceholder: "비밀번호 재확인", langTitle: "언어 선택", globalTrend: "24시간 글로벌 추세", totalSpins: "참여 라운드", winRate: "나의 승률" },
+        en: { welcome: "Welcome", buy: "BUY", closed: "CLOSED", live: "LIVE STATUS", home: "Home", how: "How", stats: "Stats", login: "Login", logout: "Logout", pick: "Pick", bet: "Bet", res: "Result", win: "Winner", ht1: "About", hm1: "DetaBridge Wheel is a multiplayer luck game.", ht2: "How to Play", hm2: "1. New round every 20s\n2. Select color to bet\n3. 2x, 3x, 5x, 50x Multipliers", ht3: "Fairness", hm3: "Fixed by UTC seeds, no manipulation.", ht4: "UI Guide", hm4: "- Top Bar: Last results\n- Arrow: Real-time tracking", pwRule: "PW: Letter+Num+Special, 6+ chars.", loginFail: "Invalid ID or PW", pwMismatch: "PW mismatch", joinSuccess: "Joined!", logoutMsg: "Logged out!", btnLogin: "LOGIN", btnJoin: "JOIN", idPlaceholder: "Telegram ID", pwPlaceholder: "Password", pwChkPlaceholder: "Confirm PW", langTitle: "SELECT LANGUAGE", globalTrend: "24H GLOBAL TREND", totalSpins: "TOTAL SPINS", winRate: "WIN RATE" },
+        cn: { welcome: "欢迎", buy: "购买", closed: "已截止", live: "实时投注", home: "首页", how: "指南", stats: "统计", login: "登录", logout: "登出", pick: "选择", bet: "赌注", res: "结果", win: "赢家", ht1: "游戏介绍", hm1: "实时多人轮盘游戏。加密算法生成公平结果。", ht2: "游戏玩法", hm2: "1. 每20秒开始一轮\n2. 在截止前投注\n3. 2x, 3x, 5x, 50x 倍率", ht3: "公平性", hm3: "UTC 时间戳种子决定，无法操控。", ht4: "UI 说明", hm4: "- 顶部栏：最近20次历史记录\n- 计时条：投注剩余时间", pwRule: "密码：字母+数字+符号，6位以上。", loginFail: "ID或密码错误", pwMismatch: "密码不匹配", joinSuccess: "注册并登录成功！", logoutMsg: "已登出。", btnLogin: "登录", btnJoin: "注册", idPlaceholder: "电报 ID", pwPlaceholder: "密码", pwChkPlaceholder: "确认密码", langTitle: "选择语言", globalTrend: "24小时趋势", totalSpins: "参与局数", winRate: "我的胜率" },
+        jp: { welcome: "ようこそ", buy: "購入", closed: "締切", live: "ライブ状況", home: "ホーム", how: "遊び方", stats: "統計", login: "ログイン", logout: "ログアウト", pick: "選択", bet: "ベット", res: "結果", win: "当選者", ht1: "ゲーム紹介", hm1: "リアルタイムマルチプレイヤー。暗号化アルゴリズム。", ht2: "遊び方", hm2: "1. 20秒ごとに新しいラウンド\n2. 締切前に色を選んでベット\n3. 2x, 3x, 5x, 50x 倍率", ht3: "公平性", hm3: "UTCシードにより、操作不可能です。", ht4: "UI説明", hm4: "- 上部バー：最近20回の履歴\n- 矢印：リアルタイムの状況", pwRule: "パスワード：英数字+記号、6文字以上。", loginFail: "IDまたはパスワードミス", pwMismatch: "パスワード不一致", joinSuccess: "登録とログイン成功！", logoutMsg: "ログアウトしました。", btnLogin: "ログイン", btnJoin: "新規登録", idPlaceholder: "テレグラム ID", pwPlaceholder: "パスワード", pwChkPlaceholder: "パスワード確認", langTitle: "言語選択", globalTrend: "24時間トレンド", totalSpins: "総回転数", winRate: "勝率" }
     };
 
     const wheelMap = []; 
@@ -253,33 +248,60 @@
     const CYCLE_MS = 20000, SPIN_DURATION = 6500, RESULT_WAIT = 2000, FREEZE_PERIOD = SPIN_DURATION + RESULT_WAIT, BETTING_PERIOD = CYCLE_MS - FREEZE_PERIOD;
     const canvas = document.getElementById('wheelCanvas'), ctx = canvas.getContext('2d'), timerBar = document.getElementById('timerBar'), betOverlay = document.getElementById('betOverlay');
 
-    function setLanguage(lang) { currentLang = lang; localStorage.setItem('db_wheel_lang', lang); document.getElementById('langOverlay').style.display = 'none'; applyI18n(); }
+    // --- 글로벌 언어 실시간 동기화 마스터 함수 ---
+    function setLanguage(lang) { 
+        currentLang = lang; 
+        localStorage.setItem('db_wheel_lang', lang); 
+        document.getElementById('langOverlay').style.display = 'none'; 
+        applyI18n(); 
+    }
 
     function applyI18n() {
         const t = i18n[currentLang] || i18n.en;
+        // 헤더 및 내비
         document.getElementById('displayId').innerText = `${t.welcome} ${currentId}`;
-        document.getElementById('btnBuyTop').innerText = t.buy; document.getElementById('closedTxt').innerText = t.closed;
-        document.getElementById('liveTitle').innerText = t.live; document.getElementById('navHome').innerText = t.home; 
-        document.getElementById('navHow').innerText = t.how; document.getElementById('navStats').innerText = t.stats; document.getElementById('navLogin').innerText = (currentId === "GUEST") ? t.login : t.logout;
-        document.getElementById('th-pick').innerText = t.pick; document.getElementById('th-bet').innerText = t.bet;
-        document.getElementById('th-res').innerText = t.res; document.getElementById('th-win').innerText = t.win;
-        document.getElementById('ht1').innerText = t.ht1; document.getElementById('hm1').innerText = t.hm1;
-        document.getElementById('ht2').innerText = t.ht2; document.getElementById('hm2').innerText = t.hm2;
-        document.getElementById('ht3').innerText = t.ht3; document.getElementById('hm3').innerText = t.hm3;
-        document.getElementById('ht4').innerText = t.ht4; document.getElementById('hm4').innerText = t.hm4;
-        document.getElementById('lblGlobalTrend').innerText = t.globalTrend;
-        document.getElementById('lbl-total').innerText = t.totalSpins; document.getElementById('lbl-winrate').innerText = t.winRate;
-        document.getElementById('langSelTitle').innerText = t.langTitle;
-        document.getElementById('loginId').placeholder = t.idPlaceholder;
-        document.getElementById('loginPw').placeholder = t.pwPlaceholder;
-        document.getElementById('loginPwCheck').placeholder = t.pwChkPlaceholder;
+        document.getElementById('btnBuyTop').innerText = t.buy; 
+        document.getElementById('closedTxt').innerText = t.closed;
+        document.getElementById('liveTitle').innerText = t.live;
+        document.getElementById('navHome').innerText = t.home; 
+        document.getElementById('navHow').innerText = t.how; 
+        document.getElementById('navStats').innerText = t.stats; 
+        document.getElementById('navLogin').innerText = (currentId === "GUEST") ? t.login : t.logout;
+        
+        // 테이블 및 레이블
+        document.getElementById('th-pick').innerText = t.pick; 
+        document.getElementById('th-bet').innerText = t.bet;
+        document.getElementById('th-res').innerText = t.res; 
+        document.getElementById('th-win').innerText = t.win;
         document.getElementById('lblBlack').innerText = currentLang === 'ko' ? "블랙" : "BLACK";
         document.getElementById('lblRed').innerText = currentLang === 'ko' ? "레드" : "RED";
         document.getElementById('lblBlue').innerText = currentLang === 'ko' ? "블루" : "BLUE";
         document.getElementById('lblGold').innerText = currentLang === 'ko' ? "골드" : "GOLD";
+
+        // 사용법 상세
+        document.getElementById('ht1').innerText = t.ht1; document.getElementById('hm1').innerText = t.hm1;
+        document.getElementById('ht2').innerText = t.ht2; document.getElementById('hm2').innerText = t.hm2;
+        document.getElementById('ht3').innerText = t.ht3; document.getElementById('hm3').innerText = t.hm3;
+        document.getElementById('ht4').innerText = t.ht4; document.getElementById('hm4').innerText = t.hm4;
+
+        // 통계 상세
+        document.getElementById('lblGlobalTrend').innerText = t.globalTrend;
+        document.getElementById('lbl-total').innerText = t.totalSpins; 
+        document.getElementById('lbl-winrate').innerText = t.winRate;
+        document.getElementById('lbt1').innerText = currentLang === 'ko' ? "블랙" : "BLACK";
+        document.getElementById('lbt2').innerText = currentLang === 'ko' ? "레드" : "RED";
+        document.getElementById('lbt3').innerText = currentLang === 'ko' ? "블루" : "BLUE";
+        document.getElementById('lbt4').innerText = currentLang === 'ko' ? "골드" : "GOLD";
+
+        // 로그인 상세
+        document.getElementById('langSelTitle').innerText = t.langTitle;
+        document.getElementById('loginId').placeholder = t.idPlaceholder;
+        document.getElementById('loginPw').placeholder = t.pwPlaceholder;
+        document.getElementById('loginPwCheck').placeholder = t.pwChkPlaceholder;
         handleIdInput(); 
     }
 
+    /* 디자인 고정 및 로그인 로직 */
     function handleIdInput() {
         const id = document.getElementById('loginId').value.trim();
         const users = JSON.parse(localStorage.getItem('db_users') || '{}');
@@ -316,6 +338,7 @@
     function checkSession() { const sUser = sessionStorage.getItem('loggedInUser'); if(sUser) { let users = JSON.parse(localStorage.getItem('db_users') || '{}'); if(users[sUser]) { currentId = sUser; balance = users[sUser].balance; myGameStats = users[sUser].myGameStats; updateLoginState(true); } } }
     function initTelegramUser() { const user = tg.initDataUnsafe?.user; if(user && (user.username || user.first_name)) { document.getElementById('loginId').value = user.username || user.first_name; handleIdInput(); } }
 
+    /* 휠 & 정밀 포인터 로직 */
     function drawWheel() {
         const arc = (Math.PI * 2) / 54;
         const radius = 260; 
@@ -337,7 +360,6 @@
             if (elapsed < 200 && !isSpinning) startSpin();
             if(isSpinning) {
                 const rotation = getCurrentRotation();
-                // 하단 중앙 포인터(270도) 색상 정확도 정밀 보정
                 const index = Math.floor(((270 - rotation) % 360 + 360) % 360 / (360 / 54)) % 54;
                 pointer.style.backgroundColor = wheelMap[index].color;
             }
@@ -357,14 +379,15 @@
         const tr = st.getPropertyValue("transform");
         if(tr === "none") return 0;
         const values = tr.split('(')[1].split(')')[0].split(',');
-        return (Math.round(Math.atan2(values[1], values[0]) * (180/Math.PI)) + 360) % 360;
+        let angle = Math.round(Math.atan2(values[1], values[0]) * (180/Math.PI));
+        return (angle + 360) % 360;
     }
 
     function startSpin() {
         isSpinning = true; const res = getWinIndex(Math.floor(Date.now() / CYCLE_MS));
-        canvas.style.transition = `transform ${SPIN_DURATION}ms cubic-bezier(0.1, 0, 0.1, 1)`;
+        canvas.style.transition = `transform ${SPIN_DURATION}ms cubic-bezier(0.15, 0, 0.1, 1)`;
         canvas.style.transform = `rotate(${res.degrees}deg)`;
-        let tC = 0; const tI = setInterval(() => { if(tC < 40 && isSpinning) { playSound('sndTick'); tC++; } else clearInterval(tI); }, 150);
+        let tC = 0; const tI = setInterval(() => { if(tC < 35 && isSpinning) { playSound('sndTick'); tC++; } else clearInterval(tI); }, 180);
         setTimeout(() => resolve(wheelMap[res.index]), SPIN_DURATION);
     }
 
@@ -391,15 +414,14 @@
     }
 
     function getWinIndex(seed) { 
-        const rv = (seed * 9301 + 49297) % 233280; 
-        const deg = (rv % 360);
-        // 하단 화살표(270도)가 정확한 인덱스를 가리키도록 역계산
+        const rv = (seed * 9301 + 49297) % 233280; const deg = (rv % 360);
         const idx = Math.floor(((270 - deg) % 360 + 360) % 360 / (360 / 54)) % 54;
         return { index: idx, degrees: deg + (360 * 10) }; 
     }
     
     function updateHistoryUI() { const strip = document.getElementById('historyStrip'); strip.innerHTML = ''; globalHistory.slice(-20).reverse().forEach(c => { strip.innerHTML += `<div class="hist-bar" style="background:${c}"></div>`; }); }
     function syncHistory() { const seed = Math.floor(Date.now() / CYCLE_MS); globalHistory = []; for(let i=20; i>=1; i--) { globalHistory.push(wheelMap[getWinIndex(seed - i).index].color); } updateHistoryUI(); }
+    
     function switchTab(id, el) {
         document.querySelectorAll('.content-view').forEach(v => v.classList.remove('active'));
         document.getElementById('view-' + id).classList.add('active');
@@ -407,48 +429,49 @@
         if(id === 'recommend') {
             document.getElementById('st-total').innerText = myGameStats.total;
             document.getElementById('st-winrate').innerText = (myGameStats.total > 0 ? (myGameStats.wins/myGameStats.total*100).toFixed(1) : 0) + "%";
+            const daySeed = Math.floor(Date.now() / 86400000);
             const trend = { black: 45, red: 35, blue: 15, gold: 5 };
             ['black', 'red', 'blue', 'gold'].forEach(c => { document.getElementById(`gb-${c}`).style.width = trend[c] + "%"; document.getElementById(`pct-${c}`).innerText = trend[c] + "%"; });
         }
         if(id === 'login') initTelegramUser();
     }
+    
     function handleUserBet(type) { 
-        const elapsed = Date.now() % CYCLE_MS; 
-        if(elapsed < FREEZE_PERIOD || elapsed > CYCLE_MS - 1000 || myBet) return; 
-        const amt = parseInt(document.getElementById('betInput').value); 
-        if(amt > balance || amt < 10000) return; 
+        const elapsed = Date.now() % CYCLE_MS; if(elapsed < FREEZE_PERIOD || elapsed > CYCLE_MS - 1000 || myBet) return; 
+        const amt = parseInt(document.getElementById('betInput').value); if(amt > balance || amt < 10000) return; 
         balance -= amt; updateBalUI(); myBet = { type, amount: amt }; 
         document.querySelectorAll('.bet-buttons .btn').forEach(b => b.classList.remove('selected'));
         document.getElementById('btn' + type.charAt(0).toUpperCase() + type.slice(1)).classList.add('selected');
         addLiveUI(type, "ME", amt); 
     }
+    
     function updateBalUI() { document.getElementById('balance').innerText = balance.toLocaleString(); }
     function adjBet(v) { let input = document.getElementById('betInput'), n = parseInt(input.value) + v; if(n >= 10000) input.value = n; }
     function initAudio() { audioInitialized = true; }
     function toggleMute() { isMuted = !isMuted; document.getElementById('soundToggle').innerText = isMuted ? "🔇" : "🔊"; }
     function playSound(id) { if(!isMuted && audioInitialized) { const s = document.getElementById(id); s.currentTime = 0; s.play().catch(()=>{}); } }
+    
     function deterministicGlobalSpawn() {
-        const now = Date.now(), elapsed = now % CYCLE_MS;
-        if(elapsed < FREEZE_PERIOD || elapsed > CYCLE_MS - 1500) return;
-        const tSeed = Math.floor(now / 1000), rand = (tSeed * 9301 + 49297) % 233280;
+        const now = Date.now(); const tSeed = Math.floor(now / 1000), rand = (tSeed * 9301 + 49297) % 233280;
         if((rand % 100) < 28) { 
-            const adjs = ["Vip", "Pro", "Lucky", "Ace", "Big"], nouns = ["King", "Star", "Wolf", "Winner", "User"];
+            const adjs = ["Vip", "Pro", "Lucky", "Top"], nouns = ["King", "Star", "Wolf", "Winner"];
             const botId = adjs[rand % adjs.length] + nouns[(rand + 7) % nouns.length] + (rand % 99);
-            const tR = (rand % 100), type = tR < 40 ? 'black' : (tR < 75 ? 'red' : (tR < 95 ? 'blue' : 'gold'));
-            let amt = (Math.floor(rand % 15) + 1) * 10000; if(type === 'gold') amt = 10000;
-            setTimeout(() => addLiveUI(type, botId, amt), (rand % 1200)); 
+            const type = (rand % 100) < 40 ? 'black' : ((rand % 100) < 75 ? 'red' : ((rand % 100) < 95 ? 'blue' : 'gold'));
+            addLiveUI(type, botId, (Math.floor(rand % 15) + 1) * 10000); 
         }
     }
     function addLiveUI(type, user, amt) {
-        const list = document.getElementById(`l-${type}`), total = document.getElementById(`t-${type}`);
+        const list = document.getElementById(`l-${type}`); if(!list) return;
         if([...list.querySelectorAll('span')].some(s => s.innerText === user)) return;
-        liveBoardTotals[type] += amt; total.innerText = liveBoardTotals[type].toLocaleString();
+        liveBoardTotals[type] += amt; document.getElementById(`t-${type}`).innerText = liveBoardTotals[type].toLocaleString();
         const item = document.createElement('div'); item.className = 'bet-item';
         item.innerHTML = `<span>${user}</span><b>${(amt/1000).toFixed(0)}k</b>`;
         list.prepend(item); if(list.children.length > 5) list.lastChild.remove();
     }
 
-    checkSession(); syncHistory(); drawWheel(); updateBalUI(); setInterval(tick, 100);
+    const savedLang = localStorage.getItem('db_wheel_lang');
+    if(savedLang) { currentLang = savedLang; document.getElementById('langOverlay').style.display = 'none'; }
+    checkSession(); syncHistory(); drawWheel(); updateBalUI(); applyI18n(); setInterval(tick, 100);
 </script>
 </body>
 </html>
