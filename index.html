@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Spin4 v5.63 Golden Master</title>
+    <title>Spin4 v5.64 Golden Master</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
@@ -28,7 +28,7 @@
         .user-id { font-size: 0.8rem; font-weight: 700; border-left: 3px solid var(--accent); padding-left: 10px; }
         .balance-box { background: rgba(255, 149, 0, 0.05); padding: 5px 10px; border-radius: 6px; border: 1px solid var(--point-color); color: var(--point-color); font-weight: 800; font-size: 0.85rem; }
 
-        /* 히스토리 바 (이미지 사양 계단식 디자인) */
+        /* 히스토리 바 (이미지 사양 반영) */
         .rolls-wrapper { width: 100%; padding: 15px 0; background: rgba(0,0,0,0.2); border-bottom: 1px solid #333; flex-shrink: 0; display: flex; justify-content: center; }
         .history-strip { display: flex; gap: 4px; height: 45px; align-items: flex-start; overflow: hidden; }
         .hist-bar { width: 4px; border-radius: 10px; flex-shrink: 0; transition: all 0.3s ease; }
@@ -46,10 +46,10 @@
         /* [GM] 물리 엔진 정렬 */
         .wheel-section { position: relative; margin: 25px 0; width: 230px; height: 230px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; }
-        .wheel-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-weight: 900; font-size: 1.8rem; color: var(--accent); text-shadow: 0 0 10px var(--accent); pointer-events: none; }
+        .wheel-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-weight: 900; font-size: 1.8rem; color: var(--accent); text-shadow: 0 0 10px var(--accent); opacity: 0.8; pointer-events: none; }
         .pointer { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); width: 14px; height: 20px; background: #fff; clip-path: polygon(50% 100%, 0% 0%, 100% 0%); z-index: 25; transition: background-color 0.05s linear; }
 
-        /* 와이드 레이아웃 배팅창 */
+        /* 와이드 레이아웃 */
         .overlay-container { width: 100%; padding: 0 15px; position: relative; }
         .controls { width: 100%; background: var(--card); padding: 15px; border-radius: 12px; border: 1px solid #333; }
         #betInput { flex: 1; background: #000; border: 1px solid #333; color: var(--accent); padding: 12px; border-radius: 8px; text-align: center; font-weight: 900; outline: none; -webkit-appearance: none; -moz-appearance: textfield; margin: 0; }
@@ -63,7 +63,7 @@
         .btn.selected.btn-blue { background: var(--blue); border-color: var(--blue); color: #000; box-shadow: 0 0 15px rgba(0,229,255,0.4); }
         .btn.selected.btn-gold { background: var(--gold); border-color: var(--gold); color: #000; box-shadow: 0 0 15px rgba(255,204,0,0.4); }
 
-        /* 라이브 배팅 UI (4열) */
+        /* 라이브 배팅 및 지갑 */
         .live-betting-area { width: 100%; margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid #333; }
         .live-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
         .live-col { background: rgba(0,0,0,0.4); border-radius: 8px; min-height: 110px; border-top: 3px solid #444; overflow: hidden; display: flex; flex-direction: column; }
@@ -73,28 +73,18 @@
         .bet-list { padding: 3px; flex: 1; display: flex; flex-direction: column; gap: 3px; overflow: hidden; }
         .bet-item { display: flex; justify-content: space-between; font-size: 0.48rem; font-weight: 700; background: rgba(255,255,255,0.05); padding: 2px; border-radius: 3px; }
 
-        /* 지갑 UI */
         .wallet-card { width: 92%; background: linear-gradient(135deg, #1a1d23 0%, #0e1013 100%); border: 1px solid #333; padding: 20px; border-radius: 15px; margin-top: 20px; }
         .crypto-balance { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #222; }
-        .crypto-name { font-weight: 800; color: var(--accent); }
         .wallet-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
         .wallet-btn { padding: 15px; border-radius: 8px; border: none; font-weight: 900; cursor: pointer; }
-        .btn-deposit { background: var(--crypto-color); color: white; }
-        .btn-withdraw { background: #333; color: #aaa; }
 
-        /* 카드 컴포넌트 */
+        /* 카드 및 테이블 */
         .how-card { width: 92%; background: var(--card); border-radius: 12px; border: 1px solid #333; padding: 20px; margin-top: 10px; }
         .how-section { margin-bottom: 25px; }
         .how-title { font-size: 0.95rem; font-weight: 900; color: var(--accent); border-bottom: 2px solid #333; padding-bottom: 8px; margin-bottom: 10px; }
         .how-text { font-size: 0.78rem; color: #bbccdd; line-height: 1.8; }
-        .how-highlight { color: var(--gold); font-weight: 800; }
-        .tech-box { background: rgba(0, 242, 255, 0.05); border: 1px dashed var(--accent); padding: 12px; border-radius: 8px; margin-top: 10px; font-size: 0.75rem; }
-
         .digital-stats { width: 92%; background: #000; border: 1px solid #333; padding: 15px; border-radius: 12px; margin-top: 10px; }
         .stat-bar-bg { width: 100%; height: 8px; background: #111; border-radius: 4px; overflow: hidden; margin-top: 5px; }
-        .stat-bar-fill { height: 100%; width: 0%; transition: width 1s ease-out; }
-
-        /* 테이블 및 하단 메뉴 */
         .log-table { width: 95%; border-collapse: collapse; font-size: 0.7rem; background: rgba(0,0,0,0.4); border-radius: 10px; overflow: hidden; margin: 15px auto; }
         .log-table th { background: #1a1a1a; padding: 10px; color: var(--text-muted); font-size: 0.75rem; font-weight: 900; }
         .log-table td { padding: 8px; border-bottom: 1px solid #222; text-align: center; font-weight: 700; }
@@ -176,11 +166,11 @@
     <div id="view-wallet" class="content-view">
         <div style="padding:25px 0; text-align:center;"><h3 id="walletMainTitle" style="color:var(--crypto-color); margin:0;">CRYPTO WALLET</h3></div>
         <div class="wallet-card">
-            <div class="crypto-balance"><span class="crypto-name">TONCOIN (TON)</span><span style="font-weight:900;" id="amt-ton">0.00 TON</span></div>
-            <div class="crypto-balance"><span class="crypto-name">TETHER (USDT)</span><span style="font-weight:900;" id="amt-usdt">0.00 USDT</span></div>
-            <div class="wallet-actions"><button class="wallet-btn btn-deposit" id="btnDeposit">DEPOSIT</button><button class="wallet-btn btn-withdraw" id="btnWithdraw">WITHDRAW</button></div>
+            <div class="crypto-balance"><span id="w-ton">TONCOIN (TON)</span><span style="font-weight:900;">0.00 TON</span></div>
+            <div class="crypto-balance"><span id="w-usdt">TETHER (USDT)</span><span style="font-weight:900;">0.00 USDT</span></div>
+            <div class="wallet-actions"><button class="wallet-btn" style="background:var(--crypto-color); color:#fff;" id="btnDeposit">DEPOSIT</button><button class="wallet-btn" style="background:#333; color:#aaa;" id="btnWithdraw">WITHDRAW</button></div>
         </div>
-        <div style="padding:20px; font-size:0.75rem; color:#667788; line-height:1.6;" id="walletDesc"></div>
+        <div id="walletDesc" style="padding:20px; font-size:0.75rem; color:#667788; line-height:1.6;"></div>
     </div>
 
     <div id="view-ranking" class="content-view">
@@ -239,10 +229,10 @@
     const i18n = {
         ko: { 
             welcome: "환영합니다", buy: "구매", closed: "마감", live: "실시간 현황", home: "홈", rank: "랭킹", how: "사용법", stats: "통계", login: "로그인", logout: "로그아웃", wallet: "지갑", deposit: "입금하기", withdraw: "출금하기", walletTitle: "코인 지갑", walletDesc: "* 코인 입금 시 포인트로 자동 전환됩니다.<br>* 환전은 연결된 지갑으로 즉시 전송됩니다.", pick: "선택", bet: "금액", res: "결과", win: "당첨", rankTitle: "TOP 100 랭킹", rhRank: "순위", rhId: "아이디", rhBet: "배팅", rhWin: "당첨", rhRate: "승률", pwRule: "비번: 6자 이상!", loginFail: "오류", pwMismatch: "불일치", joinSuccess: "가입 성공!", last100: "최근 100회 디지털 분석",
-            howTxt: `<div class="how-card"><div class="how-section"><div class="how-title">🛡️ Provably Fair (공정성)</div><div class="how-text">본 게임은 <span class="how-highlight">SHA-256 암호학적 알고리즘</span>과 UTC 타임스탬프 시드를 채택하여 서버 조작이 절대 불가능함을 기술적으로 보장합니다.</div></div></div>`
+            howTxt: `<div class="how-card"><div class="how-section"><div class="how-title">🛡️ Provably Fair (공정성)</div><div class="how-text">본 게임은 SHA-256 암호학적 알고리즘과 UTC 시드를 채택하여 서버 조작이 절대 불가능함을 보장합니다.</div></div></div>`
         },
-        en: { welcome: "Welcome", buy: "BUY", closed: "CLOSED", live: "LIVE STATUS", home: "Home", rank: "Ranking", how: "How", stats: "Stats", login: "Login", logout: "Logout", wallet: "Wallet", deposit: "DEPOSIT", withdraw: "WITHDRAW", walletTitle: "CRYPTO WALLET", walletDesc: "* Deposits convert to points.<br>* Withdrawals processed via TON Network.", rankTitle: "TOP 100 RANKING", last100: "LAST 100 ANALYSIS", howTxt: "Real-time fair wheel game using Provably Fair logic." },
-        cn: { welcome: "欢迎", buy: "购买", closed: "已截止", live: "实时投注", home: "首页", rank: "排行", how: "指南", stats: "统计", login: "登录", logout: "登出", wallet: "钱包", deposit: "存款", withdraw: "提款", rankTitle: "全球排行前100名", last100: "数据分析" },
+        en: { welcome: "Welcome", buy: "BUY", closed: "CLOSED", live: "LIVE STATUS", home: "Home", rank: "Ranking", how: "How", stats: "Stats", login: "Login", logout: "Logout", wallet: "Wallet", deposit: "DEPOSIT", withdraw: "WITHDRAW", walletTitle: "CRYPTO WALLET", walletDesc: "* Deposits convert to points.<br>* Withdrawals processed via TON.", rankTitle: "TOP 100 RANKING", last100: "LAST 100 ANALYSIS", howTxt: "Real-time fair wheel game using Provably Fair logic." },
+        cn: { welcome: "欢迎", buy: "购买", closed: "已截止", live: "实时投注", home: "首页", rank: "排行", how: "指南", stats: "统计", login: "登录", logout: "登出", wallet: "钱包", deposit: "存款", withdraw: "提款", rankTitle: "全球排行前100名", last100: "分析" },
         jp: { welcome: "ようこそ", buy: "購入", closed: "締切", live: "ライブ状況", home: "ホーム", rank: "ランク", how: "遊び方", stats: "統計", login: "ログイン", logout: "ログアウト", wallet: "ウォレット", deposit: "入金", withdraw: "出金", rankTitle: "トップ100", last100: "100回分析" }
     };
 
@@ -271,7 +261,7 @@
         globalHistory.slice(-100).forEach(color => { if(color === '#444444') counts.black++; else if(color === '#ff3333') counts.red++; else if(color === '#00e5ff') counts.blue++; else if(color === '#ffcc00') counts.gold++; });
         const container = document.getElementById('statsContainer'); container.innerHTML = '';
         ['black', 'red', 'blue', 'gold'].forEach(c => {
-            const pct = counts[c]; container.innerHTML += `<div class="stat-row"><div style="display:flex; justify-content:space-between; font-size:0.7rem;"><span>${c.toUpperCase()}</span><span>${pct}%</span></div><div class="stat-bar-bg"><div style="height:100%; width:${pct}%; transition:width 1s; background:var(--${c})"></div></div></div>`;
+            const pct = counts[c]; container.innerHTML += `<div class="stat-row" style="margin-bottom:12px;"><div style="display:flex; justify-content:space-between; font-size:0.7rem;"><span>${c.toUpperCase()}</span><span>${pct}%</span></div><div class="stat-bar-bg" style="width:100%; height:8px; background:#111; border-radius:4px; overflow:hidden; margin-top:5px;"><div style="height:100%; width:${pct}%; transition:width 1s; background:var(--${c})"></div></div></div>`;
         });
     }
 
@@ -300,7 +290,7 @@
 
     function syncHistory() { const seed = Math.floor(Date.now() / CYCLE_MS); globalHistory = []; for(let i=1; i<=100; i++) { globalHistory.push(wheelMap[getWinIndex(seed - i).index].color); } updateHistoryUI(); }
     
-    /* [GM 물리 엔진] 12시 정각(Index 0) 시작 드로잉 고정 */
+    /* [GM 물리 엔진] Index 0 = 12시 정각(-PI/2) 고정 드로잉 */
     function drawWheel() {
         const arc = (Math.PI * 2) / 56, radius = 260; ctx.clearRect(0,0,560,560); ctx.lineWidth = 14; 
         for (let i = 0; i < 56; i++) {
@@ -316,8 +306,8 @@
             if (elapsed < 200 && !isSpinning) startSpin();
             if(isSpinning) {
                 const rot = getCurrentRotation(), arc = 360 / 56;
-                // [정밀 동기화] 6시(180도) 지점 인덱스 실시간 역계산 (+90도 드로잉 보정 포함)
-                const idx = Math.floor(((180 - (rot % 360) + 90) % 360 + 360) % 360 / arc) % 56;
+                // [정밀 동기화 핵심] 6시(180도) 지점 인덱스 실시간 역계산 보정 공식
+                const idx = Math.floor(((180 - (rot % 360) + 90 + 360) % 360) / arc) % 56;
                 pointer.style.backgroundColor = wheelMap[idx].color;
             }
         } else {
@@ -325,14 +315,14 @@
             timerBar.style.width = (rem / BETTING_PERIOD) * 100 + "%";
             timerBar.style.backgroundColor = `hsl(${(rem / BETTING_PERIOD) * 60}, 100%, 50%)`;
             betOverlay.style.display = (rem < 1000) ? "flex" : "none";
-            // [Fix] 다음 판 직전까지 결과 색상 고정 유지
+            // 다음 판 직전까지 결과 색상 화살표에 고정
             pointer.style.backgroundColor = lastResultColor;
         }
     }
 
     function getCurrentRotation() { const st = window.getComputedStyle(canvas, null), tr = st.getPropertyValue("transform"); if(tr === "none") return 0; const v = tr.split('(')[1].split(')')[0].split(','); return (Math.round(Math.atan2(parseFloat(v[1]), parseFloat(v[0])) * (180/Math.PI)) + 360) % 360; }
 
-    /* [GM 물리 엔진] 180도 지점에 당첨 칸 정중앙 강제 고정 멈춤 */
+    /* [GM 물리 엔진] 180도(6시) 포인터에 당첨 칸 정중앙 강제 고정 멈춤 */
     function startSpin() {
         isSpinning = true;
         const res = getWinIndex(Math.floor(Date.now() / CYCLE_MS));
@@ -348,15 +338,10 @@
     }
 
     function resolve(win) {
-        lastResultColor = win.color; // 결과 색상 고정
+        lastResultColor = win.color; // [Fix] 결과 색상을 센서(화살표)에 고정
         document.getElementById('wheelPointer').style.backgroundColor = win.color; 
         globalHistory.push(win.color);
-        if(myBet) {
-            myGameStats.total++; const winStatus = myBet.type === win.name;
-            if(winStatus) { balance += (myBet.amount * win.mult); myGameStats.wins++; playSound('sndWin'); } else playSound('sndLose');
-            const row = `<tr><td>${myBet.type.toUpperCase()}</td><td>${myBet.amount.toLocaleString()}</td><td>${winStatus ? 'Win' : 'Lost'}</td><td><span class="winner-dot" style="background:${win.color}"></span></td></tr>`;
-            document.getElementById('myLogBody').insertAdjacentHTML('afterbegin', row);
-        }
+        if(myBet) { myGameStats.total++; const winStatus = myBet.type === win.name; if(winStatus) { balance += (myBet.amount * win.mult); myGameStats.wins++; playSound('sndWin'); } else playSound('sndLose'); const row = `<tr><td>${myBet.type.toUpperCase()}</td><td>${myBet.amount.toLocaleString()}</td><td>${winStatus ? 'Win' : 'Lost'}</td><td><span class="winner-dot" style="background:${win.color}"></span></td></tr>`; document.getElementById('myLogBody').insertAdjacentHTML('afterbegin', row); }
         updateHistoryUI(); if(currentId !== "GUEST") { let u = JSON.parse(localStorage.getItem('db_users')); u[currentId].balance = balance; u[currentId].myGameStats = myGameStats; localStorage.setItem('db_users', JSON.stringify(u)); }
         setTimeout(() => { myBet = null; document.querySelectorAll('.bet-buttons .btn').forEach(b => b.classList.remove('selected')); liveBoardTotals = { black:0, red:0, blue:0, gold:0 }; document.querySelectorAll('.bet-list').forEach(l => l.innerHTML = ''); updateBalUI(); }, RESULT_WAIT);
     }
@@ -373,7 +358,7 @@
     function initAudio() { audioInitialized = true; }
     function toggleMute() { isMuted = !isMuted; document.getElementById('soundToggle').innerText = isMuted ? "🔇" : "🔊"; }
     function playSound(id) { if(!isMuted && audioInitialized) { const s = document.getElementById(id); s.currentTime = 0; s.play().catch(()=>{}); } }
-    function deterministicGlobalSpawn() { const now = Date.now(), ts = Math.floor(now/1000), r = (ts*9301+49297)%233280; if((r%100)<28) { const botId = ["WinAce", "LuckyBot", "TopVip", "PeakAce"][r%4] + (r%99), type = (r%100)<40?'black':((r%100)<75?'red':((r%100)<95?'blue':'gold')); addLiveUI(type, botId, (Math.floor(r%15)+1)*10000); } }
+    function deterministicGlobalSpawn() { const now = Date.now(), ts = Math.floor(now/1000), r = (ts*9301+49297)%233280; if((r%100)<28) { const botId = ["WinAce", "LuckyVip", "PeakTop", "StarAce"][r%4] + (r%99), type = (r%100)<40?'black':((r%100)<75?'red':((r%100)<95?'blue':'gold')); addLiveUI(type, botId, (Math.floor(r%15)+1)*10000); } }
     function addLiveUI(type, user, amt) { const list = document.getElementById(`l-${type}`); if(!list || [...list.querySelectorAll('span')].some(s => s.innerText === user)) return; liveBoardTotals[type] += amt; document.getElementById(`t-${type}`).innerText = liveBoardTotals[type].toLocaleString(); const item = document.createElement('div'); item.className = 'bet-item'; item.innerHTML = `<span>${user}</span><b>${(amt/1000).toFixed(0)}k</b>`; list.prepend(item); if(list.children.length > 5) list.lastChild.remove(); }
 
     checkSession(); syncHistory(); drawWheel(); updateBalUI(); applyI18n(); setInterval(tick, 100);
