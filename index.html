@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Spin4 v5.59 Golden Master</title>
+    <title>Spin4 v5.60 Golden Master</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
@@ -27,7 +27,7 @@
         .user-id { font-size: 0.8rem; font-weight: 700; border-left: 3px solid var(--accent); padding-left: 10px; }
         .balance-box { background: rgba(255, 149, 0, 0.05); padding: 5px 10px; border-radius: 6px; border: 1px solid var(--point-color); color: var(--point-color); font-weight: 800; font-size: 0.85rem; }
 
-        /* 히스토리 바 (가운데 정렬, 상단 기준 정렬) */
+        /* 히스토리 바 (가운데 정렬, 상단 고정, 가변 길이) */
         .rolls-wrapper { width: 100%; padding: 15px 0; background: rgba(0,0,0,0.2); border-bottom: 1px solid #333; flex-shrink: 0; display: flex; justify-content: center; }
         .history-strip { display: flex; gap: 4px; height: 45px; align-items: flex-start; overflow: hidden; }
         .hist-bar { width: 4px; border-radius: 10px; flex-shrink: 0; transition: all 0.3s ease; }
@@ -42,7 +42,7 @@
         .content-view { flex: 1; overflow-y: auto; display: none; padding-bottom: 90px; width: 100%; align-items: center; }
         .content-view.active { display: flex; flex-direction: column; }
 
-        /* 휠 & 포인터 정렬 */
+        /* 휠 & 초정밀 물리 엔진 정렬 */
         .wheel-section { position: relative; margin: 25px 0; width: 230px; height: 230px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; }
         .wheel-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-weight: 900; font-size: 1.8rem; color: var(--accent); text-shadow: 0 0 10px var(--accent); pointer-events: none; }
@@ -59,11 +59,12 @@
         .btn-black { border-color: #555; color: #777; } .btn-red { border-color: var(--red); color: var(--red); }
         .btn-blue { border-color: var(--blue); color: var(--blue); } .btn-gold { border-color: var(--gold); color: var(--gold); }
         .btn.selected.btn-black { background: #222; border-color: #222; }
+        /* 빨강 버튼 선택 시 검정색 폰트 강제 적용 */
         .btn.selected.btn-red { background: var(--red); border-color: var(--red); color: #000 !important; box-shadow: 0 0 15px rgba(255,51,51,0.4); }
         .btn.selected.btn-blue { background: var(--blue); border-color: var(--blue); color: #000; box-shadow: 0 0 15px rgba(0,229,255,0.4); }
         .btn.selected.btn-gold { background: var(--gold); border-color: var(--gold); color: #000; box-shadow: 0 0 15px rgba(255,204,0,0.4); }
 
-        /* 라이브 배팅 보드 */
+        /* 라이브 배팅 UI */
         .live-betting-area { width: 100%; margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid #333; }
         .live-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
         .live-col { background: rgba(0,0,0,0.4); border-radius: 8px; min-height: 110px; border-top: 3px solid #444; overflow: hidden; display: flex; flex-direction: column; }
@@ -73,19 +74,6 @@
         .bet-list { padding: 3px; flex: 1; display: flex; flex-direction: column; gap: 3px; overflow: hidden; }
         .bet-item { display: flex; justify-content: space-between; font-size: 0.48rem; font-weight: 700; background: rgba(255,255,255,0.05); padding: 2px; border-radius: 3px; }
 
-        /* 카드 UI (How, Stats) */
-        .how-card { width: 94%; background: var(--card); border-radius: 12px; border: 1px solid #333; padding: 20px; margin-top: 10px; }
-        .how-section { margin-bottom: 25px; }
-        .how-title { font-size: 0.95rem; font-weight: 900; color: var(--accent); border-bottom: 2px solid #333; padding-bottom: 8px; margin-bottom: 10px; }
-        .how-text { font-size: 0.78rem; color: #bbccdd; line-height: 1.8; }
-        .how-highlight { color: var(--gold); font-weight: 800; }
-        .tech-box { background: rgba(0, 242, 255, 0.05); border: 1px dashed var(--accent); padding: 12px; border-radius: 8px; margin-top: 10px; font-size: 0.75rem; }
-
-        .digital-stats { width: 94%; background: #000; border: 1px solid #333; padding: 15px; border-radius: 12px; margin-top: 10px; }
-        .stat-row { margin-bottom: 12px; }
-        .stat-bar-bg { width: 100%; height: 8px; background: #111; border-radius: 4px; overflow: hidden; margin-top: 5px; }
-        .stat-bar-fill { height: 100%; width: 0%; transition: width 1s ease-out; }
-
         .log-table { width: 95%; border-collapse: collapse; font-size: 0.7rem; background: rgba(0,0,0,0.4); border-radius: 10px; overflow: hidden; margin: 20px auto; }
         .log-table th { background: #1a1a1a; padding: 10px; color: var(--text-muted); font-size: 0.75rem; font-weight: 900; }
         .log-table td { padding: 8px; border-bottom: 1px solid #222; text-align: center; font-weight: 700; }
@@ -94,6 +82,15 @@
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; }
         .nav-item span { font-size: 0.75rem; font-weight: 700; margin-top: 2px; }
         .nav-item.active { color: var(--accent); }
+
+        /* 사용법/통계/로그인 카드 */
+        .how-card { width: 94%; background: var(--card); border-radius: 12px; border: 1px solid #333; padding: 20px; margin-top: 10px; }
+        .how-section { margin-bottom: 25px; }
+        .how-title { font-size: 0.95rem; font-weight: 900; color: var(--accent); border-bottom: 2px solid #333; padding-bottom: 8px; margin-bottom: 10px; }
+        .how-text { font-size: 0.78rem; color: #bbccdd; line-height: 1.8; }
+        .digital-stats { width: 94%; background: #000; border: 1px solid #333; padding: 15px; border-radius: 12px; margin-top: 10px; }
+        .stat-bar-bg { width: 100%; height: 8px; background: #111; border-radius: 4px; overflow: hidden; margin-top: 5px; }
+        .stat-bar-fill { height: 100%; width: 0%; transition: width 1s ease-out; }
 
         .closed-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); z-index: 100; display: none; align-items: center; justify-content: center; border-radius: 12px; pointer-events: none; }
         .closed-text { color: #ddd; font-weight: 900; font-size: 1.6rem; letter-spacing: 4px; animation: pulse 0.8s infinite; }
@@ -176,16 +173,7 @@
 
     <div id="view-recommend" class="content-view">
         <div style="padding:30px 20px 10px; text-align:center;"><div style="font-size:0.85rem; font-weight:900; color:var(--accent);" id="lblLast100Stats">DIGITAL ANALYSIS</div></div>
-        <div class="digital-stats">
-            <div class="stat-row"><div style="display:flex; justify-content:space-between; font-size:0.7rem;"><span id="sl1">BLACK</span><span id="val-black">0%</span></div><div class="stat-bar-bg"><div id="bar-black" class="stat-bar-fill" style="background:var(--black)"></div></div></div>
-            <div class="stat-row"><div style="display:flex; justify-content:space-between; font-size:0.7rem;"><span id="sl2">RED</span><span id="val-red">0%</span></div><div class="stat-bar-bg"><div id="bar-red" class="stat-bar-fill" style="background:var(--red)"></div></div></div>
-            <div class="stat-row"><div style="display:flex; justify-content:space-between; font-size:0.7rem;"><span id="sl3">BLUE</span><span id="val-blue">0%</span></div><div class="stat-bar-bg"><div id="bar-blue" class="stat-bar-fill" style="background:var(--blue)"></div></div></div>
-            <div class="stat-row"><div style="display:flex; justify-content:space-between; font-size:0.7rem;"><span id="sl4">GOLD</span><span id="val-gold">0%</span></div><div class="stat-bar-bg"><div id="bar-gold" class="stat-bar-fill" style="background:var(--gold); box-shadow:0 0 8px var(--gold)"></div></div></div>
-        </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; width:92%; margin-top:15px;">
-            <div style="background:var(--card); padding:15px; border-radius:10px; text-align:center; border:1px solid #333;"><div id="st-total" style="font-size:1.2rem; font-weight:900; color:var(--accent);">0</div><div id="lbl-total" style="font-size:0.6rem; color:#666;">TOTAL SPINS</div></div>
-            <div style="background:var(--card); padding:15px; border-radius:10px; text-align:center; border:1px solid #333;"><div id="st-winrate" style="font-size:1.2rem; font-weight:900; color:var(--accent);">0%</div><div id="lbl-winrate" style="font-size:0.6rem; color:#666;">WIN RATE</div></div>
-        </div>
+        <div id="statsContainer" class="digital-stats"></div>
     </div>
 
     <div id="view-login" class="content-view">
@@ -226,27 +214,10 @@
     shuffleWheel();
 
     const i18n = {
-        ko: { 
-            welcome: "환영합니다", buy: "구매", closed: "마감", live: "실시간 현황", home: "홈", rank: "랭킹", how: "사용법", stats: "통계", login: "로그인", logout: "로그아웃", pick: "선택", bet: "금액", res: "결과", win: "당첨", rankTitle: "TOP 100 랭킹", rhRank: "순위", rhId: "아이디", rhBet: "배팅", rhWin: "당첨", rhRate: "승률", pwRule: "비번: 6자 이상!", loginFail: "오류", pwMismatch: "불일치", joinSuccess: "가입 성공!", last100: "최근 100회 디지털 분석", totalSpins: "참여 라운드", winRate: "나의 승률",
-            howTxt: `<div class="how-card">
-                <div class="how-section"><div class="how-title">🎮 Spin4 개요</div><div class="how-text">전 세계 유저가 실시간 참여하는 <span class="how-highlight">결정론적 휠 시스템</span>입니다.</div></div>
-                <div class="how-section"><div class="how-title">🛡️ Provably Fair (공정성)</div><div class="how-text">
-                    본 게임은 <span class="how-highlight">SHA-256 암호학적 알고리즘</span>을 채택하여 조작이 절대 불가능합니다.
-                    <div class="tech-box">
-                        <b>1. 시드 생성:</b> UTC(협정 세계시) 기반 <b>Seed</b> 생성.<br>
-                        <b>2. PRNG:</b> 시드는 수학적 난수 생성기를 거쳐 정확한 각도를 산출.<br>
-                        <b>3. 일치성:</b> 모든 유저는 서버에서 생성된 동일한 결과를 동시에 확인합니다.
-                    </div>
-                </div></div>
-                <div class="how-section"><div class="how-title">💰 당첨 배당</div><div class="how-text">BLACK x2 | RED x3 | BLUE x5 | GOLD x50</div></div>
-            </div>`
-        },
-        en: { 
-            welcome: "Welcome", buy: "BUY", closed: "CLOSED", live: "LIVE STATUS", home: "Home", rank: "Ranking", how: "How", stats: "Stats", login: "Login", logout: "Logout", rankTitle: "TOP 100 RANKING", rhRank: "#", rhId: "User ID", rhBet: "Bet", rhWin: "Win", rhRate: "Rate", pwRule: "PW: 6+ chars.", last100: "LAST 100 ANALYSIS", totalSpins: "TOTAL SPINS", winRate: "WIN RATE",
-            howTxt: `<div class="how-card"><div class="how-section"><div class="how-title">🎮 Overview</div><div class="how-text">Real-time deterministic wheel system using SHA-256 algorithms.</div></div><div class="how-section"><div class="how-title">🛡️ Provably Fair</div><div class="how-text">Outcomes fixed by UTC Seed. Tamper-proof guaranteed.</div></div></div>`
-        },
-        cn: { welcome: "欢迎", buy: "购买", closed: "已截止", live: "实时投注", home: "首页", rank: "排行", how: "指南", stats: "统计", login: "登录", logout: "登出", rankTitle: "全球排行前100名", last100: "数据分析", totalSpins: "局数", winRate: "胜率", howTxt: "<h3>简介</h3>基于精密公正算法的轮盘。" },
-        jp: { welcome: "ようこそ", buy: "購入", closed: "締切", live: "ライブ状況", home: "ホーム", rank: "ランク", how: "遊び方", stats: "統計", login: "ログイン", logout: "ログ아웃", rankTitle: "トップ100", last100: "直近100回分析", totalSpins: "回転数", winRate: "マイ勝率", howTxt: "<h3>紹介</h3>公平なホイールゲーム。" }
+        ko: { welcome: "환영합니다", buy: "구매", closed: "마감", live: "실시간 현황", home: "홈", rank: "랭킹", how: "사용법", stats: "통계", login: "로그인", logout: "로그아웃", pick: "선택", bet: "금액", res: "결과", win: "당첨", rankTitle: "TOP 100 랭킹", rhRank: "순위", rhId: "아이디", rhBet: "배팅", rhWin: "당첨", rhRate: "승률", pwRule: "비번: 6자 이상!", loginFail: "오류", pwMismatch: "불일치", joinSuccess: "가입 성공!", last100: "최근 100회 디지털 분석", howTxt: `<div class="how-card"><div class="how-section"><div class="how-title">🛡️ Provably Fair (공정성)</div><div class="how-text">본 게임은 UTC 타임스탬프와 PRNG 알고리즘을 사용한 암호학적 공정 게임입니다.</div></div></div>` },
+        en: { welcome: "Welcome", buy: "BUY", closed: "CLOSED", live: "LIVE STATUS", home: "Home", rank: "Ranking", how: "How", stats: "Stats", login: "Login", logout: "Logout", rankTitle: "TOP 100 RANKING", rhRank: "#", rhId: "User ID", rhBet: "Bet", rhWin: "Win", rhRate: "Rate", pwRule: "PW: 6+ chars.", last100: "LAST 100 ANALYSIS", howTxt: "Real-time fair wheel game using Provably Fair logic." },
+        cn: { welcome: "欢迎", buy: "购买", closed: "已截止", live: "实时投注", home: "首页", rank: "排行", how: "指南", stats: "统计", login: "登录", logout: "登出", rankTitle: "全球排行前100名", last100: "分析" },
+        jp: { welcome: "ようこそ", buy: "購入", closed: "締切", live: "ライブ状況", home: "ホーム", rank: "ランク", how: "遊び方", stats: "統計", login: "ログイン", logout: "ログアウト", rankTitle: "トップ100", last100: "100回分析" }
     };
 
     const CYCLE_MS = 20000, SPIN_DURATION = 6500, RESULT_WAIT = 2000, FREEZE_PERIOD = SPIN_DURATION + RESULT_WAIT, BETTING_PERIOD = CYCLE_MS - FREEZE_PERIOD;
@@ -266,19 +237,19 @@
         document.getElementById('rh-bet').innerText = t.rhBet; document.getElementById('rh-win').innerText = t.rhWin;
         document.getElementById('rh-rate').innerText = t.rhRate;
         document.getElementById('liveTitle').innerText = t.live; document.getElementById('lblLast100Stats').innerText = t.last100;
-        document.getElementById('lbl-total').innerText = t.totalSpins; document.getElementById('lbl-winrate').innerText = t.winRate;
         document.getElementById('cl1').innerText = currentLang === 'ko' ? "블랙" : "BLACK"; document.getElementById('cl2').innerText = currentLang === 'ko' ? "레드" : "RED";
         document.getElementById('cl3').innerText = currentLang === 'ko' ? "블루" : "BLUE"; document.getElementById('cl4').innerText = currentLang === 'ko' ? "골드" : "GOLD";
-        document.getElementById('sl1').innerText = currentLang === 'ko' ? "블랙" : "BLACK"; document.getElementById('sl2').innerText = currentLang === 'ko' ? "레드" : "RED";
-        document.getElementById('sl3').innerText = currentLang === 'ko' ? "블루" : "BLUE"; document.getElementById('sl4').innerText = currentLang === 'ko' ? "골드" : "GOLD";
-        handleIdInput();
+        handleIdInput(); if(document.getElementById('view-recommend').classList.contains('active')) renderStats();
     }
 
     function renderStats() {
         const counts = { black: 0, red: 0, blue: 0, gold: 0 };
         globalHistory.slice(-100).forEach(color => { if(color === '#444444') counts.black++; else if(color === '#ff3333') counts.red++; else if(color === '#00e5ff') counts.blue++; else if(color === '#ffcc00') counts.gold++; });
-        ['black', 'red', 'blue', 'gold'].forEach(c => { document.getElementById(`val-${c}`).innerText = `${counts[c]}%`; document.getElementById(`bar-${c}`).style.width = counts[c] + "%"; });
-        document.getElementById('st-total').innerText = myGameStats.total; document.getElementById('st-winrate').innerText = (myGameStats.total > 0 ? (myGameStats.wins/myGameStats.total*100).toFixed(1) : 0) + "%";
+        const container = document.getElementById('statsContainer'); container.innerHTML = '';
+        ['black', 'red', 'blue', 'gold'].forEach(c => {
+            const pct = counts[c];
+            container.innerHTML += `<div class="stat-row"><div style="display:flex; justify-content:space-between; font-size:0.7rem;"><span>${c.toUpperCase()}</span><span>${pct}%</span></div><div class="stat-bar-bg"><div style="height:100%; width:${pct}%; transition:width 1s; background:var(--${c})"></div></div></div>`;
+        });
     }
 
     function renderRanking() {
@@ -300,16 +271,14 @@
                 const bar = document.createElement('div');
                 let hClass = 'h-black';
                 if(color === '#ff3333') hClass = 'h-red'; else if(color === '#00e5ff') hClass = 'h-blue'; else if(color === '#ffcc00') hClass = 'h-gold';
-                bar.className = 'hist-bar ' + hClass;
-                bar.style.backgroundColor = color;
-                strip.appendChild(bar);
+                bar.className = 'hist-bar ' + hClass; bar.style.backgroundColor = color; strip.appendChild(bar);
             }
         });
     }
 
     function syncHistory() { const seed = Math.floor(Date.now() / CYCLE_MS); globalHistory = []; for(let i=1; i<=100; i++) { globalHistory.push(wheelMap[getWinIndex(seed - i).index].color); } updateHistoryUI(); }
     
-    /* [GM 물리 엔진] Index 0 = 12시 방향 고정 드로잉 */
+    /* [GM 물리 엔진] 12시 방향(Index 0) 절대 영점 드로잉 */
     function drawWheel() {
         const arc = (Math.PI * 2) / 56, radius = 260; ctx.clearRect(0,0,560,560); ctx.lineWidth = 14; 
         for (let i = 0; i < 56; i++) {
@@ -325,7 +294,7 @@
             if (elapsed < 200 && !isSpinning) startSpin();
             if(isSpinning) {
                 const rot = getCurrentRotation(), arc = 360 / 56;
-                // [좌표 역계산] 6시(180도) 포인터 지점의 색상 감지
+                // [정밀 동기화] 6시(180도) 지점의 인덱스 실시간 역계산
                 const idx = Math.floor(((180 - (rot % 360) + 90) % 360 + 360) % 360 / arc) % 56;
                 pointer.style.backgroundColor = wheelMap[idx].color;
             }
@@ -341,11 +310,12 @@
 
     function getCurrentRotation() { const st = window.getComputedStyle(canvas, null), tr = st.getPropertyValue("transform"); if(tr === "none") return 0; const v = tr.split('(')[1].split(')')[0].split(','); return (Math.round(Math.atan2(parseFloat(v[1]), parseFloat(v[0])) * (180/Math.PI)) + 360) % 360; }
 
-    /* [GM 물리 엔진] 180도(6시) 포인터에 당첨 칸 중앙 정밀 멈춤 */
+    /* [GM 물리 엔진] 180도 지점에 당첨 칸 중앙 정밀 보정 */
     function startSpin() {
         isSpinning = true;
         const res = getWinIndex(Math.floor(Date.now() / CYCLE_MS));
         const arc = 360 / 56;
+        // 180도 포인터 = (당첨 인덱스 각도) - 90도(드로잉 보정) + 칸의 절반
         const targetDegInCircle = (180 - (res.index * arc - 90 + arc / 2) + 360) % 360;
         const currentMod = currentAbsoluteRotation % 360;
         let distance = (targetDegInCircle - currentMod + 360) % 360;
