@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Spin4 v5.71 Ultimate Sync</title>
+    <title>Spin4 v5.72 Ultimate Master</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
@@ -19,7 +19,7 @@
         html, body { margin: 0; padding: 0; width: 100%; height: 100dvh; overflow: hidden; touch-action: manipulation; background: radial-gradient(circle at center, var(--bg-top) 0%, var(--bg-bottom) 100%); color: white; font-family: 'Pretendard', sans-serif; }
         .main-container { width: 100%; max-width: 500px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; position: relative; overflow: hidden; }
 
-        /* 언어 선택 */
+        /* 언어 선택 오버레이 */
         #langOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); z-index: 5000; display: flex; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
         .lang-list { display: flex; flex-direction: column; gap: 12px; width: 220px; }
         .lang-btn { background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 15px 25px; border-radius: 12px; font-size: 0.95rem; font-weight: 700; display: flex; align-items: center; gap: 15px; cursor: pointer; }
@@ -47,17 +47,18 @@
         .wheel-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-weight: 900; font-size: 1.8rem; color: var(--accent); text-shadow: 0 0 10px var(--accent); pointer-events: none; }
         .pointer { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); width: 16px; height: 24px; background: #fff; clip-path: polygon(0 0, 100% 0, 50% 100%); z-index: 25; }
 
-        .controls { width: 94%; background: var(--card); padding: 15px; border-radius: 12px; border: 1px solid #333; }
+        .overlay-container { width: 100%; padding: 0 15px; display: flex; flex-direction: column; align-items: center; }
+        .controls { width: 100%; background: var(--card); padding: 15px; border-radius: 12px; border: 1px solid #333; }
         #betInput { width: 100%; background: #000; border: 1px solid #333; color: var(--accent); padding: 12px; border-radius: 8px; text-align: center; font-weight: 900; margin-bottom: 10px; outline: none; }
         .bet-buttons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .btn { height: 60px; border: none; border-radius: 8px; font-weight: 900; font-size: 1.1rem; color: #fff; cursor: pointer; }
+        .btn { height: 60px; border: none; border-radius: 8px; font-weight: 900; font-size: 1.1rem; color: #fff; cursor: pointer; transition: all 0.3s ease; }
         .btn-black { background: var(--black); } .btn-red { background: var(--red); }
         .btn-blue { background: var(--blue); color: #000; } .btn-gold { background: var(--gold); color: #000; }
         .btn.selected { border: 2px solid white; box-shadow: 0 0 15px rgba(255,255,255,0.4); }
 
-        .live-betting-area { width: 94%; margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid #333; }
+        .live-betting-area { width: 100%; margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid #333; }
         .live-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-        .live-col { background: rgba(0,0,0,0.4); border-radius: 8px; min-height: 110px; border-top: 3px solid #444; overflow: hidden; display: flex; flex-direction: column; }
+        .live-col { background: rgba(0,0,0,0.4); border-radius: 8px; min-height: 110px; border-top: 3px solid #444; overflow: hidden; }
         .col-head { padding: 4px; text-align: center; font-size: 0.55rem; font-weight: 900; color: var(--text-muted); }
         .col-total { font-size: 0.62rem; font-weight: 800; color: var(--accent); display: block; }
 
@@ -65,16 +66,16 @@
         .log-table th { background: #1a1a1a; padding: 10px; color: var(--text-muted); }
         .log-table td { padding: 8px; border-bottom: 1px solid #222; text-align: center; font-weight: 700; }
 
-        nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; height: 75px; background: var(--nav-bg); display: flex; border-top: 1px solid #222; z-index: 200; }
+        nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; height: 75px; background: var(--nav-bg); display: flex; border-top: 1px solid #222; z-index: 200; padding-bottom: env(safe-area-inset-bottom); }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; }
         .nav-item.active { color: var(--accent); }
-        .nav-item span { font-size: 0.7rem; font-weight: 700; }
+        .nav-item span { font-size: 0.7rem; font-weight: 700; margin-top: 2px; }
 
         .closed-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); z-index: 100; display: none; align-items: center; justify-content: center; border-radius: 12px; }
         .closed-text { color: #ddd; font-weight: 900; font-size: 1.8rem; animation: pulse 0.8s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
 
-        .version-tag { font-size: 0.65rem; color: #444; text-align: center; padding: 15px; }
+        .version-tag { font-size: 0.65rem; color: #444; text-align: center; padding: 15px; width: 100%; }
         .stat-bar-bg { width: 100%; height: 8px; background: #111; border-radius: 4px; overflow: hidden; margin-top: 5px; }
     </style>
 </head>
@@ -92,9 +93,7 @@
 <div class="main-container">
     <header>
         <div class="user-id" id="displayId">Welcome</div>
-        <div style="display:flex; gap:8px; align-items:center;">
-            <div class="balance-box"><span id="balance">1,000,000</span> P</div>
-        </div>
+        <div class="balance-box"><span id="balance">1,000,000</span> P</div>
     </header>
 
     <div class="rolls-wrapper"><div id="historyStrip" class="history-strip"></div></div>
@@ -106,7 +105,7 @@
             <div class="wheel-logo">Spin4</div>
             <canvas id="wheelCanvas" width="560" height="560"></canvas>
         </div>
-        <div class="overlay-container" style="width:100%; display:flex; flex-direction:column; align-items:center;">
+        <div class="overlay-container">
             <div id="betOverlay" class="closed-overlay"><div class="closed-text">CLOSED</div></div>
             <div class="controls">
                 <input type="number" id="betInput" value="10000">
@@ -137,7 +136,7 @@
             <h3 id="lblLast100Stats" style="text-align:center; color:var(--accent);">DIGITAL ANALYSIS</h3>
             <div id="statsContainer" style="background:#000; padding:15px; border-radius:12px; border:1px solid #333;"></div>
         </div>
-        <div class="version-tag">[통계] v5.71 Ultimate Sync (GM: v5.49 Logic)</div>
+        <div class="version-tag">[통계] v5.72 Ultimate Master (Core: v5.49 Logic)</div>
     </div>
 
     <div id="view-wallet" class="content-view"></div>
@@ -180,13 +179,13 @@
     const CYCLE_MS = 20000, SPIN_DURATION = 6500, RESULT_WAIT = 2500, FREEZE_PERIOD = SPIN_DURATION + RESULT_WAIT, BETTING_PERIOD = CYCLE_MS - FREEZE_PERIOD;
     const canvas = document.getElementById('wheelCanvas'), ctx = canvas.getContext('2d'), timerBar = document.getElementById('timerBar'), betOverlay = document.getElementById('betOverlay');
 
-    // [v5.49 GM] 3시 방향 기준 드로잉 (정적 유지)
+    // [Fix] 좌표계 정렬: 3시 방향(0도)에서 시작하도록 Math.PI/2 제거
     function drawWheel() {
         const arc = (Math.PI * 2) / 56, radius = 260; 
         ctx.clearRect(0,0,560,560); ctx.lineWidth = 14; 
         for (let i = 0; i < 56; i++) {
             ctx.beginPath(); ctx.strokeStyle = wheelMap[i].color;
-            ctx.arc(280, 280, radius, i * arc + Math.PI/2 + 0.02, (i + 1) * arc + Math.PI/2 - 0.02); 
+            ctx.arc(280, 280, radius, i * arc + 0.02, (i + 1) * arc - 0.02); 
             ctx.stroke();
         }
     }
@@ -196,10 +195,11 @@
         if (elapsed < FREEZE_PERIOD) {
             timerBar.style.width = "0%"; betOverlay.style.display = "flex";
             if (elapsed < 200 && !isSpinning) startSpin();
-            // 스핀 중 실시간 포인터 색상 센싱 (v5.49 정밀 공식 기반)
+            // 포인터 색상 동기화 주기를 높여서 휠과 일치시킴
             if(isSpinning) {
                 const rot = getCurrentRotation();
                 const arc = 360 / 56;
+                // 포인터는 180도(6시)에 위치함. 
                 const idx = Math.floor(((180 - (rot % 360) + 360) % 360) / arc) % 56;
                 pointer.style.backgroundColor = wheelMap[idx].color;
             }
@@ -217,25 +217,22 @@
         return (Math.round(Math.atan2(parseFloat(v[1]), parseFloat(v[0])) * (180/Math.PI)) + 360) % 360; 
     }
 
-    // [v5.49 GM] 눈과 데이터의 일치 핵심 로직
+    // [Master Fix] 타겟팅 알고리즘: 인덱스의 중앙값이 포인터(180도)에 오게 함
     function startSpin() {
         isSpinning = true;
         const res = getWinIndex(Math.floor(Date.now() / CYCLE_MS));
         const arc = 360 / 56;
         
-        // 1. 타겟 각도 계산: 180도(6시 포인터) 위치에 인덱스의 정중앙이 오도록 함
-        const targetDegInCircle = (180 - (res.index * arc + arc / 2) + 360) % 360;
+        // 180도(포인터 위치) - (해당 인덱스의 시작각도 + 반칸)
+        const targetDegInCircle = (180 - (res.index * arc + arc / 2) + 720) % 360;
         
-        // 2. 현재 각도에서 최소 10바퀴 이상 회전하도록 절대 각도 누적
         const currentMod = currentAbsoluteRotation % 360;
         let distance = (targetDegInCircle - currentMod + 360) % 360;
         currentAbsoluteRotation += distance + (360 * 10);
         
-        // 3. 물리 엔진 가속도 적용 (브라우저 렌더링 오차 최소화)
         canvas.style.transition = `transform ${SPIN_DURATION}ms cubic-bezier(0.15, 0, 0.1, 1)`;
         canvas.style.transform = `rotate(${currentAbsoluteRotation}deg)`;
         
-        // 4. 결정된 데이터(res.index)를 결과로 강제 확정
         setTimeout(() => {
             resolve(wheelMap[res.index]);
         }, SPIN_DURATION);
@@ -306,7 +303,7 @@
     function initAudio() {}
 
     drawWheel();
-    setInterval(tick, 50);
+    setInterval(tick, 16); // 60fps 감지로 더 매끄러운 색상 동기화
 </script>
 </body>
 </html>
