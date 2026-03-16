@@ -15,11 +15,17 @@
             --point-color: #ff9500; --buy-color: #ff00ff;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html, body { margin: 0; padding: 0; width: 100%; height: 100dvh; overflow: hidden; touch-action: manipulation; background: #1e2128; color: white; font-family: 'Pretendard', sans-serif; }
-        .main-container { width: 100%; max-width: 500px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
+        html, body { margin: 0; padding: 0; width: 100%; height: 100dvh; overflow: hidden; background: #1e2128; color: white; font-family: 'Pretendard', sans-serif; }
+        .main-container { width: 100%; max-width: 500px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; position: relative; }
 
-        /* 언어 선택 */
-        #langOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.98); z-index: 5000; display: flex; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(20px); }
+        /* [추가] 언어 선택 오버레이 - 반투명 수정 */
+        #langOverlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0, 0, 0, 0.7); /* 불투명에서 반투명으로 수정 */
+            z-index: 5000; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            backdrop-filter: blur(15px); /* 유리 효과 추가 */
+            -webkit-backdrop-filter: blur(15px);
+        }
         .lang-list { display: flex; flex-direction: column; gap: 12px; width: 240px; }
         .lang-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 18px 20px; border-radius: 12px; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 15px; cursor: pointer; }
 
@@ -27,75 +33,63 @@
         .user-id { font-size: 0.8rem; font-weight: 700; border-left: 3px solid var(--accent); padding-left: 10px; }
         .balance-box { background: rgba(255, 149, 0, 0.05); padding: 5px 10px; border-radius: 6px; border: 1px solid var(--point-color); color: var(--point-color); font-weight: 800; font-size: 0.85rem; }
 
-        /* v5.49 계단식 히스토리 바 복구 */
-        .rolls-wrapper { width: 100%; padding: 10px 15px; background: rgba(0,0,0,0.2); border-bottom: 1px solid #333; flex-shrink: 0; }
-        .history-strip { display: flex; gap: 3px; height: 45px; width: 100%; align-items: flex-start; justify-content: flex-start; overflow: hidden; }
-        .hist-bar { width: 4px; border-radius: 1px; flex-shrink: 0; transition: all 0.3s; }
+        /* [복구] v5.49 계단식 히스토리 바 */
+        .rolls-wrapper { width: 100%; padding: 10px 15px; background: rgba(0,0,0,0.2); border-bottom: 1px solid #333; }
+        .history-strip { display: flex; gap: 3px; height: 45px; align-items: flex-start; overflow: hidden; }
+        .hist-bar { width: 4px; border-radius: 1px; flex-shrink: 0; }
         .hist-bar.black-bar { height: 18px; }
         .hist-bar.red-bar { height: 26px; }
         .hist-bar.blue-bar { height: 34px; }
         .hist-bar.gold-bar { height: 42px; box-shadow: 0 0 10px var(--gold); }
 
-        .timer-container { width: 100%; height: 6px; background: #000; position: relative; flex-shrink: 0; }
+        .timer-container { width: 100%; height: 6px; background: #000; position: relative; }
         #timerBar { position: absolute; left: 0; top: 0; height: 100%; width: 0%; transition: width 0.1s linear; }
 
-        .content-view { flex: 1; overflow-y: auto; display: none; padding-bottom: 90px; width: 100%; align-items: center; }
-        .content-view.active { display: flex; flex-direction: column; }
+        .content-view { flex: 1; overflow-y: auto; display: none; padding-bottom: 90px; width: 100%; }
+        .content-view.active { display: flex; flex-direction: column; align-items: center; }
 
-        /* 휠 섹션 (v5.49 동일) */
-        .wheel-section { position: relative; margin: 25px 0; width: 230px; height: 230px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-        #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; transform: rotate(0deg); }
-        .wheel-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-weight: 900; font-size: 1.8rem; color: var(--accent); text-shadow: 0 0 10px var(--accent); opacity: 0.8; pointer-events: none; }
-        /* 6시 방향 화살표 고정 */
-        .pointer { position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); width: 16px; height: 22px; background: #fff; clip-path: polygon(50% 100%, 0% 0%, 100% 0%); z-index: 25; border: 2px solid #000; }
+        /* [고정] v5.49 휠 및 6시 화살표 */
+        .wheel-section { position: relative; margin: 25px 0; width: 230px; height: 230px; }
+        #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; }
+        .pointer { position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); width: 20px; height: 24px; background: #fff; clip-path: polygon(50% 100%, 0% 0%, 100% 0%); z-index: 30; border: 2.5px solid #000; }
+        .wheel-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-weight: 900; font-size: 1.8rem; color: var(--accent); opacity: 0.8; }
 
         .overlay-container { width: 100%; padding: 0 15px; position: relative; }
         .controls { width: 100%; background: var(--card); padding: 15px; border-radius: 12px; border: 1px solid #333; }
         
+        /* [복구] v5.49 베팅 입력창 (작은 화살표) */
         #betInput {
-            flex: 1; background: #000; border: 1px solid #333; color: var(--accent); 
-            padding: 12px; border-radius: 8px; text-align: center; font-weight: 900; 
-            outline: none; margin: 0; font-size: 1.1rem;
+            width: 100%; background: #000; border: 1px solid #444; color: var(--accent); 
+            padding: 12px; border-radius: 8px; text-align: center; font-weight: 900; font-size: 1.1rem;
         }
 
-        .bet-buttons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 12px; }
-        .btn { height: 65px; background: transparent; border: 1.5px solid transparent; border-radius: 4px; font-weight: 900; font-size: 1.1rem; color: #fff; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; }
-        .btn-black { border-color: #555; color: #777; } .btn-red { border-color: var(--red); color: var(--red); }
-        .btn-blue { border-color: var(--blue); color: var(--blue); } .btn-gold { border-color: var(--gold); color: var(--gold); }
+        .bet-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px; }
+        .btn { height: 60px; background: transparent; border: 1.5px solid #333; border-radius: 4px; font-weight: 900; font-size: 1rem; color: #fff; cursor: pointer; }
+        .btn-red { border-color: var(--red); color: var(--red); }
+        .btn-blue { border-color: var(--blue); color: var(--blue); }
+        .btn-gold { border-color: var(--gold); color: var(--gold); }
         
-        /* 레드 버튼 시인성 개선: 선택 시 글자색 검정 */
+        /* [고정] 레드 버튼 선택 시 글자 검정색 */
         .btn.selected.btn-black { background: #333; color: #fff; }
         .btn.selected.btn-red { background: var(--red); color: #000 !important; }
         .btn.selected.btn-blue { background: var(--blue); color: #000 !important; }
         .btn.selected.btn-gold { background: var(--gold); color: #000 !important; }
 
-        /* 라이브 배팅 영역 */
-        .live-betting-area { width: 100%; margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid #333; }
-        .live-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-        .live-col { background: rgba(0,0,0,0.4); border-radius: 8px; min-height: 110px; border-top: 3px solid #444; overflow: hidden; display: flex; flex-direction: column; }
-        .col-head { padding: 4px; text-align: center; }
-        .col-label { font-size: 0.55rem; font-weight: 900; color: var(--text-muted); display: block; }
-        .col-total { font-size: 0.6rem; font-weight: 800; color: var(--accent); }
-        .bet-list { padding: 3px; flex: 1; display: flex; flex-direction: column; gap: 3px; overflow: hidden; }
-        .bet-item { display: flex; justify-content: space-between; font-size: 0.48rem; font-weight: 700; background: rgba(255,255,255,0.05); padding: 2px; border-radius: 3px; }
-
-        /* 네비게이션 v5.49 순서 */
-        nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; height: 75px; background: var(--nav-bg); display: flex; border-top: 1px solid #222; z-index: 200; }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; }
-        .nav-item span { font-size: 0.75rem; font-weight: 700; }
+        /* 하단 메뉴 */
+        nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; height: 75px; background: var(--nav-bg); display: flex; border-top: 1px solid #222; z-index: 1000; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.7rem; font-weight: 700; cursor: pointer; }
         .nav-item.active { color: var(--accent); }
+        .nav-icon { font-size: 1.2rem; margin-bottom: 3px; }
 
-        .closed-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); z-index: 100; display: none; align-items: center; justify-content: center; border-radius: 12px; pointer-events: none; }
-        .closed-text { color: #ddd; font-weight: 900; font-size: 1.6rem; letter-spacing: 4px; animation: pulse 0.8s infinite; }
-        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
-        
-        .version-tag { font-size: 0.6rem; color: #444; margin-top: 20px; text-align: center; width: 100%; }
+        .closed-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:none; align-items:center; justify-content:center; z-index:50; border-radius:12px; }
+        .closed-text { font-weight: 900; font-size: 1.5rem; color: #fff; letter-spacing: 2px; }
+        .version-info { font-size: 0.6rem; color: #444; margin: 20px 0; text-align: center; }
     </style>
 </head>
 <body onclick="initAudio()">
 
 <div id="langOverlay">
-    <h3 id="langSelTitle" style="color:var(--accent); font-weight:900; margin-bottom:25px;">SELECT LANGUAGE</h3>
+    <h3 style="color:var(--accent); font-weight:900; margin-bottom:25px;">SELECT LANGUAGE</h3>
     <div class="lang-list">
         <div class="lang-btn" onclick="setLanguage('en')">🇺🇸 English</div>
         <div class="lang-btn" onclick="setLanguage('cn')">🇨🇳 简体中文</div>
@@ -106,7 +100,7 @@
 
 <div class="main-container">
     <header>
-        <div class="user-id" id="displayId">Welcome Guest</div>
+        <div class="user-id" id="displayId">GUEST</div>
         <div class="balance-box"><span id="balance">1,000,000</span> P</div>
     </header>
 
@@ -116,94 +110,76 @@
     <div id="view-home" class="content-view active">
         <div class="wheel-section">
             <div class="pointer" id="wheelPointer"></div>
-            <div class="wheel-logo">Spin4</div>
             <canvas id="wheelCanvas" width="560" height="560"></canvas>
+            <div class="wheel-logo">Spin4</div>
         </div>
         <div class="overlay-container">
-            <div id="betOverlay" class="closed-overlay"><div id="closedTxt" class="closed-text">CLOSED</div></div>
+            <div id="betOverlay" class="closed-overlay"><div class="closed-text">CLOSED</div></div>
             <div class="controls">
-                <div style="display:flex; gap:8px; align-items:center;">
-                    <input type="number" id="betInput" value="10000" step="10000">
-                    <div style="display:flex; flex-direction:column; gap:2px;">
-                        <button onclick="adjBet(10000)" style="width:40px; height:24px; background:#333; border:none; color:#fff; border-radius:4px; font-weight:bold;">+</button>
-                        <button onclick="adjBet(-10000)" style="width:40px; height:24px; background:#333; border:none; color:#fff; border-radius:4px; font-weight:bold;">-</button>
-                    </div>
-                </div>
+                <input type="number" id="betInput" value="10000" step="10000" min="10000">
                 <div class="bet-buttons">
-                    <button class="btn btn-black" onclick="handleUserBet('black')" id="btnBlack">2×</button>
-                    <button class="btn btn-red" onclick="handleUserBet('red')" id="btnRed">3×</button>
-                    <button class="btn btn-blue" onclick="handleUserBet('blue')" id="btnBlue">5×</button>
-                    <button class="btn btn-gold" onclick="handleUserBet('gold')" id="btnGold">50×</button>
+                    <button class="btn btn-black" onclick="handleUserBet('black')" id="btnBlack">2x</button>
+                    <button class="btn btn-red" onclick="handleUserBet('red')" id="btnRed">3x</button>
+                    <button class="btn btn-blue" onclick="handleUserBet('blue')" id="btnBlue">5x</button>
+                    <button class="btn btn-gold" onclick="handleUserBet('gold')" id="btnGold">50x</button>
                 </div>
             </div>
-            <div class="live-betting-area">
-                <div class="live-grid">
-                    <div class="live-col" style="border-top-color:var(--black);"><div class="col-head"><span class="col-label">BLACK</span><span id="t-black" class="col-total">0</span></div><div id="l-black" class="bet-list"></div></div>
-                    <div class="live-col" style="border-top-color:var(--red);"><div class="col-head"><span class="col-label">RED</span><span id="t-red" class="col-total">0</span></div><div id="l-red" class="bet-list"></div></div>
-                    <div class="live-col" style="border-top-color:var(--blue);"><div class="col-head"><span class="col-label">BLUE</span><span id="t-blue" class="col-total">0</span></div><div id="l-blue" class="bet-list"></div></div>
-                    <div class="live-col" style="border-top-color:var(--gold);"><div class="col-head"><span class="col-label">GOLD</span><span id="t-gold" class="col-total">0</span></div><div id="l-gold" class="bet-list"></div></div>
-                </div>
+            <div id="liveStatus" style="width:100%; margin-top:15px; display:grid; grid-template-columns: repeat(4, 1fr); gap:5px;">
+                <div style="background:rgba(0,0,0,0.3); padding:5px; border-radius:5px; text-align:center; border-top:2px solid #444;" id="l-black"></div>
+                <div style="background:rgba(0,0,0,0.3); padding:5px; border-radius:5px; text-align:center; border-top:2px solid var(--red);" id="l-red"></div>
+                <div style="background:rgba(0,0,0,0.3); padding:5px; border-radius:5px; text-align:center; border-top:2px solid var(--blue);" id="l-blue"></div>
+                <div style="background:rgba(0,0,0,0.3); padding:5px; border-radius:5px; text-align:center; border-top:2px solid var(--gold);" id="l-gold"></div>
             </div>
         </div>
     </div>
 
     <div id="view-wallet" class="content-view">
-        <div style="padding:40px 20px; width:100%;">
-            <h2 style="color:var(--accent); text-align:center;">WALLET</h2>
-            <div style="background:var(--card); padding:20px; border-radius:12px; border:1px solid #333;">
-                <div style="display:flex; justify-content:space-between; margin-bottom:15px; align-items:center;">
-                    <span>TON Balance</span>
-                    <button style="background:#0088cc; border:none; color:white; padding:8px 15px; border-radius:6px; font-weight:bold;">Deposit</button>
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span>USDT Balance</span>
-                    <button style="background:#26a17b; border:none; color:white; padding:8px 15px; border-radius:6px; font-weight:bold;">Deposit</button>
-                </div>
-            </div>
+        <h3 style="margin-top:20px; color:var(--accent);">WALLET</h3>
+        <div style="width:90%; background:var(--card); padding:20px; border-radius:12px; border:1px solid #333;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px;"><span>TON</span><button style="background:#0088cc; border:none; color:white; padding:5px 10px; border-radius:5px;">Deposit</button></div>
+            <div style="display:flex; justify-content:space-between;"><span>USDT</span><button style="background:#26a17b; border:none; color:white; padding:5px 10px; border-radius:5px;">Deposit</button></div>
         </div>
     </div>
 
     <div id="view-ranking" class="content-view">
-        <h3 style="margin:20px 0; color:var(--gold);">TOP 100 RANKING</h3>
-        <table class="log-table" id="rankingTable" style="width:98%;"></table>
+        <h3 style="margin-top:20px; color:var(--gold);">TOP 100 RANKING</h3>
+        <div id="rankList" style="width:95%;"></div>
     </div>
 
     <div id="view-how" class="content-view">
-        <div style="padding:20px; line-height:1.8;">
-            <h3 style="color:var(--accent);">How to Play</h3>
-            <p>1. Select Color. 2. Bet. 3. Win.</p>
-            <p style="font-size:0.8rem; color:var(--text-muted);">Provably Fair SHA-256 Engine</p>
+        <div style="padding:25px; line-height:1.7; font-size:0.9rem;">
+            <h3 style="color:var(--accent);">SHA-256 Provably Fair</h3>
+            <p>Every spin result is determined by a cryptographically secure hash combined with a UTC timestamp.</p>
         </div>
     </div>
 
     <div id="view-recommend" class="content-view">
-        <div style="padding:30px 20px; width:90%;">
-            <h3 style="color:var(--accent); text-align:center;">STATISTICS</h3>
-            <div id="statsDash"></div>
-        </div>
-        <div class="version-tag">Spin4 v5.72 Golden Master | 2026-03-16</div>
+        <h3 style="margin-top:20px; color:var(--accent);">STATISTICS</h3>
+        <div id="statsBox" style="width:90%; background:#000; padding:20px; border-radius:12px; border:1px solid #333;"></div>
+        <div class="version-info">v5.72 Golden Master | 2026-03-16</div>
     </div>
 
     <div id="view-login" class="content-view">
-        <div class="login-box">
-            <input type="text" id="loginId" class="login-input" placeholder="ID">
-            <input type="password" id="loginPw" class="login-input" placeholder="PW">
-            <button onclick="handleLoginSubmit()" style="width:100%; height:55px; background:var(--gold); color:#000; border:none; border-radius:8px; font-weight:900;">GO</button>
+        <div style="width:90%; padding:30px 20px; background:var(--card); border-radius:15px; border:1px solid #333; margin-top:40px;">
+            <h2 style="text-align:center; margin-bottom:25px;">LOGIN</h2>
+            <input type="text" id="loginId" style="width:100%; padding:15px; background:#000; border:1px solid #333; color:#fff; margin-bottom:12px; border-radius:8px;" placeholder="USER ID">
+            <input type="password" id="loginPw" style="width:100%; padding:15px; background:#000; border:1px solid #333; color:#fff; margin-bottom:12px; border-radius:8px;" placeholder="PASSWORD">
+            <button onclick="handleLoginSubmit()" style="width:100%; padding:16px; background:var(--gold); color:#000; border:none; border-radius:8px; font-weight:900; font-size:1.1rem;">GO</button>
         </div>
     </div>
 
     <nav>
-        <div class="nav-item active" onclick="switchTab('home', this)">🏠<span>홈</span></div>
-        <div class="nav-item" onclick="switchTab('wallet', this)">👛<span>지갑</span></div>
-        <div class="nav-item" onclick="switchTab('ranking', this)">🏆<span>랭킹</span></div>
-        <div class="nav-item" onclick="switchTab('how', this)">❓<span>사용법</span></div>
-        <div class="nav-item" onclick="switchTab('recommend', this)">📈<span>통계</span></div>
-        <div class="nav-item" onclick="switchTab('login', this)">👤<span>로그인</span></div>
+        <div class="nav-item active" onclick="switchTab('home', this)"><div class="nav-icon">🏠</div><span>홈</span></div>
+        <div class="nav-item" id="nav-wallet" onclick="switchTab('wallet', this)"><div class="nav-icon">👛</div><span>지갑</span></div>
+        <div class="nav-item" onclick="switchTab('ranking', this)"><div class="nav-icon">🏆</div><span>랭킹</span></div>
+        <div class="nav-item" onclick="switchTab('how', this)"><div class="nav-icon">❓</div><span>사용법</span></div>
+        <div class="nav-item" onclick="switchTab('recommend', this)"><div class="nav-icon">📈</div><span>통계</span></div>
+        <div class="nav-item" onclick="switchTab('login', this)"><div class="nav-icon">👤</div><span>로그인</span></div>
     </nav>
 </div>
 
 <script>
-    let balance = 1000000, currentId = "GUEST", isSpinning = false, myBet = null, globalHistory = [], lastRotation = 0;
+    let balance = 1000000, currentId = "GUEST", isSpinning = false, myBet = null, lastRotation = 0, globalHistory = [];
     const CYCLE = 20000, SPIN_TIME = 6500, FREEZE = 9000;
     const sectors = [{color:'#ffcc00', name:'gold', mult:50, weight: 1},{color:'#00e5ff', name:'blue', mult:5, weight: 10},{color:'#ff3333', name:'red', mult:3, weight: 17},{color:'#444444', name:'black', mult:2, weight: 28}];
     const wheelMap = []; sectors.forEach(s => { for(let i=0; i<s.weight; i++) wheelMap.push(s); });
@@ -214,7 +190,7 @@
         const arc = (Math.PI * 2) / 56; ctx.clearRect(0,0,560,560); ctx.lineWidth = 14; 
         for (let i = 0; i < 56; i++) {
             ctx.beginPath(); ctx.strokeStyle = wheelMap[i].color;
-            // 12시 영점 고정 (-90도)
+            // v5.49 고정 영점: Index 0이 12시(-90도)
             ctx.arc(280, 280, 260, i * arc - Math.PI/2, (i + 1) * arc - Math.PI/2); ctx.stroke();
         }
     }
@@ -225,7 +201,7 @@
             document.getElementById('betOverlay').style.display = "flex";
             if (elapsed < 200 && !isSpinning) startSpin();
             if(isSpinning) {
-                // 실시간 물리 색상 센서 (6시 화살표 기준 역계산)
+                // v5.49 고정 로직: 6시 방향(180도) 물리 색상 감지
                 const rot = getCurrentRotation();
                 const physicalPos = (180 - (rot % 360) + 360) % 360;
                 const idx = Math.floor(physicalPos / (360/56)) % 56;
@@ -251,7 +227,7 @@
         isSpinning = true;
         const seed = Math.floor(Date.now() / CYCLE);
         const winIdx = (seed * 9301 + 49297) % 233280 % 56;
-        // 6시 화살표에 winIdx가 멈추도록 계산 (180도 타겟)
+        // 6시 방향(180도)에 당첨 Index가 오도록 계산
         const targetDeg = (180 - (winIdx * (360/56) + (360/112))) + (360 * 10); 
         canvas.style.transition = `transform ${SPIN_TIME}ms cubic-bezier(0.1, 0, 0.05, 1)`;
         canvas.style.transform = `rotate(${targetDeg}deg)`;
@@ -260,16 +236,19 @@
     }
 
     function resolve(win) {
+        if(myBet) {
+            if(myBet.type === win.name) balance += (myBet.amount * win.mult);
+            myBet = null;
+            document.querySelectorAll('.btn').forEach(b => b.classList.remove('selected'));
+            updateBal();
+        }
         globalHistory.push(win.color);
-        if(myBet && myBet.type === win.name) balance += (myBet.amount * win.mult);
-        myBet = null;
-        document.querySelectorAll('.btn').forEach(b => b.classList.remove('selected'));
-        updateBal(); updateHistoryUI();
+        updateHistoryUI();
     }
 
     function updateHistoryUI() {
         const strip = document.getElementById('historyStrip'); strip.innerHTML = '';
-        [...globalHistory].slice(-50).reverse().forEach(color => {
+        [...globalHistory].slice(-100).reverse().forEach(color => {
             const bar = document.createElement('div');
             let cls = 'black-bar';
             if(color === '#ff3333') cls = 'red-bar';
@@ -297,9 +276,9 @@
         el.classList.add('active');
     }
 
-    function adjBet(v) { let i = document.getElementById('betInput'); i.value = Math.max(10000, parseInt(i.value) + v); }
+    function setLanguage(lang) { document.getElementById('langOverlay').style.display = 'none'; }
+    function handleLoginSubmit() { alert('Welcome!'); switchTab('home', document.querySelector('.nav-item')); }
     function updateBal() { document.getElementById('balance').innerText = balance.toLocaleString(); }
-    function handleLoginSubmit() { alert('Login Success'); }
     function initAudio() {}
 
     drawWheel(); updateBal(); setInterval(tick, 100);
