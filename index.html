@@ -18,20 +18,12 @@
         html, body { margin: 0; padding: 0; width: 100%; height: 100dvh; overflow: hidden; touch-action: manipulation; background: #1e2128; color: white; font-family: 'Pretendard', sans-serif; }
         .main-container { width: 100%; max-width: 500px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
 
-        /* 언어 선택 오버레이 - 불투명 레이아웃 수정 */
+        /* 언어 선택 오버레이 - 불투명 레이아웃 */
         #langOverlay { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(0, 0, 0, 0.7); /* 불투명하게 수정하여 뒤의 게임이 보이도록 함 */
-            z-index: 5000; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            backdrop-filter: blur(10px); /* 블러 강도 조절 */
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0, 0, 0, 0.7); z-index: 5000; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            backdrop-filter: blur(10px); 
         }
         .lang-list { display: flex; flex-direction: column; gap: 12px; width: 240px; }
         .lang-btn { background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 18px 20px; border-radius: 12px; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 15px; cursor: pointer; }
@@ -40,7 +32,6 @@
         .user-id { font-size: 0.8rem; font-weight: 700; border-left: 3px solid var(--accent); padding-left: 10px; }
         .balance-box { background: rgba(255, 149, 0, 0.05); padding: 5px 10px; border-radius: 6px; border: 1px solid var(--point-color); color: var(--point-color); font-weight: 800; font-size: 0.85rem; }
 
-        /* 히스토리 바 */
         .rolls-wrapper { width: 100%; padding: 10px 15px; background: rgba(0,0,0,0.2); border-bottom: 1px solid #333; flex-shrink: 0; }
         .history-strip { display: flex; gap: 3px; height: 40px; width: 100%; align-items: center; justify-content: flex-start; overflow: hidden; }
         .hist-bar { width: 3px; border-radius: 1px; flex-shrink: 0; transition: all 0.3s; }
@@ -53,7 +44,6 @@
         .content-view { flex: 1; overflow-y: auto; display: none; padding-bottom: 90px; width: 100%; align-items: center; }
         .content-view.active { display: flex; flex-direction: column; }
 
-        /* 휠 섹션 정렬 */
         .wheel-section { position: relative; margin: 25px 0; width: 230px; height: 230px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; }
         .wheel-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-weight: 900; font-size: 1.8rem; color: var(--accent); text-shadow: 0 0 10px var(--accent); opacity: 0.8; pointer-events: none; }
@@ -61,16 +51,10 @@
 
         .overlay-container { width: 100%; padding: 0 15px; position: relative; }
         .controls { width: 100%; background: var(--card); padding: 15px; border-radius: 12px; border: 1px solid #333; }
-        
-        #betInput {
-            flex: 1; background: #000; border: 1px solid #333; color: var(--accent); 
-            padding: 12px; border-radius: 8px; text-align: center; font-weight: 900; 
-            outline: none; -webkit-appearance: none; -moz-appearance: textfield; margin: 0;
-        }
-        #betInput::-webkit-outer-spin-button, #betInput::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        #betInput { flex: 1; background: #000; border: 1px solid #333; color: var(--accent); padding: 12px; border-radius: 8px; text-align: center; font-weight: 900; outline: none; -webkit-appearance: none; }
 
         .bet-buttons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 12px; }
-        .btn { height: 65px; background: transparent; border: 1.5px solid transparent; border-radius: 4px; font-weight: 900; font-size: 1.1rem; color: #fff; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; }
+        .btn { height: 65px; background: transparent; border: 1.5px solid transparent; border-radius: 4px; font-weight: 900; font-size: 1.1rem; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .btn-black { border-color: #555; color: #777; } .btn-red { border-color: var(--red); color: var(--red); }
         .btn-blue { border-color: var(--blue); color: var(--blue); } .btn-gold { border-color: var(--gold); color: var(--gold); }
         .btn.selected.btn-black { background: #222; border-color: #222; }
@@ -78,7 +62,6 @@
         .btn.selected.btn-blue { background: var(--blue); border-color: var(--blue); color: #000; box-shadow: 0 0 15px rgba(0,229,255,0.4); }
         .btn.selected.btn-gold { background: var(--gold); border-color: var(--gold); color: #000; box-shadow: 0 0 15px rgba(255,204,0,0.4); }
 
-        /* 라이브 배팅 그리드 */
         .live-betting-area { width: 100%; margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid #333; }
         .live-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
         .live-col { background: rgba(0,0,0,0.4); border-radius: 8px; min-height: 110px; border-top: 3px solid #444; overflow: hidden; display: flex; flex-direction: column; }
@@ -88,7 +71,6 @@
         .bet-list { padding: 3px; flex: 1; display: flex; flex-direction: column; gap: 3px; overflow: hidden; }
         .bet-item { display: flex; justify-content: space-between; font-size: 0.48rem; font-weight: 700; background: rgba(255,255,255,0.05); padding: 2px; border-radius: 3px; }
 
-        /* 테이블 */
         .log-table { width: 95%; border-collapse: collapse; font-size: 0.7rem; background: rgba(0,0,0,0.4); border-radius: 10px; overflow: hidden; margin: 20px auto; }
         .log-table th { background: #1a1a1a; padding: 10px; color: var(--text-muted); font-size: 0.75rem; font-weight: 900; }
         .log-table td { padding: 8px; border-bottom: 1px solid #222; text-align: center; font-weight: 700; }
@@ -227,7 +209,7 @@
 
 <script>
     const tg = window.Telegram.WebApp; tg.expand();
-    let currentLang = 'en', currentId = "GUEST", balance = 1000000;
+    let currentLang = localStorage.getItem('db_wheel_lang') || 'en', currentId = "GUEST", balance = 1000000;
     let isSpinning = false, myBet = null, globalHistory = [], stats = { black: 0, red: 0, blue: 0, gold: 0 };
     let myGameStats = { total: 0, wins: 0 }, isMuted = false, audioInitialized = false, liveBoardTotals = { black:0, red:0, blue:0, gold:0 };
 
@@ -239,36 +221,61 @@
     const i18n = {
         ko: { 
             welcome: "환영합니다", buy: "구매", closed: "마감", live: "실시간 현황", home: "홈", rank: "랭킹", how: "사용법", stats: "통계", login: "로그인", logout: "로그아웃", pick: "선택", bet: "금액", res: "결과", win: "당첨", rankTitle: "TOP 100 랭킹", rhRank: "순위", rhId: "아이디", rhBet: "배팅", rhWin: "당첨", rhRate: "승률", pwRule: "비번: 영문+숫자+특수문자 6자 이상!", loginFail: "오류", pwMismatch: "불일치", joinSuccess: "가입 성공!", last100: "최근 100회 디지털 분석", totalSpins: "참여 라운드", winRate: "나의 승률",
-            howTxt: `<div class="how-card"><div class="how-section"><div class="how-title">🎮 소개</div><div class="how-text">Spin4는 실시간 공정 알고리즘 기반 멀티플레이어 게임입니다. 모든 회차는 조작 불가능한 UTC 타임스탬프로 결정됩니다.</div></div><div class="how-section"><div class="how-title">📜 규칙</div><div class="how-text"><span class="how-sub-item"><b>1. 배팅:</b> 초기 12초간 배팅.</span><span class="how-sub-item"><b>2. 추첨:</b> CLOSED 후 휠 회전.</span><span class="how-sub-item"><b>3. 보상:</b> 결과에 따라 즉시 지급.</span></div></div><div class="how-section"><div class="how-title">🔒 공정성</div><div class="how-text">Provably Fair 기술로 서버에서도 결과를 조작할 수 없습니다.</div></div></div>`
+            howTxt: `<div class="how-card"><div class="how-section"><div class="how-title">🎮 소개</div><div class="how-text">Spin4는 실시간 공정 알고리즘 기반 멀티플레이어 게임입니다. 모든 회차는 조작 불가능한 UTC 타임스탬프로 결정됩니다.</div></div><div class="how-section"><div class="how-title">📜 규칙</div><div class="how-text"><span class="how-sub-item"><b>1. 배팅:</b> 초기 12초간 배팅.</span><span class="how-sub-item"><b>2. 추첨:</b> CLOSED 후 휠 회전.</span><span class="how-sub-item"><b>3. 보상:</b> 결과에 따라 즉시 지급.</span></div></div></div>`
         },
         en: { 
             welcome: "Welcome", buy: "BUY", closed: "CLOSED", live: "LIVE STATUS", home: "Home", rank: "Ranking", how: "How", stats: "Stats", login: "Login", logout: "Logout", pick: "Pick", bet: "Bet", res: "Result", win: "Winner", rankTitle: "TOP 100 RANKING", rhRank: "#", rhId: "User ID", rhBet: "Bet", rhWin: "Win", rhRate: "Rate", pwRule: "PW: 6+ chars.", loginFail: "Error", pwMismatch: "Mismatch", joinSuccess: "Joined!", last100: "LAST 100 ANALYSIS", totalSpins: "TOTAL SPINS", winRate: "WIN RATE",
             howTxt: `<div class="how-card"><div class="how-section"><div class="how-title">🎮 About</div><div class="how-text">Spin4 is a real-time fair wheel game with Provably Fair logic.</div></div></div>`
+        },
+        cn: {
+            welcome: "欢迎", buy: "购买", closed: "关闭", live: "实时状态", home: "首页", rank: "排行", how: "指南", stats: "统计", login: "登录", logout: "登出", pick: "选择", bet: "金额", res: "结果", win: "获胜", rankTitle: "前100名排行", rhRank: "排名", rhId: "用户ID", rhBet: "下注", rhWin: "获胜", rhRate: "胜率", pwRule: "密码: 6位以上", loginFail: "错误", pwMismatch: "不匹配", joinSuccess: "加入成功!", last100: "最近100次分析", totalSpins: "总局数", winRate: "胜率",
+            howTxt: `<div class="how-card"><div class="how-section">实时公平轮盘游戏。</div></div>`
+        },
+        jp: {
+            welcome: "歓迎", buy: "購入", closed: "締切", live: "ライブ状況", home: "ホーム", rank: "ランク", how: "遊び方", stats: "統計", login: "ログイン", logout: "ログアウト", pick: "選択", bet: "ベット", res: "結果", win: "勝者", rankTitle: "TOP 100 ランキング", rhRank: "順位", rhId: "ID", rhBet: "ベット", rhWin: "当選", rhRate: "勝率", pwRule: "パスワード: 6字以上", loginFail: "エラー", pwMismatch: "不一致", joinSuccess: "参加完了!", last100: "最近100回の分析", totalSpins: "参加回数", winRate: "勝率",
+            howTxt: `<div class="how-card"><div class="how-section">リアルタイム・フェア・ホイールゲーム。</div></div>`
         }
     };
 
     const CYCLE_MS = 20000, SPIN_DURATION = 6500, RESULT_WAIT = 2000, FREEZE_PERIOD = SPIN_DURATION + RESULT_WAIT, BETTING_PERIOD = CYCLE_MS - FREEZE_PERIOD;
     const canvas = document.getElementById('wheelCanvas'), ctx = canvas.getContext('2d'), timerBar = document.getElementById('timerBar'), betOverlay = document.getElementById('betOverlay');
 
-    function setLanguage(lang) { currentLang = lang; localStorage.setItem('db_wheel_lang', lang); document.getElementById('langOverlay').style.display = 'none'; applyI18n(); }
+    function setLanguage(lang) { 
+        currentLang = lang; 
+        localStorage.setItem('db_wheel_lang', lang); 
+        document.getElementById('langOverlay').style.display = 'none'; 
+        applyI18n(); 
+    }
+
     function applyI18n() {
         const t = i18n[currentLang] || i18n.en;
         document.getElementById('displayId').innerText = `${t.welcome} ${currentId}`;
-        document.getElementById('closedTxt').innerText = t.closed; document.getElementById('navHome').innerText = t.home; 
-        document.getElementById('navRank').innerText = t.rank; document.getElementById('navHow').innerText = t.how; 
-        document.getElementById('navStats').innerText = t.stats; document.getElementById('navLogin').innerText = (currentId === "GUEST") ? t.login : t.logout;
-        document.getElementById('th-pick').innerText = t.pick; document.getElementById('th-bet').innerText = t.bet;
-        document.getElementById('th-res').innerText = t.res; document.getElementById('th-win').innerText = t.win;
-        document.getElementById('howContent').innerHTML = t.howTxt; document.getElementById('rankMainTitle').innerText = t.rankTitle;
-        document.getElementById('rh-rank').innerText = t.rhRank; document.getElementById('rh-id').innerText = t.rhId;
-        document.getElementById('rh-bet').innerText = t.rhBet; document.getElementById('rh-win').innerText = t.rhWin;
+        document.getElementById('closedTxt').innerText = t.closed; 
+        document.getElementById('navHome').innerText = t.home; 
+        document.getElementById('navRank').innerText = t.rank; 
+        document.getElementById('navHow').innerText = t.how; 
+        document.getElementById('navStats').innerText = t.stats; 
+        document.getElementById('navLogin').innerText = (currentId === "GUEST") ? t.login : t.logout;
+        document.getElementById('th-pick').innerText = t.pick; 
+        document.getElementById('th-bet').innerText = t.bet;
+        document.getElementById('th-res').innerText = t.res; 
+        document.getElementById('th-win').innerText = t.win;
+        document.getElementById('howContent').innerHTML = t.howTxt; 
+        document.getElementById('rankMainTitle').innerText = t.rankTitle;
+        document.getElementById('rh-rank').innerText = t.rhRank; 
+        document.getElementById('rh-id').innerText = t.rhId;
+        document.getElementById('rh-bet').innerText = t.rhBet; 
+        document.getElementById('rh-win').innerText = t.rhWin;
         document.getElementById('rh-rate').innerText = t.rhRate;
         document.getElementById('lblLast100Stats').innerText = t.last100;
-        document.getElementById('lbl-total').innerText = t.totalSpins; document.getElementById('lbl-winrate').innerText = t.winRate;
-        document.getElementById('cl1').innerText = currentLang === 'ko' ? "블랙" : "BLACK"; document.getElementById('cl2').innerText = currentLang === 'ko' ? "레드" : "RED";
-        document.getElementById('cl3').innerText = currentLang === 'ko' ? "블루" : "BLUE"; document.getElementById('cl4').innerText = currentLang === 'ko' ? "골드" : "GOLD";
-        document.getElementById('sl1').innerText = currentLang === 'ko' ? "블랙" : "BLACK"; document.getElementById('sl2').innerText = currentLang === 'ko' ? "레드" : "RED";
-        document.getElementById('sl3').innerText = currentLang === 'ko' ? "블루" : "BLUE"; document.getElementById('sl4').innerText = currentLang === 'ko' ? "골드" : "GOLD";
+        document.getElementById('lbl-total').innerText = t.totalSpins; 
+        document.getElementById('lbl-winrate').innerText = t.winRate;
+        
+        const langMap = { black: currentLang === 'ko' ? "블랙" : "BLACK", red: currentLang === 'ko' ? "레드" : "RED", blue: currentLang === 'ko' ? "블루" : "BLUE", gold: currentLang === 'ko' ? "골드" : "GOLD" };
+        document.getElementById('cl1').innerText = langMap.black; document.getElementById('cl2').innerText = langMap.red;
+        document.getElementById('cl3').innerText = langMap.blue; document.getElementById('cl4').innerText = langMap.gold;
+        document.getElementById('sl1').innerText = langMap.black; document.getElementById('sl2').innerText = langMap.red;
+        document.getElementById('sl3').innerText = langMap.blue; document.getElementById('sl4').innerText = langMap.gold;
         handleIdInput();
     }
 
@@ -276,13 +283,14 @@
         const counts = { black: 0, red: 0, blue: 0, gold: 0 };
         globalHistory.slice(-100).forEach(color => { if(color === '#444444') counts.black++; else if(color === '#ff3333') counts.red++; else if(color === '#00e5ff') counts.blue++; else if(color === '#ffcc00') counts.gold++; });
         ['black', 'red', 'blue', 'gold'].forEach(c => { document.getElementById(`val-${c}`).innerText = `${counts[c]}%`; document.getElementById(`bar-${c}`).style.width = counts[c] + "%"; });
-        document.getElementById('st-total').innerText = myGameStats.total; document.getElementById('st-winrate').innerText = (myGameStats.total > 0 ? (myGameStats.wins/myGameStats.total*100).toFixed(1) : 0) + "%";
+        document.getElementById('st-total').innerText = myGameStats.total; 
+        document.getElementById('st-winrate').innerText = (myGameStats.total > 0 ? (myGameStats.wins/myGameStats.total*100).toFixed(1) : 0) + "%";
     }
 
     function renderRanking() {
         const tbody = document.getElementById('rankingBody'); tbody.innerHTML = '';
         const adjs = ["Top", "Vip", "Win", "Pro", "Lucky", "Ace", "Big", "King", "Wolf", "Spin"];
-        const nouns = ["Star", "Boss", "Player", "User", "Champ", "Master", "Peak", "Hero", "Peak", "One"];
+        const nouns = ["Star", "Boss", "Player", "User", "Champ", "Master", "Peak", "Hero", "One"];
         for(let i=1; i<=100; i++) {
             const seed = i * 1234.56; const botId = adjs[Math.floor(seed % adjs.length)] + nouns[Math.floor((seed/7) % nouns.length)] + (Math.floor(seed % 99));
             const totalBet = (2000 - i * 15 + Math.floor(seed % 100)) * 10000; const winRate = (54 - (i/4) + (seed % 2)).toFixed(1); const totalWin = Math.floor(totalBet * (winRate/100) * 1.85);
@@ -340,7 +348,12 @@
     function deterministicGlobalSpawn() { const now = Date.now(), ts = Math.floor(now/1000), r = (ts*9301+49297)%233280; if((r%100)<28) { const botId = ["BotAce", "LuckyVip", "StarWin", "PeakPro"][r%4] + (r%99), type = (r%100)<40?'black':((r%100)<75?'red':((r%100)<95?'blue':'gold')); addLiveUI(type, botId, (Math.floor(r%15)+1)*10000); } }
     function addLiveUI(type, user, amt) { const list = document.getElementById(`l-${type}`); if(!list || [...list.querySelectorAll('span')].some(s => s.innerText === user)) return; liveBoardTotals[type] += amt; document.getElementById(`t-${type}`).innerText = liveBoardTotals[type].toLocaleString(); const item = document.createElement('div'); item.className = 'bet-item'; item.innerHTML = `<span>${user}</span><b>${(amt/1000).toFixed(0)}k</b>`; list.prepend(item); if(list.children.length > 5) list.lastChild.remove(); }
 
-    checkSession(); syncHistory(); drawWheel(); updateBalUI(); applyI18n(); setInterval(tick, 100);
+    window.onload = () => {
+        if(localStorage.getItem('db_wheel_lang')) {
+            document.getElementById('langOverlay').style.display = 'none';
+        }
+        checkSession(); syncHistory(); drawWheel(); updateBalUI(); applyI18n(); setInterval(tick, 100);
+    };
 </script>
 </body>
 </html>
