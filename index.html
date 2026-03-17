@@ -18,16 +18,16 @@
         html, body { margin: 0; padding: 0; width: 100%; height: 100dvh; overflow: hidden; touch-action: manipulation; background: #1e2128; color: white; font-family: 'Pretendard', sans-serif; }
         .main-container { width: 100%; max-width: 500px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
 
-        /* 언어 선택 오버레이 - 최상위 레이어 고정 및 클릭 보정 */
+        /* 언어 선택 오버레이 - 최상단 고정 및 클릭 보정 */
         #langOverlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0, 0, 0, 0.7); z-index: 9999; 
+            background: rgba(0, 0, 0, 0.75); z-index: 99999; 
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            backdrop-filter: blur(10px); pointer-events: auto;
+            backdrop-filter: blur(15px); pointer-events: auto;
         }
-        .lang-list { display: flex; flex-direction: column; gap: 12px; width: 240px; pointer-events: auto; }
-        .lang-btn { background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 18px 20px; border-radius: 12px; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: all 0.2s ease; -webkit-user-select: none; }
-        .lang-btn:active { background: rgba(255, 255, 255, 0.3); transform: scale(0.98); }
+        .lang-list { display: flex; flex-direction: column; gap: 15px; width: 260px; z-index: 100000; }
+        .lang-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 20px; border-radius: 15px; font-size: 1.1rem; font-weight: 800; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: all 0.2s ease; }
+        .lang-btn:active { background: rgba(255, 255, 255, 0.3); transform: scale(0.95); }
 
         header { padding: 12px 18px; background: rgba(0,0,0,0.4); display: flex; justify-content: space-between; align-items: center; z-index: 100; }
         .user-id { font-size: 0.8rem; font-weight: 700; border-left: 3px solid var(--accent); padding-left: 10px; }
@@ -58,7 +58,6 @@
             padding: 12px; border-radius: 8px; text-align: center; font-weight: 900; 
             outline: none; -webkit-appearance: none; -moz-appearance: textfield; margin: 0;
         }
-        #betInput::-webkit-outer-spin-button, #betInput::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
         .bet-buttons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 12px; }
         .btn { height: 65px; background: transparent; border: 1.5px solid transparent; border-radius: 4px; font-weight: 900; font-size: 1.1rem; color: #fff; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; }
@@ -103,7 +102,7 @@
 <body>
 
 <div id="langOverlay">
-    <h3 id="langSelTitle" style="color:var(--accent); font-weight:900; margin-bottom:25px;">SELECT LANGUAGE</h3>
+    <h3 id="langSelTitle" style="color:var(--accent); font-weight:900; margin-bottom:25px; font-size:1.4rem;">SELECT LANGUAGE</h3>
     <div class="lang-list">
         <div class="lang-btn" onclick="setLanguage('en')">🇺🇸 English</div>
         <div class="lang-btn" onclick="setLanguage('cn')">🇨🇳 简体中文</div>
@@ -216,7 +215,7 @@
 
 <script>
     const tg = window.Telegram.WebApp; tg.expand();
-    let currentLang = 'en', currentId = "GUEST", balance = 1000000;
+    let currentLang = 'ko', currentId = "GUEST", balance = 1000000;
     let isSpinning = false, myBet = null, globalHistory = [], stats = { black: 0, red: 0, blue: 0, gold: 0 };
     let myGameStats = { total: 0, wins: 0 }, isMuted = false, audioInitialized = false, liveBoardTotals = { black:0, red:0, blue:0, gold:0 };
 
@@ -229,21 +228,23 @@
         ko: { welcome: "환영합니다", buy: "구매", closed: "마감", live: "실시간 현황", home: "홈", rank: "랭킹", how: "사용법", stats: "통계", login: "로그인", logout: "로그아웃", pick: "선택", bet: "금액", res: "결과", win: "당첨", rankTitle: "TOP 100 랭킹", rhRank: "순위", rhId: "아이디", rhBet: "배팅", rhWin: "당첨", rhRate: "승률", pwRule: "비번: 영문+숫자+특수문자 6자 이상!", loginFail: "오류", pwMismatch: "불일치", joinSuccess: "가입 성공!", last100: "최근 100회 디지털 분석", totalSpins: "참여 라운드", winRate: "나의 승률", black: "블랙", red: "레드", blue: "블루", gold: "골드", howTxt: `<div class="how-card"><div class="how-text">Spin4는 실시간 공정 알고리즘 기반 멀티플레이어 게임입니다.</div></div>` },
         en: { welcome: "Welcome", buy: "BUY", closed: "CLOSED", live: "LIVE STATUS", home: "Home", rank: "Ranking", how: "How", stats: "Stats", login: "Login", logout: "Logout", pick: "Pick", bet: "Bet", res: "Result", win: "Winner", rankTitle: "TOP 100 RANKING", rhRank: "#", rhId: "User ID", rhBet: "Bet", rhWin: "Win", rhRate: "Rate", pwRule: "PW: 6+ chars.", loginFail: "Error", pwMismatch: "Mismatch", joinSuccess: "Joined!", last100: "LAST 100 ANALYSIS", totalSpins: "TOTAL SPINS", winRate: "WIN RATE", black: "BLACK", red: "RED", blue: "BLUE", gold: "GOLD", howTxt: `<div class="how-card"><div class="how-text">Spin4 is a real-time fair wheel game with Provably Fair logic.</div></div>` },
         cn: { welcome: "欢迎", buy: "购买", closed: "关闭", live: "实时状态", home: "首页", rank: "排名", how: "玩法", stats: "统计", login: "登录", logout: "登出", pick: "选择", bet: "金额", res: "结果", win: "赢家", rankTitle: "前 100 名排名", rhRank: "排名", rhId: "用户ID", rhBet: "投注", rhWin: "获胜", rhRate: "胜率", pwRule: "密码: 6位以上!", loginFail: "错误", pwMismatch: "不匹配", joinSuccess: "加入成功!", last100: "最近100次分析", totalSpins: "总轮次", winRate: "胜率", black: "黑色", red: "红色", blue: "蓝色", gold: "金色", howTxt: `<div class="how-card"><div class="how-text">Spin4 是一款基于实时公平算法的多人游戏。</div></div>` },
-        jp: { welcome: "ようこそ", buy: "購入", closed: "締切", live: "ライブ状況", home: "ホーム", rank: "ランク", how: "使い方", stats: "統計", login: "ログイン", logout: "ログアウト", pick: "選択", bet: "金額", res: "結果", win: "勝者", rankTitle: "TOP 100 ランキング", rhRank: "順位", rhId: "ID", rhBet: "ベット", rhWin: "勝利", rhRate: "勝率", pwRule: "PW: 6文字以上!", loginFail: "エラー", pwMismatch: "不一致", joinSuccess: "登録完了!", last100: "最近100回の分析", totalSpins: "総プレイ数", winRate: "勝率", black: "ブラック", red: "レッド", blue: "ブルー", gold: "ゴールド", howTxt: `<div class="how-card"><div class="how-text">Spin4は公平なアルゴリズムに基づいたゲームです。</div></div>` }
+        jp: { welcome: "ようこそ", buy: "購入", closed: "締切", live: "ライブ状況", home: "ホーム", rank: "ランク", how: "使い方", stats: "統計", login: "ログイン", logout: "ログアウト", pick: "選択", bet: "金額", res: "結果", win: "勝者", rankTitle: "TOP 100 ランキング", rhRank: "順位", rhId: "ID", rhBet: "ベット", rhWin: "勝利", rhRate: "勝率", pwRule: "PW: 6文字以上!", loginFail: "エラー", pwMismatch: "不一致", joinSuccess: "登録完了!", last100: "最近100回の分析", totalSpins: "総プレイ数", winRate: "勝率", black: "ブラック", red: "レッド", blue: "ブルー", gold: "ゴールド", howTxt: `<div class="how-card"><div class="how-text">Spin4은 공평한 알고리즘に基づいたゲームです。</div></div>` }
     };
 
     const CYCLE_MS = 20000, SPIN_DURATION = 6500, RESULT_WAIT = 2000, FREEZE_PERIOD = SPIN_DURATION + RESULT_WAIT, BETTING_PERIOD = CYCLE_MS - FREEZE_PERIOD;
     const canvas = document.getElementById('wheelCanvas'), ctx = canvas.getContext('2d'), timerBar = document.getElementById('timerBar'), betOverlay = document.getElementById('betOverlay');
 
+    // [중요] 언어 설정 로직 - 명시적 호출로 고정
     function setLanguage(lang) { 
         currentLang = lang; 
         localStorage.setItem('db_wheel_lang', lang); 
-        document.getElementById('langOverlay').style.display = 'none'; 
+        const overlay = document.getElementById('langOverlay');
+        overlay.style.setProperty('display', 'none', 'important'); // 강제 숨김
         applyI18n(); 
     }
     
     function applyI18n() {
-        const t = i18n[currentLang] || i18n.en;
+        const t = i18n[currentLang] || i18n.ko; // 기본 한국어 폴백
         document.getElementById('displayId').innerText = `${t.welcome} ${currentId}`;
         document.getElementById('btnBuyTop').innerText = t.buy;
         document.getElementById('closedTxt').innerText = t.closed;
@@ -328,22 +329,22 @@
     function updateBalUI() { document.getElementById('balance').innerText = balance.toLocaleString(); }
     function adjBet(v) { let input = document.getElementById('betInput'), n = parseInt(input.value) + v; if(n >= 10000) input.value = n; }
     function handleIdInput() { const id = document.getElementById('loginId').value.trim(); const users = JSON.parse(localStorage.getItem('db_users') || '{}'); document.getElementById('pwConfirmGroup').style.display = (id && users[id]) ? 'none' : 'flex'; }
-    function handleLoginSubmit() { const id = document.getElementById('loginId').value.trim(), pw = document.getElementById('loginPw').value, pwChk = document.getElementById('loginPwCheck').value, t = i18n[currentLang] || i18n.en; if(!id || pw.length < 6) { document.getElementById('loginMsg').innerText = t.pwRule; return; } let users = JSON.parse(localStorage.getItem('db_users') || '{}'); if(users[id]) { if(users[id].pw === pw) { currentId = id; balance = users[id].balance; myGameStats = users[id].myGameStats; sessionStorage.setItem('loggedInUser', id); updateLoginState(true); } else document.getElementById('loginMsg').innerText = t.loginFail; } else { if(pw !== pwChk) { document.getElementById('loginMsg').innerText = t.pwMismatch; return; } users[id] = { pw, balance: 1000000, myGameStats: { total: 0, wins: 0 } }; localStorage.setItem('db_users', JSON.stringify(users)); currentId = id; sessionStorage.setItem('loggedInUser', id); alert(t.joinSuccess); updateLoginState(true); } }
-    function updateLoginState(isLogged) { const t = i18n[currentLang] || i18n.en; document.getElementById('loginForm').style.display = isLogged ? 'none' : 'flex'; document.getElementById('logoutForm').style.display = isLogged ? 'block' : 'none'; document.getElementById('loggedInMsg').innerText = `${t.welcome} ${currentId}!`; document.getElementById('navLogin').innerText = isLogged ? t.logout : t.login; document.getElementById('displayId').innerText = `${t.welcome} ${currentId}`; updateBalUI(); }
+    function handleLoginSubmit() { const id = document.getElementById('loginId').value.trim(), pw = document.getElementById('loginPw').value, pwChk = document.getElementById('loginPwCheck').value, t = i18n[currentLang] || i18n.ko; if(!id || pw.length < 6) { document.getElementById('loginMsg').innerText = t.pwRule; return; } let users = JSON.parse(localStorage.getItem('db_users') || '{}'); if(users[id]) { if(users[id].pw === pw) { currentId = id; balance = users[id].balance; myGameStats = users[id].myGameStats; sessionStorage.setItem('loggedInUser', id); updateLoginState(true); } else document.getElementById('loginMsg').innerText = t.loginFail; } else { if(pw !== pwChk) { document.getElementById('loginMsg').innerText = t.pwMismatch; return; } users[id] = { pw, balance: 1000000, myGameStats: { total: 0, wins: 0 } }; localStorage.setItem('db_users', JSON.stringify(users)); currentId = id; sessionStorage.setItem('loggedInUser', id); alert(t.joinSuccess); updateLoginState(true); } }
+    function updateLoginState(isLogged) { const t = i18n[currentLang] || i18n.ko; document.getElementById('loginForm').style.display = isLogged ? 'none' : 'flex'; document.getElementById('logoutForm').style.display = isLogged ? 'block' : 'none'; document.getElementById('loggedInMsg').innerText = `${t.welcome} ${currentId}!`; document.getElementById('navLogin').innerText = isLogged ? t.logout : t.login; document.getElementById('displayId').innerText = `${t.welcome} ${currentId}`; updateBalUI(); }
     function handleLogout() { sessionStorage.removeItem('loggedInUser'); currentId = "GUEST"; balance = 1000000; myGameStats = { total: 0, wins: 0 }; updateLoginState(false); switchTab('home', document.querySelector('.nav-item')); }
     
-    // 앱 초기화 로직 보강
+    // [보정] 앱 초기화 로직 - 언어 선택창 강제 제어
     function initApp() {
         const sLang = localStorage.getItem('db_wheel_lang');
         const overlay = document.getElementById('langOverlay');
         
-        // 언어 기본값 강제 설정 (일본어 고정 방지)
-        if (!sLang) {
-            currentLang = 'ko'; // 기본값 한국어
-            overlay.style.display = 'flex';
+        // 언어 유효성 검사 (i18n 객체에 없는 값이면 무시)
+        if (!sLang || !i18n[sLang]) {
+            currentLang = 'ko'; 
+            overlay.style.display = 'flex'; // 선택 전까지 무조건 보임
         } else {
             currentLang = sLang;
-            overlay.style.display = 'none';
+            overlay.style.display = 'none'; // 유효한 선택 값이 있으면 숨김
         }
         
         const sUser = sessionStorage.getItem('loggedInUser');
@@ -368,7 +369,7 @@
     function deterministicGlobalSpawn() { const now = Date.now(), ts = Math.floor(now/1000), r = (ts*9301+49297)%233280; if((r%100)<28) { const botId = ["BotAce", "LuckyVip", "StarWin", "PeakPro"][r%4] + (r%99), type = (r%100)<40?'black':((r%100)<75?'red':((r%100)<95?'blue':'gold')); addLiveUI(type, botId, (Math.floor(r%15)+1)*10000); } }
     function addLiveUI(type, user, amt) { const list = document.getElementById(`l-${type}`); if(!list || [...list.querySelectorAll('span')].some(s => s.innerText === user)) return; liveBoardTotals[type] += amt; document.getElementById(`t-${type}`).innerText = liveBoardTotals[type].toLocaleString(); const item = document.createElement('div'); item.className = 'bet-item'; item.innerHTML = `<span>${user}</span><b>${(amt/1000).toFixed(0)}k</b>`; list.prepend(item); if(list.children.length > 5) list.lastChild.remove(); }
 
-    // 모든 리소스 로드 후 실행 보장
+    // 리소스 로드 후 최종 실행
     window.addEventListener('load', () => {
         initApp();
         setInterval(tick, 100);
