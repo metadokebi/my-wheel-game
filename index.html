@@ -18,21 +18,16 @@
         html, body { margin: 0; padding: 0; width: 100%; height: 100dvh; overflow: hidden; touch-action: manipulation; background: #1e2128; color: white; font-family: 'Pretendard', sans-serif; }
         .main-container { width: 100%; max-width: 500px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
 
-        /* 언어 선택 오버레이 - display flex 강제 고정 */
+        /* 언어 선택 오버레이 - 최상위 레이어 고정 */
         #langOverlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0, 0, 0, 0.8); z-index: 99999; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            backdrop-filter: blur(20px); pointer-events: auto;
+            background: rgba(0, 0, 0, 0.8); z-index: 10000; 
+            display: none; flex-direction: column; align-items: center; justify-content: center; 
+            backdrop-filter: blur(15px); pointer-events: auto;
         }
         .lang-list { display: flex; flex-direction: column; gap: 12px; width: 240px; }
-        .lang-btn { 
-            background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.2); 
-            color: #fff; padding: 18px 20px; border-radius: 12px; font-size: 1rem; 
-            font-weight: 700; display: flex; align-items: center; gap: 15px; 
-            cursor: pointer; -webkit-user-select: none;
-        }
-        .lang-btn:active { background: rgba(255, 255, 255, 0.25); transform: scale(0.96); }
+        .lang-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 18px 20px; border-radius: 12px; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 15px; cursor: pointer; }
+        .lang-btn:active { background: rgba(255, 255, 255, 0.2); }
 
         header { padding: 12px 18px; background: rgba(0,0,0,0.4); display: flex; justify-content: space-between; align-items: center; z-index: 100; }
         .user-id { font-size: 0.8rem; font-weight: 700; border-left: 3px solid var(--accent); padding-left: 10px; }
@@ -104,10 +99,10 @@
 <div id="langOverlay">
     <h3 id="langSelTitle" style="color:var(--accent); font-weight:900; margin-bottom:25px;">SELECT LANGUAGE</h3>
     <div class="lang-list">
-        <div class="lang-btn" onclick="setLanguage('en', event)">🇺🇸 English</div>
-        <div class="lang-btn" onclick="setLanguage('cn', event)">🇨🇳 简体中文</div>
-        <div class="lang-btn" onclick="setLanguage('jp', event)">🇯🇵 日本語</div>
-        <div class="lang-btn" onclick="setLanguage('ko', event)">🇰🇷 한국어</div>
+        <div class="lang-btn" onclick="setLanguage('en')">🇺🇸 English</div>
+        <div class="lang-btn" onclick="setLanguage('cn')">🇨🇳 简体中文</div>
+        <div class="lang-btn" onclick="setLanguage('jp')">🇯🇵 日本語</div>
+        <div class="lang-btn" onclick="setLanguage('ko')">🇰🇷 한국어</div>
     </div>
 </div>
 
@@ -185,7 +180,7 @@
             <div style="background:var(--card); padding:15px; border-radius:10px; text-align:center; border:1px solid #333;"><div id="st-total" style="font-size:1.2rem; font-weight:900; color:var(--accent);">0</div><div id="lbl-total" style="font-size:0.6rem; color:#666;">TOTAL SPINS</div></div>
             <div style="background:var(--card); padding:15px; border-radius:10px; text-align:center; border:1px solid #333;"><div id="st-winrate" style="font-size:1.2rem; font-weight:900; color:var(--accent);">0%</div><div id="lbl-winrate" style="font-size:0.6rem; color:#666;">WIN RATE</div></div>
         </div>
-        <div style="text-align:center; color:#444; font-size:0.6rem; margin-top:20px; font-weight:bold;">v5.49 Golden Master</div>
+        <div style="text-align:center; color:#444; font-size:0.65rem; margin-top:25px; font-weight:bold; letter-spacing:1px;">v5.49 Golden Master</div>
     </div>
 
     <div id="view-login" class="content-view">
@@ -225,7 +220,7 @@
     shuffleWheel();
 
     const i18n = {
-        ko: { welcome: "환영합니다", buy: "구매", closed: "마감", live: "실시간 현황", home: "홈", rank: "랭킹", how: "사용법", stats: "통계", login: "로그인", logout: "로그아웃", pick: "선택", bet: "금액", res: "결과", win: "당첨", rankTitle: "TOP 100 랭킹", rhRank: "순위", rhId: "아이디", rhBet: "배팅", rhWin: "당첨", rhRate: "승률", pwRule: "비번: 영문+숫자+특수문자 6자 이상!", loginFail: "오류", pwMismatch: "불일치", joinSuccess: "가입 성공!", last100: "최근 100회 디지털 분석", totalSpins: "참여 라운드", winRate: "나의 승률", black: "블랙", red: "레드", blue: "블루", gold: "골드", howTxt: `<div class="how-card"><div class="how-text">Spin4는 실시간 공정 알고리즘 기반 멀티플레이어 게임입니다.</div></div>` },
+        ko: { welcome: "환영합니다", buy: "구매", closed: "마감", live: "실시간 현황", home: "홈", rank: "랭킹", how: "사용법", stats: "통계", login: "로그인", logout: "로그아웃", pick: "선택", bet: "금액", res: "결과", win: "당첨", rankTitle: "TOP 100 랭킹", rhRank: "순위", rhId: "아이디", rhBet: "배팅", rhWin: "당첨", rhRate: "승률", pwRule: "비번: 영문+숫자+특수문자 6자 이상!", loginFail: "오류", pwMismatch: "불일치", joinSuccess: "가입 성공!", last100: "최근 100회 디지털 분석", totalSpins: "참여 라운드", winRate: "나의 승률", black: "블랙", red: "레드", blue: "블루", gold: "골드", howTxt: `<div class="how-card"><div class="how-text">Spin4는 실시간 공정 알고리즘 기반 멀티플레이어 게임입니다. 모든 회차는 조작 불가능한 UTC 타임스탬프로 결정됩니다.</div></div>` },
         en: { welcome: "Welcome", buy: "BUY", closed: "CLOSED", live: "LIVE STATUS", home: "Home", rank: "Ranking", how: "How", stats: "Stats", login: "Login", logout: "Logout", pick: "Pick", bet: "Bet", res: "Result", win: "Winner", rankTitle: "TOP 100 RANKING", rhRank: "#", rhId: "User ID", rhBet: "Bet", rhWin: "Win", rhRate: "Rate", pwRule: "PW: 6+ chars.", loginFail: "Error", pwMismatch: "Mismatch", joinSuccess: "Joined!", last100: "LAST 100 ANALYSIS", totalSpins: "TOTAL SPINS", winRate: "WIN RATE", black: "BLACK", red: "RED", blue: "BLUE", gold: "GOLD", howTxt: `<div class="how-card"><div class="how-text">Spin4 is a real-time fair wheel game with Provably Fair logic.</div></div>` },
         cn: { welcome: "欢迎", buy: "购买", closed: "关闭", live: "实时状态", home: "首页", rank: "排名", how: "玩法", stats: "统计", login: "登录", logout: "登出", pick: "选择", bet: "金额", res: "结果", win: "赢家", rankTitle: "前 100 名排名", rhRank: "排名", rhId: "用户ID", rhBet: "投注", rhWin: "获胜", rhRate: "胜率", pwRule: "密码: 6位以上!", loginFail: "错误", pwMismatch: "不匹配", joinSuccess: "加入成功!", last100: "最近100次分析", totalSpins: "总轮次", winRate: "胜率", black: "黑色", red: "红色", blue: "蓝色", gold: "金色", howTxt: `<div class="how-card"><div class="how-text">Spin4 是一款基于实时公平算法的多人游戏。</div></div>` },
         jp: { welcome: "ようこそ", buy: "購入", closed: "締切", live: "ライブ状況", home: "ホーム", rank: "ランク", how: "使い方", stats: "統計", login: "ログイン", logout: "ログアウト", pick: "選択", bet: "金額", res: "結果", win: "勝者", rankTitle: "TOP 100 ランキング", rhRank: "順位", rhId: "ID", rhBet: "ベット", rhWin: "勝利", rhRate: "勝率", pwRule: "PW: 6文字以上!", loginFail: "エラー", pwMismatch: "不一致", joinSuccess: "登録完了!", last100: "最近100回の分析", totalSpins: "総プレイ数", winRate: "勝率", black: "ブラック", red: "レッド", blue: "ブルー", gold: "ゴールド", howTxt: `<div class="how-card"><div class="how-text">Spin4은 공평한 알고리즘に基づいたゲームです。</div></div>` }
@@ -234,15 +229,11 @@
     const CYCLE_MS = 20000, SPIN_DURATION = 6500, RESULT_WAIT = 2000, FREEZE_PERIOD = SPIN_DURATION + RESULT_WAIT, BETTING_PERIOD = CYCLE_MS - FREEZE_PERIOD;
     const canvas = document.getElementById('wheelCanvas'), ctx = canvas.getContext('2d'), timerBar = document.getElementById('timerBar'), betOverlay = document.getElementById('betOverlay');
 
-    // [중점 수정] 언어 설정 로직 - 이벤트 버블링 차단 및 즉시 갱신
-    function setLanguage(lang, event) { 
-        if(event) { event.preventDefault(); event.stopPropagation(); }
-        if(!i18n[lang]) return;
+    function setLanguage(lang) { 
         currentLang = lang; 
         localStorage.setItem('db_wheel_lang', lang); 
         document.getElementById('langOverlay').style.display = 'none'; 
         applyI18n(); 
-        console.log("Haku's Command: Language changed to " + lang);
     }
     
     function applyI18n() {
@@ -331,21 +322,15 @@
     function updateLoginState(isLogged) { const t = i18n[currentLang] || i18n.ko; document.getElementById('loginForm').style.display = isLogged ? 'none' : 'flex'; document.getElementById('logoutForm').style.display = isLogged ? 'block' : 'none'; document.getElementById('loggedInMsg').innerText = `${t.welcome} ${currentId}!`; document.getElementById('navLogin').innerText = isLogged ? t.logout : t.login; document.getElementById('displayId').innerText = `${t.welcome} ${currentId}`; updateBalUI(); }
     function handleLogout() { sessionStorage.removeItem('loggedInUser'); currentId = "GUEST"; balance = 1000000; myGameStats = { total: 0, wins: 0 }; updateLoginState(false); switchTab('home', document.querySelector('.nav-item')); }
     
-    // [완전 보정] 앱 초기화 로직
     function initApp() {
         const sLang = localStorage.getItem('db_wheel_lang');
         const overlay = document.getElementById('langOverlay');
-        
-        // 1. 유효성 검사: 저장된 값이 없거나 i18n 리스트에 없으면 강제로 창을 띄움
         if (!sLang || !i18n[sLang]) {
-            currentLang = 'ko'; // 기본값은 한국어로 설정
             overlay.style.display = 'flex';
         } else {
-            // 2. 유효한 값이 있다면 해당 언어를 적용하고 창을 숨김
             currentLang = sLang;
             overlay.style.display = 'none';
         }
-        
         const sUser = sessionStorage.getItem('loggedInUser');
         if (sUser) {
             let users = JSON.parse(localStorage.getItem('db_users') || '{}');
@@ -368,13 +353,7 @@
     function deterministicGlobalSpawn() { const now = Date.now(), ts = Math.floor(now/1000), r = (ts*9301+49297)%233280; if((r%100)<28) { const botId = ["BotAce", "LuckyVip", "StarWin", "PeakPro"][r%4] + (r%99), type = (r%100)<40?'black':((r%100)<75?'red':((r%100)<95?'blue':'gold')); addLiveUI(type, botId, (Math.floor(r%15)+1)*10000); } }
     function addLiveUI(type, user, amt) { const list = document.getElementById(`l-${type}`); if(!list || [...list.querySelectorAll('span')].some(s => s.innerText === user)) return; liveBoardTotals[type] += amt; document.getElementById(`t-${type}`).innerText = liveBoardTotals[type].toLocaleString(); const item = document.createElement('div'); item.className = 'bet-item'; item.innerHTML = `<span>${user}</span><b>${(amt/1000).toFixed(0)}k</b>`; list.prepend(item); if(list.children.length > 5) list.lastChild.remove(); }
 
-    // [중요] 모든 로직 실행 전 DOM 준비 상태 확인
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initApp);
-    } else {
-        initApp();
-    }
-    setInterval(tick, 100);
+    window.onload = () => { initApp(); setInterval(tick, 100); };
 </script>
 </body>
 </html>
