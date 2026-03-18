@@ -18,7 +18,7 @@
         html, body { margin: 0; padding: 0; width: 100%; height: 100dvh; overflow: hidden; touch-action: manipulation; background: #1e2128; color: white; font-family: 'Pretendard', sans-serif; }
         .main-container { width: 100%; max-width: 500px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
 
-        /* 언어 선택 오버레이 - 투명도 0.7 고정 사양 */
+        /* 언어 선택 오버레이 - 투명도 0.7 고정 */
         #langOverlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0, 0, 0, 0.7); 
@@ -32,12 +32,22 @@
         .user-id { font-size: 0.8rem; font-weight: 700; border-left: 3px solid var(--accent); padding-left: 10px; }
         .balance-box { background: rgba(255, 149, 0, 0.05); padding: 5px 10px; border-radius: 6px; border: 1px solid var(--point-color); color: var(--point-color); font-weight: 800; font-size: 0.85rem; }
 
-        /* 히스토리 바 */
-        .rolls-wrapper { width: 100%; padding: 10px 15px; background: rgba(0,0,0,0.2); border-bottom: 1px solid #333; flex-shrink: 0; }
-        .history-strip { display: flex; gap: 3px; height: 40px; width: 100%; align-items: center; justify-content: flex-start; overflow: hidden; }
-        .hist-bar { width: 3px; border-radius: 1px; flex-shrink: 0; transition: all 0.3s; }
-        .hist-bar.normal { height: 22px; opacity: 0.8; }
-        .hist-bar.gold-bar { height: 36px; width: 4px; box-shadow: 0 0 10px var(--gold); z-index: 5; }
+        /* 지난 결과 바 - 중앙 정렬 및 높이 커스텀 (v5.49 수정) */
+        .rolls-wrapper { 
+            width: 100%; padding: 5px 15px; background: rgba(0,0,0,0.2); 
+            border-bottom: 1px solid #333; flex-shrink: 0; 
+            display: flex; justify-content: center; align-items: center; min-height: 50px;
+        }
+        .history-strip { 
+            display: flex; gap: 4px; height: 40px; width: auto; 
+            align-items: center; justify-content: center; overflow: hidden; 
+        }
+        .hist-bar { width: 3px; border-radius: 1.5px; flex-shrink: 0; transition: all 0.3s; }
+        /* 색상별 높이 차별화 로직 (이미지 사양 반영) */
+        .hist-bar.h-black { height: 16px; opacity: 0.6; }
+        .hist-bar.h-red { height: 24px; opacity: 0.9; }
+        .hist-bar.h-blue { height: 32px; opacity: 1; }
+        .hist-bar.h-gold { height: 40px; width: 4px; box-shadow: 0 0 10px var(--gold); z-index: 5; }
 
         .timer-container { width: 100%; height: 6px; background: #000; position: relative; flex-shrink: 0; }
         #timerBar { position: absolute; left: 0; top: 0; height: 100%; width: 0%; transition: width 0.1s linear; }
@@ -74,7 +84,7 @@
         .bet-list { padding: 3px; flex: 1; display: flex; flex-direction: column; gap: 3px; overflow: hidden; }
         .bet-item { display: flex; justify-content: space-between; font-size: 0.48rem; font-weight: 700; background: rgba(255,255,255,0.05); padding: 2px; border-radius: 3px; }
 
-        /* 사용법 전용 스타일 강화 */
+        /* 사용법 전용 스타일 */
         .manual-container { width: 94%; margin-top: 10px; display: flex; flex-direction: column; gap: 15px; }
         .manual-card { background: var(--card); border: 1px solid #333; border-radius: 15px; padding: 20px; }
         .manual-section { margin-bottom: 20px; }
@@ -229,8 +239,7 @@
     function shuffleWheel() { const seed = 123; for (let i = wheelMap.length - 1; i > 0; i--) { const j = (seed * (i + 1)) % wheelMap.length; [wheelMap[i], wheelMap[j]] = [wheelMap[j], wheelMap[i]]; } }
     shuffleWheel();
 
-    // 사용법 공통 데이터 생성기 (전문 기술 내용 포함)
-    function getHowHtml(title, fairTitle, formula, rulesTitle, r1, r2, r3, probTitle) {
+    function getHowHtml(title, fairTitle, formula, rulesTitle, r1, r2, r3) {
         return `
             <div class="manual-card">
                 <div class="manual-section">
@@ -281,9 +290,12 @@
     function applyI18n() {
         const t = i18n[currentLang] || i18n.en;
         document.getElementById('displayId').innerText = `${t.welcome} ${currentId}`;
-        document.getElementById('closedTxt').innerText = t.closed; document.getElementById('navHome').innerText = t.home; 
-        document.getElementById('navRank').innerText = t.rank; document.getElementById('navHow').innerText = t.how; 
-        document.getElementById('navStats').innerText = t.stats; document.getElementById('navLogin').innerText = (currentId === "GUEST") ? t.login : t.logout;
+        document.getElementById('closedTxt').innerText = t.closed; 
+        document.getElementById('navHome').innerText = t.home; 
+        document.getElementById('navRank').innerText = t.rank; 
+        document.getElementById('navHow').innerText = t.how; 
+        document.getElementById('navStats').innerText = t.stats; 
+        document.getElementById('navLogin').innerText = (currentId === "GUEST") ? t.login : t.logout;
         document.getElementById('th-pick').innerText = t.pick; document.getElementById('th-bet').innerText = t.bet;
         document.getElementById('th-res').innerText = t.res; document.getElementById('th-win').innerText = t.win;
         document.getElementById('howContent').innerHTML = t.howTxt; document.getElementById('rankMainTitle').innerText = t.rankTitle;
@@ -303,7 +315,8 @@
         };
         ['black', 'red', 'blue', 'gold'].forEach((c, i) => {
             const label = colors[c][currentLang] || colors[c]['en'];
-            document.getElementById(`cl${i+1}`).innerText = label; document.getElementById(`sl${i+1}`).innerText = label;
+            const clEl = document.getElementById(`cl${i+1}`); if(clEl) clEl.innerText = label;
+            const slEl = document.getElementById(`sl${i+1}`); if(slEl) slEl.innerText = label;
         });
         handleIdInput();
     }
@@ -326,7 +339,22 @@
         }
     }
 
-    function updateHistoryUI() { const strip = document.getElementById('historyStrip'); strip.innerHTML = ''; const reversedData = [...globalHistory].slice(-100).reverse(); reversedData.forEach((color, idx) => { if(idx < 55) { const bar = document.createElement('div'); bar.className = 'hist-bar ' + (color === '#ffcc00' ? 'gold-bar' : 'normal'); bar.style.backgroundColor = color; strip.appendChild(bar); } }); }
+    // 지난 결과 바 렌더링 - 색상별 높이 차별화 (v5.49 수정)
+    function updateHistoryUI() { 
+        const strip = document.getElementById('historyStrip'); strip.innerHTML = ''; 
+        const reversedData = [...globalHistory].slice(-100).reverse(); 
+        reversedData.forEach((color, idx) => { if(idx < 55) { 
+            const bar = document.createElement('div'); 
+            let heightClass = 'h-black'; // Default
+            if(color === '#ffcc00') heightClass = 'h-gold';
+            else if(color === '#00e5ff') heightClass = 'h-blue';
+            else if(color === '#ff3333') heightClass = 'h-red';
+            
+            bar.className = `hist-bar ${heightClass}`; 
+            bar.style.backgroundColor = color; strip.appendChild(bar); 
+        }}); 
+    }
+
     function syncHistory() { const seed = Math.floor(Date.now() / CYCLE_MS); globalHistory = []; for(let i=1; i<=100; i++) { globalHistory.push(wheelMap[getWinIndex(seed - i).index].color); } updateHistoryUI(); }
     function drawWheel() { const arc = (Math.PI * 2) / 56, radius = 260; ctx.clearRect(0,0,560,560); ctx.lineWidth = 14; for (let i = 0; i < 56; i++) { ctx.beginPath(); ctx.strokeStyle = wheelMap[i].color; ctx.arc(280, 280, radius, i * arc + Math.PI/2 + 0.02, (i + 1) * arc + Math.PI/2 - 0.02); ctx.stroke(); } }
 
