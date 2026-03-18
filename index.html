@@ -307,7 +307,7 @@
         }
     }
 
-    /* [v6.0] 전화번호 인증 보상 최적화 (parseFloat 강제 및 제로 리셋) */
+    /* [v6.0] 전화번호 인증 보상 리셋 로직 (절대값 강제 할당으로 백만 단위 오류 차단) */
     function requestTelegramContact() {
         tg.requestContact((shared) => {
             if (shared && tg.initDataUnsafe.user) {
@@ -317,27 +317,22 @@
                 let users = JSON.parse(localStorage.getItem('db_users') || '{}');
 
                 if (!users[username]) {
-                    // 신규 유저는 0.0에서 시작하여 정확히 10.0 보너스
+                    // 신규 유저는 무조건 10.0으로 셋팅 (더하기 연산 배제)
                     users[username] = { pw: "telegram_auth", balance: 10.0, myGameStats: { total:0, wins:0 }, phone: phone, tgId: user.id, is_rewarded: true };
-                } else {
-                    if (!users[username].is_rewarded) {
-                        // 기존 유저 보상 시 parseFloat으로 산술 더하기 보장
-                        let currentBal = parseFloat(users[username].balance || 0);
-                        users[username].balance = (currentBal + 10.0).toFixed(1);
-                        users[username].is_rewarded = true;
-                        alert("🎁 10 TON Reward Credited!");
-                    } else {
-                        alert("Already rewarded.");
-                    }
+                } else if (!users[username].is_rewarded) {
+                    // 기존 유저 첫 인증 시, 기존 금액 상관없이 10.0 고정 (하쿠님 요청 사항)
+                    users[username].balance = 10.0;
+                    users[username].is_rewarded = true;
                 }
                 users[username].phone = phone;
                 localStorage.setItem('db_users', JSON.stringify(users));
                 
-                // 전역 변수 즉시 동기화
+                // 전역 상태 즉시 동기화 (Number 타입 강제)
                 currentId = username; 
-                balance = parseFloat(users[username].balance);
+                balance = 10.0; // 전역 변수 직접 할당
                 myGameStats = users[username].myGameStats;
                 sessionStorage.setItem('loggedInUser', username);
+                alert("🎁 10 TON Reward Credited!");
                 updateLoginState(true);
             }
         });
@@ -373,14 +368,14 @@
     function startSpin() { isSpinning = true; const masterSeed = Math.floor(Date.now() / CYCLE_MS); currentRoundResult = getWinIndex(masterSeed); const arc = 360 / 56, targetRelativeAngle = (360 - (currentRoundResult.index * arc)) % 360, currentMod = currentRotation % 360, delta = (targetRelativeAngle - currentMod + 360) % 360; currentRotation += (360 * 10) + delta; canvas.style.transition = `transform ${SPIN_DURATION}ms cubic-bezier(0.15, 0, 0.1, 1)`; canvas.style.transform = `rotate(${currentRotation}deg)`; setTimeout(() => resolve(wheelMap[currentRoundResult.index]), SPIN_DURATION); }
     function resolve(win) { 
         document.getElementById('wheelPointer').style.backgroundColor = win.color; globalHistory.push(win.color); setTimeout(() => updateHistoryUI(), 500);
-        if(myBet) { myGameStats.total++; const winStatus = myBet.type === win.name; if(winStatus) { balance += (myBet.amount * win.mult); myGameStats.wins++; playSound('sndWin'); } else playSound('sndLose'); const row = `<tr><td>${myBet.type.toUpperCase()}</td><td>${myBet.amount.toFixed(1)}T</td><td>${winStatus ? 'Win' : 'Lost'}</td><td><span class="winner-dot" style="background:${win.color}"></span></td></tr>`; document.getElementById('myLogBody').insertAdjacentHTML('afterbegin', row); } 
-        if(currentId !== "GUEST") { let u = JSON.parse(localStorage.getItem('db_users')); u[currentId].balance = balance.toFixed(1); u[currentId].myGameStats = myGameStats; localStorage.setItem('db_users', JSON.stringify(u)); } 
+        if(myBet) { myGameStats.total++; const winStatus = myBet.type === win.name; if(winStatus) { balance = Number(balance) + (myBet.amount * win.mult); myGameStats.wins++; playSound('sndWin'); } else playSound('sndLose'); const row = `<tr><td>${myBet.type.toUpperCase()}</td><td>${myBet.amount.toFixed(1)}T</td><td>${winStatus ? 'Win' : 'Lost'}</td><td><span class="winner-dot" style="background:${win.color}"></span></td></tr>`; document.getElementById('myLogBody').insertAdjacentHTML('afterbegin', row); } 
+        if(currentId !== "GUEST") { let u = JSON.parse(localStorage.getItem('db_users')); u[currentId].balance = Number(balance).toFixed(1); u[currentId].myGameStats = myGameStats; localStorage.setItem('db_users', JSON.stringify(u)); } 
         setTimeout(() => { myBet = null; document.querySelectorAll('.bet-buttons .btn').forEach(b => b.classList.remove('selected')); liveBoardTotals = { black:0, red:0, blue:0, gold:0 }; document.querySelectorAll('.bet-list').forEach(l => l.innerHTML = ''); document.querySelectorAll('.col-total').forEach(t => t.innerText = '0.0'); canvas.style.transition = 'none'; canvas.style.transform = `rotate(${currentRotation % 360}deg)`; updateBalUI(); currentRoundResult = null; }, RESULT_WAIT); 
     }
 
     function getWinIndex(seed) { const rv = (seed * 9301 + 49297) % 233280; return { index: (rv % 56) }; }
-    function handleUserBet(type) { const el = Date.now() % CYCLE_MS; if(el < FREEZE_PERIOD || el > CYCLE_MS - 1000 || myBet) return; const amt = parseFloat(document.getElementById('betInput').value); if(isNaN(amt) || amt > balance || amt < 0.1 || amt > 1000) return; balance -= amt; updateBalUI(); myBet = { type, amount: amt }; document.getElementById('btn' + type.charAt(0).toUpperCase() + type.slice(1)).classList.add('selected'); addLiveUI(type, "ME", amt); }
-    function updateBalUI() { document.getElementById('balance').innerText = parseFloat(balance).toFixed(1); const wBal = document.getElementById('w-bal'); if(wBal) wBal.innerText = parseFloat(balance).toFixed(1); }
+    function handleUserBet(type) { const el = Date.now() % CYCLE_MS; if(el < FREEZE_PERIOD || el > CYCLE_MS - 1000 || myBet) return; const amt = parseFloat(document.getElementById('betInput').value); if(isNaN(amt) || amt > balance || amt < 0.1 || amt > 1000) return; balance = Number(balance) - amt; updateBalUI(); myBet = { type, amount: amt }; document.getElementById('btn' + type.charAt(0).toUpperCase() + type.slice(1)).classList.add('selected'); addLiveUI(type, "ME", amt); }
+    function updateBalUI() { document.getElementById('balance').innerText = Number(balance).toFixed(1); const wBal = document.getElementById('w-bal'); if(wBal) wBal.innerText = Number(balance).toFixed(1); }
     function adjBet(v) { let input = document.getElementById('betInput'), n = parseFloat(input.value) + v; if(n >= 0.1) input.value = n.toFixed(1); }
 
     function switchTab(id, el) { 
@@ -392,17 +387,16 @@
     function renderStats() { const daySeed = Math.floor(Date.now() / (1000 * 60 * 60 * 24)), pseudoRandom = (offset) => ((daySeed + offset) * 9301 + 49297) % 233280 / 233280; const counts = { black: 49.5 + (pseudoRandom(1) * 1.2), red: 29.8 + (pseudoRandom(2) * 1.1), blue: 17.5 + (pseudoRandom(3) * 0.8), gold: 1.6 + (pseudoRandom(4) * 0.4) }; ['black', 'red', 'blue', 'gold'].forEach(c => { const val = counts[c].toFixed(1); document.getElementById(`val-${c}`).innerText = `${val}%`; document.getElementById(`bar-${c}`).style.width = `${val}%`; }); document.getElementById('st-total').innerText = myGameStats.total; document.getElementById('st-winrate').innerText = (myGameStats.total > 0 ? (myGameStats.wins/myGameStats.total*100).toFixed(1) : 0) + "%"; }
     function renderRanking() { const tbody = document.getElementById('rankingBody'); tbody.innerHTML = ''; const adjs = ["Top", "Vip", "Win", "Pro", "Lucky", "Ace", "Big", "King", "Wolf", "Spin"]; const nouns = ["Star", "Boss", "Player", "User", "Champ", "Master", "Peak", "Hero", "Peak", "One"]; for(let i=1; i<=100; i++) { const seed = i * 1234.56; let botId = adjs[Math.floor(seed % adjs.length)] + nouns[Math.floor((seed/7) % nouns.length)] + (Math.floor(seed % 99)); const maskedId = botId.length > 3 ? botId.slice(0, -3) + "***" : botId + "***"; const totalBet = (2000 - i * 15 + Math.floor(seed % 100)) * 1.5, winRate = (54 - (i/4) + (seed % 2)).toFixed(1), totalWin = (totalBet * (winRate/100) * 1.85); tbody.innerHTML += `<tr><td>${i}</td><td style="color:var(--accent); text-align:left; padding-left:15px; font-size:0.55rem;">${maskedId}</td><td>${totalBet.toFixed(1)}T</td><td style="color:var(--accent)">${totalWin.toFixed(1)}T</td><td>${winRate}%</td></tr>`; } }
 
-    /* [v6.0] 제로 리셋 로그인 핸들러 */
+    /* [v6.0] 제로 리셋 로그인 (게스트 밸런스 완전 소거) */
     function handleLoginSubmit() { 
         const id = document.getElementById('loginId').value.trim(), pw = document.getElementById('loginPw').value, pwChk = document.getElementById('loginPwCheck').value, t = i18n[currentLang] || i18n.en; 
         if(!id || pw.length < 6) { document.getElementById('loginMsg').innerText = t.pwRule; return; } 
         let users = JSON.parse(localStorage.getItem('db_users') || '{}'); 
         
-        // 로그인 시 전역 밸런스 초기화 (게스트 밸런스 50.0 소멸)
         if(users[id]) { 
             if(users[id].pw === pw) { 
                 currentId = id; 
-                balance = parseFloat(users[id].balance || 0); 
+                balance = Number(users[id].balance || 0); // 기존 게스트 50 무시
                 myGameStats = users[id].myGameStats; 
                 currentPhone = users[id].phone || ""; 
                 sessionStorage.setItem('loggedInUser', id); 
@@ -410,8 +404,7 @@
             } else document.getElementById('loginMsg').innerText = t.loginFail; 
         } else { 
             if(pw !== pwChk) { document.getElementById('loginMsg').innerText = t.pwMismatch; return; } 
-            // 신규 가입 시 강제 0.0 TON 시작
-            users[id] = { pw, balance: "0.0", myGameStats: { total: 0, wins: 0 }, is_rewarded: false }; 
+            users[id] = { pw, balance: 0.0, myGameStats: { total: 0, wins: 0 }, is_rewarded: false }; 
             localStorage.setItem('db_users', JSON.stringify(users)); 
             currentId = id; balance = 0.0; sessionStorage.setItem('loggedInUser', id); alert(t.joinSuccess); updateLoginState(true); 
         } 
@@ -424,14 +417,14 @@
         applyI18n(); updateBalUI(); 
     }
     
-    function checkSession() { const sUser = sessionStorage.getItem('loggedInUser'); if(sUser) { let users = JSON.parse(localStorage.getItem('db_users') || '{}'); if(users[sUser]) { currentId = sUser; balance = parseFloat(users[sUser].balance || 0); myGameStats = users[sUser].myGameStats; currentPhone = users[sUser].phone || ""; updateLoginState(true); } } }
+    function checkSession() { const sUser = sessionStorage.getItem('loggedInUser'); if(sUser) { let users = JSON.parse(localStorage.getItem('db_users') || '{}'); if(users[sUser]) { currentId = sUser; balance = Number(users[sUser].balance || 0); myGameStats = users[sUser].myGameStats; currentPhone = users[sUser].phone || ""; updateLoginState(true); } } }
     function initAudio() { audioInitialized = true; }
     function toggleMute() { isMuted = !isMuted; document.getElementById('soundToggle').innerText = isMuted ? "🔇" : "🔊"; }
     function playSound(id) { if(!isMuted && audioInitialized) { const s = document.getElementById(id); s.currentTime = 0; s.play().catch(()=>{}); } }
 
     function generateRealBotId(seed) { const chars = "abcdefghijklmnopqrstuvwxyz"; const types = ['random', 'initials', 'masked', 'pro']; const type = types[seed % 4]; if(type === 'random') { let id = ""; const len = (seed % 3) + 5; for(let i=0; i<len; i++) id += chars.charAt((seed >> i) % 26); return id; } else if(type === 'initials') { const inits = ["kmh", "lsy", "pjs", "hjh", "kty", "mks", "shw", "bkc"]; return inits[seed % inits.length] + (seed % 9999); } else if(type === 'masked') { const names = ["Kim", "Lee", "Park", "Choi", "Jung", "Kang", "Cho", "Yoon"]; return names[seed % names.length] + "***"; } else { const adjs = ["Top", "Lucky", "Ace", "Big", "Spin", "Pro", "Vip", "Win"]; const nouns = ["Star", "Boss", "Player", "King", "One", "Hero", "Master", "Peak"]; return adjs[seed % 8] + nouns[(seed/7 >> 0) % 8] + (seed % 99); } }
     function deterministicGlobalSpawn(elapsed) { if (elapsed < FREEZE_PERIOD || elapsed > CYCLE_MS - 1000 || roundBotBetTotal >= 7.4) return; const ts = Math.floor(Date.now() / 100), r = (ts * 9301 + 49297) % 233280, roundSeed = Math.floor(Date.now() / CYCLE_MS), spawnChance = ( (roundSeed + ts) % 15 < 3 ) ? 25 : 5; if ((r % 100) < spawnChance) { const botId = generateRealBotId(r), weights = [55, 35, 15, 3], totalWeight = weights.reduce((a, b) => a + b, 0); let selector = r % totalWeight, selectedIdx = 0; for(let i=0; i<4; i++) { if(selector < weights[i]) { selectedIdx = i; break; } selector -= weights[i]; } const types = ['black', 'red', 'blue', 'gold'], type = types[selectedIdx]; let amount = (type === 'gold') ? ((r % 5) + 1) * 0.1 : ((r % 25) + 1) * 0.1; if (roundBotBetTotal + amount > 7.4) amount = 7.4 - roundBotBetTotal; if (amount < 0.1) return; roundBotBetTotal += amount; addLiveUI(type, botId, amount); } }
-    function addLiveUI(type, user, amt) { const list = document.getElementById(`l-${type}`); if(!list) return; liveBoardTotals[type] += amt; document.getElementById(`t-${type}`).innerText = liveBoardTotals[type].toFixed(1); const item = document.createElement('div'); item.className = 'bet-item'; item.innerHTML = `<span>${user}</span><b>${amt.toFixed(1)}T</b>`; list.prepend(item); if(list.children.length > 5) list.lastChild.remove(); }
+    function addLiveUI(type, user, amt) { const list = document.getElementById(`l-${type}`); if(!list) return; liveBoardTotals[type] = Number(liveBoardTotals[type]) + amt; document.getElementById(`t-${type}`).innerText = liveBoardTotals[type].toFixed(1); const item = document.createElement('div'); item.className = 'bet-item'; item.innerHTML = `<span>${user}</span><b>${amt.toFixed(1)}T</b>`; list.prepend(item); if(list.children.length > 5) list.lastChild.remove(); }
     function toggleWithdraw() { const g = document.getElementById('withdrawGroup'); g.style.display = g.style.display === 'none' ? 'flex' : 'none'; }
 
     checkSession(); syncHistory(); drawWheel(); updateBalUI(); applyI18n(); setInterval(tick, 100);
