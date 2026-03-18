@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Spin4 v6.0 Golden Master</title>
+    <title>Spin4 v6.0 TON Golden Master</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
             --bg-top: #1e2128; --bg-bottom: #0e1013;
             --card: #1a1d23; --accent: #00f2ff;
-            --gold: #ffcc00; --blue: #0088cc;
+            --gold: #ffcc00; --blue: #0088cc; /* TON Blue */
             --red: #ff3333; --black: #444444; 
             --text-muted: #8899aa; --nav-bg: #16191e;
             --point-color: #0088cc; --buy-color: #0088cc;
@@ -18,7 +18,7 @@
         html, body { margin: 0; padding: 0; width: 100%; height: 100dvh; overflow: hidden; touch-action: manipulation; background: #1e2128; color: white; font-family: 'Pretendard', sans-serif; }
         .main-container { width: 100%; max-width: 500px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
 
-        /* [v5.49] 언어선택 오버레이 - 투명도 0.2 */
+        /* [v5.49] 언어선택 오버레이 - 투명도 0.2 극대화 */
         #langOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2); z-index: 5000; display: flex; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
         .lang-list { display: flex; flex-direction: column; gap: 12px; width: 240px; }
         .lang-btn { background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.25); color: #fff; padding: 18px 20px; border-radius: 12px; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: background 0.2s; }
@@ -27,7 +27,7 @@
         .user-id { font-size: 0.8rem; font-weight: 700; border-left: 3px solid var(--accent); padding-left: 10px; }
         .balance-box { background: rgba(0, 136, 204, 0.1); padding: 5px 10px; border-radius: 6px; border: 1px solid var(--point-color); color: var(--point-color); font-weight: 800; font-size: 0.85rem; }
 
-        /* [v5.49] 지난 결과 바 - 35개 제한 + 센터 정렬 */
+        /* [v5.49] 지난 결과 바 - 35개 제한 + 센터 정렬 Gravity UI */
         .rolls-wrapper { width: 100%; padding: 8px 15px; background: rgba(0,0,0,0.15); border-bottom: 1px solid #333; flex-shrink: 0; display: flex; justify-content: center; align-items: flex-start; min-height: 55px; }
         .history-strip { display: flex; gap: 5px; height: 40px; width: auto; align-items: flex-start; justify-content: center; overflow: hidden; }
         .hist-bar { width: 3px; border-radius: 1.5px; flex-shrink: 0; transition: all 0.3s; }
@@ -42,22 +42,24 @@
         .content-view { flex: 1; overflow-y: auto; display: none; padding-bottom: 90px; width: 100%; align-items: center; }
         .content-view.active { display: flex; flex-direction: column; }
 
-        /* [v5.49] 휠 섹션 */
+        /* [v5.49] 휠 섹션 - 세그먼트 UI */
         .wheel-section { position: relative; margin: 25px 0; width: 230px; height: 230px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-        #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; transition: transform 0s; }
+        #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; }
         .wheel-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-weight: 900; font-size: 1.8rem; color: var(--accent); text-shadow: 0 0 10px var(--accent); opacity: 0.8; pointer-events: none; }
         .pointer { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); width: 14px; height: 20px; background: #fff; clip-path: polygon(50% 100%, 0% 0%, 100% 0%); z-index: 25; transition: background-color 0.1s linear; }
 
-        /* [v5.49] 컨트롤 박스 및 CLOSED 오버레이 */
+        /* [v5.49] 컨트롤 박스 및 CLOSED 오버레이 범위 제한 */
         .overlay-container { width: 100%; padding: 0 15px; position: relative; }
         .controls { position: relative; width: 100%; background: var(--card); padding: 15px; border-radius: 12px; border: 1px solid #333; overflow: hidden; }
         #betOverlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); z-index: 100; display: none; align-items: center; justify-content: center; pointer-events: none; border-radius: 12px; }
         .closed-text { color: #ddd; font-weight: 900; font-size: 1.6rem; letter-spacing: 4px; animation: pulse 0.8s infinite; }
         @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 
+        /* [v5.49] 입력창 화살표 제거 */
         #betInput { flex: 1; background: #000; border: 1px solid #333; color: var(--accent); padding: 12px; border-radius: 8px; text-align: center; font-weight: 900; outline: none; -moz-appearance: textfield; }
         #betInput::-webkit-outer-spin-button, #betInput::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
+        /* [v5.49] 버튼 선택 색상 사양 */
         .bet-buttons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 12px; }
         .btn { height: 65px; background: transparent; border: 1.5px solid transparent; border-radius: 4px; font-weight: 900; font-size: 1.1rem; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
         .btn-black { border-color: #555; color: #777; } .btn-red { border-color: var(--red); color: var(--red); }
@@ -76,19 +78,31 @@
         .bet-list { padding: 3px; flex: 1; display: flex; flex-direction: column; gap: 3px; overflow: hidden; }
         .bet-item { display: flex; justify-content: space-between; font-size: 0.48rem; font-weight: 700; background: rgba(255,255,255,0.05); padding: 2px; border-radius: 3px; }
 
-        /* [v6.0] 지갑 탭 */
-        .wallet-card { width: 92%; background: var(--card); border: 1px solid #333; border-radius: 15px; padding: 20px; margin-top: 15px; }
+        /* [v6.0] 지갑 탭 디자인 */
+        .wallet-card { width: 92%; background: var(--card); border: 1px solid #333; border-radius: 15px; padding: 20px; margin-top: 15px; position: relative; }
         .wallet-user-info { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding-bottom: 10px; }
         .wallet-balance-big { font-size: 2.2rem; font-weight: 900; color: var(--accent); text-align: center; margin: 20px 0; }
         .wallet-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
         .action-btn { padding: 15px; border-radius: 10px; border: none; font-weight: 900; font-size: 0.85rem; cursor: pointer; }
         .btn-deposit { background: var(--blue); color: #fff; }
         .btn-withdraw { background: #333; color: #ccc; }
-        .wallet-input { background: #000; border: 1px solid #333; padding: 12px; border-radius: 8px; color: var(--accent); font-size: 0.75rem; outline: none; }
+        .wallet-input { background: #000; border: 1px solid #333; padding: 12px; border-radius: 8px; color: var(--accent); font-size: 0.75rem; outline: none; margin-bottom: 10px; width: 100%; }
         .tx-history { width: 92%; margin-top: 20px; }
         .tx-item { background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
 
-        /* 하단 네비게이션 */
+        /* [v5.49] 사용법 및 통계 고정 UI */
+        .manual-container { width: 94%; margin-top: 10px; display: flex; flex-direction: column; gap: 15px; }
+        .manual-card { background: var(--card); border: 1px solid #333; border-radius: 15px; padding: 20px; }
+        .manual-title { font-size: 0.95rem; font-weight: 900; color: var(--accent); margin-bottom: 12px; border-bottom: 1px solid #222; padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .manual-formula { background: #000; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 0.7rem; color: var(--accent); margin: 10px 0; border: 1px solid #222; text-align: center; }
+        .digital-stats { width: 92%; background: #000; border: 1px solid #333; padding: 15px; border-radius: 12px; margin-top: 10px; }
+        .stat-bar-bg { width: 100%; height: 8px; background: #111; border-radius: 4px; overflow: hidden; margin-top: 5px; }
+        .stat-bar-fill { height: 100%; width: 0%; transition: width 1s ease-out; }
+
+        .log-table { width: 95%; border-collapse: collapse; font-size: 0.7rem; background: rgba(0,0,0,0.4); border-radius: 10px; overflow: hidden; margin: 20px auto; }
+        .log-table th { background: #1a1a1a; padding: 10px; color: var(--text-muted); font-size: 0.75rem; font-weight: 900; }
+        .log-table td { padding: 8px; border-bottom: 1px solid #222; text-align: center; font-weight: 700; }
+
         nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; height: 75px; background: var(--nav-bg); display: flex; border-top: 1px solid #222; z-index: 200; padding-bottom: env(safe-area-inset-bottom); }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; }
         .nav-item span { font-size: 0.75rem; font-weight: 700; }
@@ -177,15 +191,19 @@
             <div class="stat-row"><div style="display:flex; justify-content:space-between; font-size:0.7rem;"><span id="sl3">BLUE</span><span id="val-blue">0%</span></div><div class="stat-bar-bg"><div id="bar-blue" class="stat-bar-fill" style="background:var(--blue)"></div></div></div>
             <div class="stat-row"><div style="display:flex; justify-content:space-between; font-size:0.7rem;"><span id="sl4">GOLD</span><span id="val-gold">0%</span></div><div class="stat-bar-bg"><div id="bar-gold" class="stat-bar-fill" style="background:var(--gold); box-shadow:0 0 8px var(--gold)"></div></div></div>
         </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; width:92%; margin-top:15px;">
+            <div style="background:var(--card); padding:15px; border-radius:10px; text-align:center; border:1px solid #333;"><div id="st-total" style="font-size:1.2rem; font-weight:900; color:var(--accent);">0</div><div id="lbl-total" style="font-size:0.6rem; color:#666;">TOTAL SPINS</div></div>
+            <div style="background:var(--card); padding:15px; border-radius:10px; text-align:center; border:1px solid #333;"><div id="st-winrate" style="font-size:1.2rem; font-weight:900; color:var(--accent);">0%</div><div id="lbl-winrate" style="font-size:0.6rem; color:#666;">WIN RATE</div></div>
+        </div>
         <div style="margin-top:25px; color:#555; font-size:0.6rem; font-weight:bold; text-align:center;">v6.0 Golden Master</div>
     </div>
 
     <div id="view-wallet" class="content-view">
-        <div id="loginForm" class="wallet-card" style="display: flex; flex-direction: column;">
+        <div id="loginForm" class="wallet-card">
             <h3 style="color:var(--accent); text-align:center; margin-bottom:15px;">Telegram Connect</h3>
-            <input type="text" id="loginId" class="wallet-input" placeholder="Username" style="margin-bottom:10px;">
-            <input type="password" id="loginPw" class="wallet-input" placeholder="Password" style="margin-bottom:10px;">
-            <div id="pwConfirmGroup" style="display: flex; flex-direction: column;"><input type="password" id="loginPwCheck" class="wallet-input" placeholder="Confirm Password" style="margin-bottom:10px;"></div>
+            <input type="text" id="loginId" class="wallet-input" placeholder="Username">
+            <input type="password" id="loginPw" class="wallet-input" placeholder="Password">
+            <div id="pwConfirmGroup" style="display: flex; flex-direction: column;"><input type="password" id="loginPwCheck" class="wallet-input" placeholder="Confirm Password"></div>
             <div id="loginMsg" style="font-size:0.7rem; color:var(--red); text-align:center; min-height:1.2rem;"></div>
             <button id="btnLoginBtn" onclick="handleLoginSubmit()" style="width:100%; height:50px; background:var(--blue); color:#fff; border:none; border-radius:8px; font-weight:900;">CONNECT ACCOUNT</button>
         </div>
@@ -210,6 +228,10 @@
     </nav>
 </div>
 
+<audio id="sndTick" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+<audio id="sndWin" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3"></audio>
+<audio id="sndLose" src="https://assets.mixkit.co/active_storage/sfx/2004/2004-preview.mp3"></audio>
+
 <script>
     const tg = window.Telegram.WebApp; tg.expand();
     let currentLang = 'en', currentId = "GUEST", balance = 100.0;
@@ -225,28 +247,43 @@
 
     const canvas = document.getElementById('wheelCanvas'), ctx = canvas.getContext('2d'), timerBar = document.getElementById('timerBar'), betOverlay = document.getElementById('betOverlay');
 
-    /* [v5.49 무결성] 드로잉 - 6시 방향 정중앙 보정 */
-    function drawWheel() { 
-        const arc = (Math.PI * 2) / 56, radius = 260, gap = 0.025; 
-        ctx.clearRect(0,0,560,560); ctx.lineWidth = 14; 
-        for (let i = 0; i < 56; i++) {
-            ctx.beginPath(); ctx.strokeStyle = wheelMap[i].color;
-            const startAngle = i * arc + Math.PI/2 - arc/2 + gap;
-            const endAngle = (i + 1) * arc + Math.PI/2 - arc/2 - gap;
-            ctx.arc(280, 280, radius, startAngle, endAngle); ctx.stroke();
-        }
+    function setLanguage(lang) { 
+        currentLang = lang; localStorage.setItem('db_wheel_lang', lang); 
+        document.getElementById('langOverlay').style.display = 'none'; 
+        // [v6.0 수정] 언어 선택 후 초기화 체인 강제 실행
+        applyI18n(); syncHistory(); drawWheel(); updateBalUI();
     }
 
-    function getWinIndex(seed) { const rv = (seed * 9301 + 49297) % 233280; return { index: (rv % 56) }; }
+    function applyI18n() {
+        const t = i18n[currentLang] || i18n.en;
+        document.getElementById('displayId').innerText = `${t.welcome} ${currentId}`;
+        document.getElementById('closedTxt').innerText = t.closed; document.getElementById('navHome').innerText = t.home; 
+        document.getElementById('navRank').innerText = t.rank; document.getElementById('navHow').innerText = t.how; 
+        document.getElementById('navStats').innerText = t.stats; document.getElementById('navLogin').innerText = t.login;
+        document.getElementById('th-pick').innerText = t.pick; document.getElementById('th-bet').innerText = t.bet;
+        document.getElementById('th-res').innerText = t.res; document.getElementById('th-win').innerText = t.win;
+        document.getElementById('howContent').innerHTML = t.howTxt; document.getElementById('rankMainTitle').innerText = t.rankTitle;
+        document.getElementById('lblLast100Stats').innerText = t.last100;
+        document.getElementById('lbl-total').innerText = t.totalSpins; document.getElementById('lbl-winrate').innerText = t.winRate;
+        document.getElementById('btnBuyTop').innerText = t.buy;
+        const colors = { black: { ko: "블랙", en: "BLACK", cn: "黑色", jp: "ブラック" }, red: { ko: "레드", en: "RED", cn: "红色", jp: "レッド" }, blue: { ko: "블루", en: "BLUE", cn: "蓝色", jp: "ブルー" }, gold: { ko: "골드", en: "GOLD", cn: "金色", jp: "ゴールド" } };
+        ['black', 'red', 'blue', 'gold'].forEach((c, i) => { const label = colors[c][currentLang] || colors[c]['en']; document.getElementById(`cl${i+1}`).innerText = label; document.getElementById(`sl${i+1}`).innerText = label; });
+        handleIdInput();
+    }
 
-    /* [v5.49 무결성] 상단 바 센터링 및 동기화 */
+    function drawWheel() { 
+        const arc = (Math.PI * 2) / 56, radius = 260, gap = 0.025; ctx.clearRect(0,0,560,560); ctx.lineWidth = 14; 
+        for (let i = 0; i < 56; i++) { ctx.beginPath(); ctx.strokeStyle = wheelMap[i].color; const startAngle = i * arc + Math.PI/2 - arc/2 + gap; const endAngle = (i + 1) * arc + Math.PI/2 - arc/2 - gap; ctx.arc(280, 280, radius, startAngle, endAngle); ctx.stroke(); }
+    }
+
     function syncHistory() { 
         const masterSeed = Math.floor(Date.now() / CYCLE_MS);
         globalHistory = []; for(let i=1; i<=35; i++) { globalHistory.push(wheelMap[getWinIndex(masterSeed - i).index].color); } 
         updateHistoryUI(); 
     }
+
     function updateHistoryUI() { 
-        const strip = document.getElementById('historyStrip'); strip.innerHTML = ''; const reversedData = [...globalHistory].slice(-35).reverse(); 
+        const strip = document.getElementById('historyStrip'); if(!strip) return; strip.innerHTML = ''; const reversedData = [...globalHistory].slice(-35).reverse(); 
         reversedData.forEach((color) => {
             const bar = document.createElement('div'); let hClass = 'h-black'; if(color === '#ffcc00') hClass = 'h-gold'; else if(color === '#0088cc') hClass = 'h-blue'; else if(color === '#ff3333') hClass = 'h-red';
             bar.className = `hist-bar ${hClass}`; bar.style.backgroundColor = color; strip.appendChild(bar); 
@@ -275,41 +312,10 @@
     }
 
     function getCurrentRotation() { const st = window.getComputedStyle(canvas, null), tr = st.getPropertyValue("transform"); if(tr === "none") return 0; const v = tr.split('(')[1].split(')')[0].split(','); const angle = Math.round(Math.atan2(parseFloat(v[1]), parseFloat(v[0])) * (180/Math.PI)); return (angle + 360) % 360; }
-    
-    function startSpin() { 
-        isSpinning = true; const masterSeed = Math.floor(Date.now() / CYCLE_MS); 
-        currentRoundResult = getWinIndex(masterSeed); 
-        const arc = 360 / 56;
-        const targetRelativeAngle = (360 - (currentRoundResult.index * arc)) % 360;
-        const currentMod = currentRotation % 360;
-        const delta = (targetRelativeAngle - currentMod + 360) % 360;
-        currentRotation += (360 * 10) + delta; 
-        canvas.style.transition = `transform ${SPIN_DURATION}ms cubic-bezier(0.15, 0, 0.1, 1)`; 
-        canvas.style.transform = `rotate(${currentRotation}deg)`; 
-        setTimeout(() => resolve(wheelMap[currentRoundResult.index]), SPIN_DURATION); 
-    }
+    function startSpin() { isSpinning = true; const masterSeed = Math.floor(Date.now() / CYCLE_MS); currentRoundResult = getWinIndex(masterSeed); const arc = 360 / 56; const targetRelativeAngle = (360 - (currentRoundResult.index * arc)) % 360; const currentMod = currentRotation % 360; const delta = (targetRelativeAngle - currentMod + 360) % 360; currentRotation += (360 * 10) + delta; canvas.style.transition = `transform ${SPIN_DURATION}ms cubic-bezier(0.15, 0, 0.1, 1)`; canvas.style.transform = `rotate(${currentRotation}deg)`; setTimeout(() => resolve(wheelMap[currentRoundResult.index]), SPIN_DURATION); }
+    function resolve(win) { document.getElementById('wheelPointer').style.backgroundColor = win.color; globalHistory.push(win.color); setTimeout(() => updateHistoryUI(), 500); if(myBet) { myGameStats.total++; const winStatus = myBet.type === win.name; if(winStatus) { balance += (myBet.amount * win.mult); myGameStats.wins++; playSound('sndWin'); } else playSound('sndLose'); const row = `<tr><td>${myBet.type.toUpperCase()}</td><td>${myBet.amount.toFixed(1)}T</td><td>${winStatus ? 'Win' : 'Lost'}</td><td><span class="winner-dot" style="background:${win.color}"></span></td></tr>`; document.getElementById('myLogBody').insertAdjacentHTML('afterbegin', row); } if(currentId !== "GUEST") { let u = JSON.parse(localStorage.getItem('db_users')); u[currentId].balance = balance; u[currentId].myGameStats = myGameStats; localStorage.setItem('db_users', JSON.stringify(u)); } setTimeout(() => { myBet = null; document.querySelectorAll('.bet-buttons .btn').forEach(b => b.classList.remove('selected')); liveBoardTotals = { black:0, red:0, blue:0, gold:0 }; document.querySelectorAll('.bet-list').forEach(l => l.innerHTML = ''); document.querySelectorAll('.col-total').forEach(t => t.innerText = '0.0'); canvas.style.transition = 'none'; canvas.style.transform = `rotate(${currentRotation % 360}deg)`; updateBalUI(); currentRoundResult = null; }, RESULT_WAIT); }
+    function getWinIndex(seed) { const rv = (seed * 9301 + 49297) % 233280; return { index: (rv % 56) }; }
 
-    function resolve(win) { 
-        document.getElementById('wheelPointer').style.backgroundColor = win.color; globalHistory.push(win.color); 
-        setTimeout(() => updateHistoryUI(), 500);
-        if(myBet) { 
-            myGameStats.total++; const winStatus = myBet.type === win.name; 
-            if(winStatus) { balance += (myBet.amount * win.mult); myGameStats.wins++; playSound('sndWin'); } else playSound('sndLose'); 
-            const row = `<tr><td>${myBet.type.toUpperCase()}</td><td>${myBet.amount.toFixed(1)}T</td><td>${winStatus ? 'Win' : 'Lost'}</td><td><span class="winner-dot" style="background:${win.color}"></span></td></tr>`; 
-            document.getElementById('myLogBody').insertAdjacentHTML('afterbegin', row); 
-        } 
-        if(currentId !== "GUEST") { let u = JSON.parse(localStorage.getItem('db_users') || '{}'); u[currentId].balance = balance; u[currentId].myGameStats = myGameStats; localStorage.setItem('db_users', JSON.stringify(u)); } 
-        setTimeout(() => { 
-            myBet = null; document.querySelectorAll('.bet-buttons .btn').forEach(b => b.classList.remove('selected')); 
-            liveBoardTotals = { black:0, red:0, blue:0, gold:0 }; 
-            document.querySelectorAll('.bet-list').forEach(l => l.innerHTML = ''); 
-            document.querySelectorAll('.col-total').forEach(t => t.innerText = '0.0'); 
-            canvas.style.transition = 'none'; canvas.style.transform = `rotate(${currentRotation % 360}deg)`; 
-            updateBalUI(); currentRoundResult = null;
-        }, RESULT_WAIT); 
-    }
-
-    /* [v6.0] 봇 엔진 - 70% 고액 배팅 비중 */
     function deterministicGlobalSpawn(elapsed) {
         if (elapsed < FREEZE_PERIOD || elapsed > CYCLE_MS - 1000 || roundBotBetTotal >= 7.4) return;
         const ts = Math.floor(Date.now() / 100), r = (ts * 9301 + 49297) % 233280;
@@ -330,25 +336,10 @@
             addLiveUI(type, botId, amount);
         }
     }
-    function addLiveUI(type, user, amt) {
-        const list = document.getElementById(`l-${type}`); if(!list) return;
-        liveBoardTotals[type] += amt; document.getElementById(`t-${type}`).innerText = liveBoardTotals[type].toFixed(1);
-        const item = document.createElement('div'); item.className = 'bet-item';
-        item.innerHTML = `<span>${user}</span><b>${amt.toFixed(1)}T</b>`;
-        list.prepend(item); if(list.children.length > 5) list.lastChild.remove();
-    }
+    function addLiveUI(type, user, amt) { const list = document.getElementById(`l-${type}`); if(!list) return; liveBoardTotals[type] += amt; document.getElementById(`t-${type}`).innerText = liveBoardTotals[type].toFixed(1); const item = document.createElement('div'); item.className = 'bet-item'; item.innerHTML = `<span>${user}</span><b>${amt.toFixed(1)}T</b>`; list.prepend(item); if(list.children.length > 5) list.lastChild.remove(); }
     function generateRealBotId(seed) { const chars = "abcdefghijklmnopqrstuvwxyz"; const types = ['random', 'initials', 'masked', 'pro']; const type = types[seed % 4]; if(type === 'random') { let id = ""; const len = (seed % 3) + 5; for(let i=0; i<len; i++) id += chars.charAt((seed >> i) % 26); return id; } else if(type === 'initials') { const inits = ["kmh", "lsy", "pjs", "hjh", "kty", "mks", "shw", "bkc"]; return inits[seed % inits.length] + (seed % 9999); } else if(type === 'masked') { const names = ["Kim", "Lee", "Park", "Choi", "Jung", "Kang", "Cho", "Yoon"]; return names[seed % names.length] + "***"; } else { const adjs = ["Top", "Lucky", "Ace", "Big", "Spin", "Pro", "Vip", "Win"]; const nouns = ["Star", "Boss", "Player", "King", "One", "Hero", "Master", "Peak"]; return adjs[seed % 8] + nouns[(seed/7 >> 0) % 8] + (seed % 99); } }
 
-    /* UI 핸들러 */
-    function switchTab(id, el) { 
-        document.querySelectorAll('.content-view').forEach(v => v.classList.remove('active')); 
-        document.getElementById('view-' + id).classList.add('active'); 
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); 
-        el.classList.add('active'); 
-        if(id === 'ranking') renderRanking(); 
-        if(id === 'recommend') renderStats(); 
-        if(id === 'wallet') autoFillTelegramId();
-    }
+    function switchTab(id, el) { document.querySelectorAll('.content-view').forEach(v => v.classList.remove('active')); document.getElementById('view-' + id).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active'); if(id === 'ranking') renderRanking(); if(id === 'recommend') renderStats(); if(id === 'wallet') autoFillTelegramId(); }
     function autoFillTelegramId() { if (currentId === "GUEST") { const user = tg.initDataUnsafe?.user; if (user && user.username) document.getElementById('loginId').value = `@${user.username}`; } }
     function toggleWithdraw() { const g = document.getElementById('withdrawGroup'); g.style.display = g.style.display === 'none' ? 'flex' : 'none'; }
     function handleUserBet(type) { const el = Date.now() % CYCLE_MS; if(el < FREEZE_PERIOD || el > CYCLE_MS - 1000 || myBet) return; const amt = parseFloat(document.getElementById('betInput').value); if(isNaN(amt) || amt > balance || amt < 0.1) return; balance -= amt; updateBalUI(); myBet = { type, amount: amt }; document.getElementById('btn' + type.charAt(0).toUpperCase() + type.slice(1)).classList.add('selected'); addLiveUI(type, "ME", amt); }
@@ -363,8 +354,9 @@
     function checkSession() { const sUser = sessionStorage.getItem('loggedInUser'); if(sUser) { let users = JSON.parse(localStorage.getItem('db_users') || '{}'); if(users[sUser]) { currentId = sUser; balance = users[sUser].balance; myGameStats = users[sUser].myGameStats; updateLoginState(true); } } }
     function initAudio() { audioInitialized = true; }
     function toggleMute() { isMuted = !isMuted; document.getElementById('soundToggle').innerText = isMuted ? "🔇" : "🔊"; }
-    function playSound(id) { if(!isMuted && audioInitialized) { const s = document.getElementById(id); s.currentTime = 0; s.play().catch(()=>{}); } }
+    function playSound(id) { if(!isMuted && audioInitialized) { const s = document.getElementById(id); if(s) { s.currentTime = 0; s.play().catch(()=>{}); } } }
 
+    /* [v5.49] '골든 마스터' 엔진 초기화 */
     checkSession(); syncHistory(); drawWheel(); updateBalUI(); applyI18n(); setInterval(tick, 100);
 </script>
 </body>
