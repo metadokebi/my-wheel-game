@@ -18,10 +18,10 @@
         html, body { margin: 0; padding: 0; width: 100%; height: 100dvh; overflow: hidden; touch-action: manipulation; background: #1e2128; color: white; font-family: 'Pretendard', sans-serif; }
         .main-container { width: 100%; max-width: 500px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
 
-        /* [언어선택] 오버레이 - 투명도 강화 (0.7 -> 0.4) */
+        /* [언어선택] 오버레이 - 투명도 극대화 (rgba 0.2) 수정 완료 */
         #langOverlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0, 0, 0, 0.4); 
+            background: rgba(0, 0, 0, 0.2); 
             z-index: 5000; display: flex; flex-direction: column; align-items: center; justify-content: center; 
             backdrop-filter: blur(15px); 
         }
@@ -32,7 +32,7 @@
         .user-id { font-size: 0.8rem; font-weight: 700; border-left: 3px solid var(--accent); padding-left: 10px; }
         .balance-box { background: rgba(255, 149, 0, 0.05); padding: 5px 10px; border-radius: 6px; border: 1px solid var(--point-color); color: var(--point-color); font-weight: 800; font-size: 0.85rem; }
 
-        /* [지난 결과 바] - 35개 제한 + 상단 정렬 Gravity UI */
+        /* [지난 결과 바] - 35개 제한 + 상단 정렬 Gravity UI 고정 */
         .rolls-wrapper { width: 100%; padding: 8px 15px; background: rgba(0,0,0,0.15); border-bottom: 1px solid #333; flex-shrink: 0; display: flex; justify-content: center; align-items: flex-start; min-height: 55px; }
         .history-strip { display: flex; gap: 4px; height: 40px; width: auto; align-items: flex-start; justify-content: center; overflow: hidden; }
         .hist-bar { width: 3px; border-radius: 1.5px; flex-shrink: 0; transition: all 0.3s; }
@@ -58,13 +58,10 @@
         .controls { position: relative; width: 100%; background: var(--card); padding: 15px; border-radius: 12px; border: 1px solid #333; overflow: hidden; }
         #betOverlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); z-index: 100; display: none; align-items: center; justify-content: center; pointer-events: none; border-radius: 12px; }
         .closed-text { color: #ddd; font-weight: 900; font-size: 1.6rem; letter-spacing: 4px; animation: pulse 0.8s infinite; }
-        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 
-        /* 입력창 화살표 제거 */
+        /* 입력창 및 버튼 UI 고정 */
         #betInput { flex: 1; background: #000; border: 1px solid #333; color: var(--accent); padding: 12px; border-radius: 8px; text-align: center; font-weight: 900; outline: none; -moz-appearance: textfield; }
         #betInput::-webkit-outer-spin-button, #betInput::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-
-        /* 배팅 버튼 */
         .bet-buttons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 12px; }
         .btn { height: 65px; background: transparent; border: 1.5px solid transparent; border-radius: 4px; font-weight: 900; font-size: 1.1rem; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
         .btn-black { border-color: #555; color: #777; } .btn-red { border-color: var(--red); color: var(--red); }
@@ -83,7 +80,7 @@
         .bet-list { padding: 3px; flex: 1; display: flex; flex-direction: column; gap: 3px; overflow: hidden; }
         .bet-item { display: flex; justify-content: space-between; font-size: 0.48rem; font-weight: 700; background: rgba(255,255,255,0.05); padding: 2px; border-radius: 3px; }
 
-        /* [사용법 전문 매뉴얼] */
+        /* [사용법 및 통계/로그인 고정 UI] */
         .manual-container { width: 94%; margin-top: 10px; display: flex; flex-direction: column; gap: 15px; }
         .manual-card { background: var(--card); border: 1px solid #333; border-radius: 15px; padding: 20px; }
         .manual-section { margin-bottom: 20px; }
@@ -92,7 +89,6 @@
         .manual-formula { background: #000; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 0.7rem; color: var(--point-color); margin: 10px 0; border: 1px solid #222; text-align: center; }
         .manual-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 800; margin-right: 5px; background: #333; color: var(--gold); }
 
-        /* [통계 및 로그인 고정 UI] */
         .digital-stats { width: 92%; background: #000; border: 1px solid #333; padding: 15px; border-radius: 12px; margin-top: 10px; }
         .stat-bar-bg { width: 100%; height: 8px; background: #111; border-radius: 4px; overflow: hidden; margin-top: 5px; }
         .stat-bar-fill { height: 100%; width: 0%; transition: width 1s ease-out; }
@@ -260,25 +256,16 @@
         document.getElementById('howContent').innerHTML = t.howTxt; document.getElementById('rankMainTitle').innerText = t.rankTitle;
         document.getElementById('lblLast100Stats').innerText = t.last100;
         document.getElementById('lbl-total').innerText = t.totalSpins; document.getElementById('lbl-winrate').innerText = t.winRate;
+        document.getElementById('liveTitle').innerText = t.live; document.getElementById('btnBuyTop').innerText = t.buy;
         const colors = { black: { ko: "블랙", en: "BLACK", cn: "黑色", jp: "ブラック" }, red: { ko: "레드", en: "RED", cn: "红色", jp: "レッド" }, blue: { ko: "블루", en: "BLUE", cn: "蓝色", jp: "ブルー" }, gold: { ko: "골드", en: "GOLD", cn: "金色", jp: "ゴールド" } };
         ['black', 'red', 'blue', 'gold'].forEach((c, i) => { const label = colors[c][currentLang] || colors[c]['en']; document.getElementById(`cl${i+1}`).innerText = label; document.getElementById(`sl${i+1}`).innerText = label; });
         handleIdInput();
     }
 
-    // [v5.49 수정] 24시간 시뮬레이션 통계 렌더링
     function renderStats() {
-        // 실제 설계된 확률을 바탕으로 한 24시간(약 4320회차) 누적 가상 통계
         const daySeed = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
         const pseudoRandom = (offset) => ((daySeed + offset) * 9301 + 49297) % 233280 / 233280;
-        
-        // 기준 확률: Black 50%, Red 30.3%, Blue 17.8%, Gold 1.8% 에 미세한 24시간 변동성 부여
-        const counts = {
-            black: 49.5 + (pseudoRandom(1) * 1.2),
-            red: 29.8 + (pseudoRandom(2) * 1.1),
-            blue: 17.5 + (pseudoRandom(3) * 0.8),
-            gold: 1.6 + (pseudoRandom(4) * 0.4)
-        };
-        
+        const counts = { black: 49.5 + (pseudoRandom(1) * 1.2), red: 29.8 + (pseudoRandom(2) * 1.1), blue: 17.5 + (pseudoRandom(3) * 0.8), gold: 1.6 + (pseudoRandom(4) * 0.4) };
         ['black', 'red', 'blue', 'gold'].forEach(c => {
             const val = counts[c].toFixed(1);
             document.getElementById(`val-${c}`).innerText = `${val}%`;
@@ -290,32 +277,20 @@
 
     function syncHistory() { 
         const currentMasterSeed = Math.floor(Date.now() / CYCLE_MS);
-        globalHistory = []; 
-        for(let i=1; i<=35; i++) { 
-            const resIdx = getWinIndex(currentMasterSeed - i).index;
-            globalHistory.push(wheelMap[resIdx].color); 
-        } 
+        globalHistory = []; for(let i=1; i<=35; i++) { const resIdx = getWinIndex(currentMasterSeed - i).index; globalHistory.push(wheelMap[resIdx].color); } 
         updateHistoryUI(); 
     }
     function updateHistoryUI() { 
-        const strip = document.getElementById('historyStrip'); strip.innerHTML = ''; 
-        const reversedData = [...globalHistory].slice(-35).reverse(); 
+        const strip = document.getElementById('historyStrip'); strip.innerHTML = ''; const reversedData = [...globalHistory].slice(-35).reverse(); 
         reversedData.forEach((color, idx) => {
-            const bar = document.createElement('div'); 
-            let hClass = 'h-black'; if(color === '#ffcc00') hClass = 'h-gold'; else if(color === '#00e5ff') hClass = 'h-blue'; else if(color === '#ff3333') hClass = 'h-red';
+            const bar = document.createElement('div'); let hClass = 'h-black'; if(color === '#ffcc00') hClass = 'h-gold'; else if(color === '#00e5ff') hClass = 'h-blue'; else if(color === '#ff3333') hClass = 'h-red';
             bar.className = `hist-bar ${hClass}`; bar.style.backgroundColor = color; strip.appendChild(bar); 
         }); 
     }
 
     function drawWheel() { 
-        const arc = (Math.PI * 2) / 56, radius = 260, gap = 0.025; 
-        ctx.clearRect(0,0,560,560); ctx.lineWidth = 14; 
-        for (let i = 0; i < 56; i++) {
-            ctx.beginPath(); ctx.strokeStyle = wheelMap[i].color;
-            const startAngle = i * arc + Math.PI/2 - arc/2 + gap;
-            const endAngle = (i + 1) * arc + Math.PI/2 - arc/2 - gap;
-            ctx.arc(280, 280, radius, startAngle, endAngle); ctx.stroke();
-        }
+        const arc = (Math.PI * 2) / 56, radius = 260, gap = 0.025; ctx.clearRect(0,0,560,560); ctx.lineWidth = 14; 
+        for (let i = 0; i < 56; i++) { ctx.beginPath(); ctx.strokeStyle = wheelMap[i].color; const startAngle = i * arc + Math.PI/2 - arc/2 + gap; const endAngle = (i + 1) * arc + Math.PI/2 - arc/2 - gap; ctx.arc(280, 280, radius, startAngle, endAngle); ctx.stroke(); }
     }
 
     function tick() {
@@ -324,63 +299,38 @@
             timerBar.style.width = "0%"; betOverlay.style.display = "flex";
             if (elapsed < 200 && !isSpinning) { startSpin(); roundBotBetTotal = 0; }
             if(isSpinning) {
-                const rot = getCurrentRotation(), arc = 360 / 56;
-                const normalizedRot = (360 - (rot % 360)) % 360;
-                const visualIdx = Math.floor((normalizedRot + arc/2) % 360 / arc) % 56;
+                const rot = getCurrentRotation(), arc = 360 / 56; const normalizedRot = (360 - (rot % 360)) % 360; const visualIdx = Math.floor((normalizedRot + arc/2) % 360 / arc) % 56;
                 pointer.style.backgroundColor = wheelMap[visualIdx].color;
             }
         } else {
-            isSpinning = false; const rem = CYCLE_MS - elapsed;
-            timerBar.style.width = (rem / BETTING_PERIOD) * 100 + "%";
-            timerBar.style.backgroundColor = `hsl(${(rem / BETTING_PERIOD) * 60}, 100%, 50%)`;
-            betOverlay.style.display = (rem < 1000) ? "flex" : "none";
-            pointer.style.backgroundColor = "#fff"; 
-            deterministicGlobalSpawn(elapsed); 
+            isSpinning = false; const rem = CYCLE_MS - elapsed; timerBar.style.width = (rem / BETTING_PERIOD) * 100 + "%";
+            timerBar.style.backgroundColor = `hsl(${(rem / BETTING_PERIOD) * 60}, 100%, 50%)`; betOverlay.style.display = (rem < 1000) ? "flex" : "none";
+            pointer.style.backgroundColor = "#fff"; deterministicGlobalSpawn(elapsed); 
         }
     }
 
     function getCurrentRotation() { 
-        const st = window.getComputedStyle(canvas, null), tr = st.getPropertyValue("transform"); 
-        if(tr === "none") return 0; 
-        const v = tr.split('(')[1].split(')')[0].split(','); 
-        const angle = Math.round(Math.atan2(parseFloat(v[1]), parseFloat(v[0])) * (180/Math.PI));
-        return (angle + 360) % 360; 
+        const st = window.getComputedStyle(canvas, null), tr = st.getPropertyValue("transform"); if(tr === "none") return 0; 
+        const v = tr.split('(')[1].split(')')[0].split(','); const angle = Math.round(Math.atan2(parseFloat(v[1]), parseFloat(v[0])) * (180/Math.PI)); return (angle + 360) % 360; 
     }
     
     function startSpin() { 
-        isSpinning = true; 
-        const masterSeed = Math.floor(Date.now() / CYCLE_MS); 
-        currentRoundResult = getWinIndex(masterSeed); 
-        const arc = 360 / 56;
-        const targetRelativeAngle = (360 - (currentRoundResult.index * arc)) % 360;
-        const currentMod = currentRotation % 360;
-        const delta = (targetRelativeAngle - currentMod + 360) % 360;
-        currentRotation += (360 * 10) + delta; 
-        canvas.style.transition = `transform ${SPIN_DURATION}ms cubic-bezier(0.15, 0, 0.1, 1)`; 
-        canvas.style.transform = `rotate(${currentRotation}deg)`; 
+        isSpinning = true; const masterSeed = Math.floor(Date.now() / CYCLE_MS); currentRoundResult = getWinIndex(masterSeed); const arc = 360 / 56;
+        const targetRelativeAngle = (360 - (currentRoundResult.index * arc)) % 360; const currentMod = currentRotation % 360; const delta = (targetRelativeAngle - currentMod + 360) % 360;
+        currentRotation += (360 * 10) + delta; canvas.style.transition = `transform ${SPIN_DURATION}ms cubic-bezier(0.15, 0, 0.1, 1)`; canvas.style.transform = `rotate(${currentRotation}deg)`; 
         setTimeout(() => resolve(wheelMap[currentRoundResult.index]), SPIN_DURATION); 
     }
 
     function resolve(win) { 
-        document.getElementById('wheelPointer').style.backgroundColor = win.color; 
-        globalHistory.push(win.color); 
-        setTimeout(() => updateHistoryUI(), 500);
+        document.getElementById('wheelPointer').style.backgroundColor = win.color; globalHistory.push(win.color); setTimeout(() => updateHistoryUI(), 500);
         if(myBet) { 
-            myGameStats.total++; const winStatus = myBet.type === win.name; 
-            if(winStatus) { balance += (myBet.amount * win.mult); myGameStats.wins++; playSound('sndWin'); } else playSound('sndLose'); 
+            myGameStats.total++; const winStatus = myBet.type === win.name; if(winStatus) { balance += (myBet.amount * win.mult); myGameStats.wins++; playSound('sndWin'); } else playSound('sndLose'); 
             const row = `<tr><td>${myBet.type.toUpperCase()}</td><td>${myBet.amount.toLocaleString()}</td><td>${winStatus ? 'Win' : 'Lost'}</td><td><span class="winner-dot" style="background:${win.color}"></span></td></tr>`; 
             document.getElementById('myLogBody').insertAdjacentHTML('afterbegin', row); 
         } 
         if(currentId !== "GUEST") { let u = JSON.parse(localStorage.getItem('db_users')); u[currentId].balance = balance; u[currentId].myGameStats = myGameStats; localStorage.setItem('db_users', JSON.stringify(u)); } 
         setTimeout(() => { 
-            myBet = null; document.querySelectorAll('.bet-buttons .btn').forEach(b => b.classList.remove('selected')); 
-            liveBoardTotals = { black:0, red:0, blue:0, gold:0 }; 
-            document.querySelectorAll('.bet-list').forEach(l => l.innerHTML = ''); 
-            document.querySelectorAll('.col-total').forEach(t => t.innerText = '0'); 
-            canvas.style.transition = 'none'; 
-            canvas.style.transform = `rotate(${currentRotation % 360}deg)`; 
-            updateBalUI(); 
-            currentRoundResult = null;
+            myBet = null; document.querySelectorAll('.bet-buttons .btn').forEach(b => b.classList.remove('selected')); liveBoardTotals = { black:0, red:0, blue:0, gold:0 }; document.querySelectorAll('.bet-list').forEach(l => l.innerHTML = ''); document.querySelectorAll('.col-total').forEach(t => t.innerText = '0'); canvas.style.transition = 'none'; canvas.style.transform = `rotate(${currentRotation % 360}deg)`; updateBalUI(); currentRoundResult = null;
         }, RESULT_WAIT); 
     }
 
