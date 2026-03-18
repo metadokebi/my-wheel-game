@@ -18,7 +18,7 @@
         html, body { margin: 0; padding: 0; width: 100%; height: 100dvh; overflow: hidden; touch-action: manipulation; background: #1e2128; color: white; font-family: 'Pretendard', sans-serif; }
         .main-container { width: 100%; max-width: 500px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
 
-        /* 언어 선택 오버레이 - 투명도 0.7 고정 */
+        /* 언어 선택 오버레이 - 투명도 0.7 고정 사양 */
         #langOverlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0, 0, 0, 0.7); 
@@ -32,22 +32,23 @@
         .user-id { font-size: 0.8rem; font-weight: 700; border-left: 3px solid var(--accent); padding-left: 10px; }
         .balance-box { background: rgba(255, 149, 0, 0.05); padding: 5px 10px; border-radius: 6px; border: 1px solid var(--point-color); color: var(--point-color); font-weight: 800; font-size: 0.85rem; }
 
-        /* 지난 결과 바 - 중앙 정렬 및 높이 커스텀 (v5.49 수정) */
+        /* 지난 결과 바 - 상단 일직선 정렬 및 아래로 길이 확장 (v5.49 정밀 수정) */
         .rolls-wrapper { 
-            width: 100%; padding: 5px 15px; background: rgba(0,0,0,0.2); 
+            width: 100%; padding: 8px 15px; background: rgba(0,0,0,0.2); 
             border-bottom: 1px solid #333; flex-shrink: 0; 
-            display: flex; justify-content: center; align-items: center; min-height: 50px;
+            display: flex; justify-content: center; align-items: flex-start; min-height: 55px;
         }
         .history-strip { 
             display: flex; gap: 4px; height: 40px; width: auto; 
-            align-items: center; justify-content: center; overflow: hidden; 
+            align-items: flex-start; /* 위쪽 일직선 정렬 */
+            justify-content: center; overflow: hidden; 
         }
         .hist-bar { width: 3px; border-radius: 1.5px; flex-shrink: 0; transition: all 0.3s; }
-        /* 색상별 높이 차별화 로직 (이미지 사양 반영) */
+        /* 색상별 높이 차별화 (v5.49 Gravity Spec) */
         .hist-bar.h-black { height: 16px; opacity: 0.6; }
         .hist-bar.h-red { height: 24px; opacity: 0.9; }
         .hist-bar.h-blue { height: 32px; opacity: 1; }
-        .hist-bar.h-gold { height: 40px; width: 4px; box-shadow: 0 0 10px var(--gold); z-index: 5; }
+        .hist-bar.h-gold { height: 37px; width: 4px; box-shadow: 0 0 10px var(--gold); z-index: 5; } /* 40px -> 37px 조정 */
 
         .timer-container { width: 100%; height: 6px; background: #000; position: relative; flex-shrink: 0; }
         #timerBar { position: absolute; left: 0; top: 0; height: 100%; width: 0%; transition: width 0.1s linear; }
@@ -74,7 +75,7 @@
         .btn.selected.btn-blue { background: var(--blue); border-color: var(--blue); color: #000; box-shadow: 0 0 15px rgba(0,229,255,0.4); }
         .btn.selected.btn-gold { background: var(--gold); border-color: var(--gold); color: #000; box-shadow: 0 0 15px rgba(255,204,0,0.4); }
 
-        /* 실시간 현황 */
+        /* 라이브 배팅 영역 */
         .live-betting-area { width: 100%; margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid #333; }
         .live-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
         .live-col { background: rgba(0,0,0,0.4); border-radius: 8px; min-height: 110px; border-top: 3px solid #444; overflow: hidden; display: flex; flex-direction: column; }
@@ -239,7 +240,7 @@
     function shuffleWheel() { const seed = 123; for (let i = wheelMap.length - 1; i > 0; i--) { const j = (seed * (i + 1)) % wheelMap.length; [wheelMap[i], wheelMap[j]] = [wheelMap[j], wheelMap[i]]; } }
     shuffleWheel();
 
-    function getHowHtml(title, fairTitle, formula, rulesTitle, r1, r2, r3) {
+    function getHowHtml(fairTitle, formula, rulesTitle, r1, r2, r3) {
         return `
             <div class="manual-card">
                 <div class="manual-section">
@@ -266,19 +267,19 @@
     const i18n = {
         ko: { 
             welcome: "환영합니다", buy: "구매", closed: "마감", live: "실시간 현황", home: "홈", rank: "랭킹", how: "사용법", stats: "통계", login: "로그인", logout: "로그아웃", pick: "선택", bet: "금액", res: "결과", win: "당첨", rankTitle: "TOP 100 랭킹", rhRank: "순위", rhId: "아이디", rhBet: "배팅", rhWin: "당첨", rhRate: "승률", pwRule: "비번: 6자 이상!", loginFail: "오류", pwMismatch: "불일치", joinSuccess: "가입 성공!", last100: "최근 100회 디지털 분석", totalSpins: "참여 라운드", winRate: "나의 승률",
-            howTxt: getHowHtml("사용법", "증명 가능한 공정성", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "상세 게임 규칙", "배팅 구간: 12초간 자유 배팅", "CLOSED: 배팅 마감 및 연산", "추첨: 6.5초간 휠 회전")
+            howTxt: getHowHtml("증명 가능한 공정성", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "상세 게임 규칙", "배팅 구간: 12초간 자유 배팅", "CLOSED: 배팅 마감 및 연산", "추첨: 6.5초간 휠 회전")
         },
         en: { 
             welcome: "Welcome", buy: "BUY", closed: "CLOSED", live: "LIVE STATUS", home: "Home", rank: "Ranking", how: "How", stats: "Stats", login: "Login", logout: "Logout", pick: "Pick", bet: "Bet", res: "Result", win: "Winner", rankTitle: "TOP 100 RANKING", rhRank: "#", rhId: "User ID", rhBet: "Bet", rhWin: "Win", rhRate: "Rate", pwRule: "PW: 6+ chars.", loginFail: "Error", pwMismatch: "Mismatch", joinSuccess: "Joined!", last100: "ANALYSIS", totalSpins: "TOTAL SPINS", winRate: "WIN RATE",
-            howTxt: getHowHtml("How to Play", "Provably Fair", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "Game Rules", "Betting: 12s active window", "CLOSED: Finalizing results", "Spin: 6.5s animation")
+            howTxt: getHowHtml("Provably Fair", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "Game Rules", "Betting: 12s active window", "CLOSED: Finalizing results", "Spin: 6.5s animation")
         },
         cn: {
             welcome: "欢迎", buy: "购买", closed: "结束", live: "实时状态", home: "首页", rank: "排行", how: "使用", stats: "统计", login: "登录", logout: "登出", pick: "选择", bet: "赌注", res: "结果", win: "获胜", rankTitle: "前 100 名排行榜", rhRank: "排名", rhId: "用户ID", rhBet: "赌注", rhWin: "奖金", rhRate: "胜率", pwRule: "密码：6位以上", loginFail: "错误", pwMismatch: "不匹配", joinSuccess: "加入成功！", last100: "数字分析", totalSpins: "总轮数", winRate: "胜率",
-            howTxt: getHowHtml("使用说明", "公平性证明", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "游戏规则", "投注阶段：12秒", "CLOSED：投注结束", "抽奖：6.5秒转盘旋转")
+            howTxt: getHowHtml("公平性证明", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "游戏规则", "投注阶段：12秒", "CLOSED：投注结束", "抽奖：6.5秒转盘旋转")
         },
         jp: {
             welcome: "ようこそ", buy: "購入", closed: "締切", live: "ライブ状況", home: "ホーム", rank: "ランク", how: "使い方", stats: "統計", login: "ログイン", logout: "ログアウト", pick: "選択", bet: "金額", res: "結果", win: "当選者", rankTitle: "トップ100ランキング", rhRank: "順位", rhId: "ユーザーID", rhBet: "ベット", rhWin: "当選", rhRate: "勝率", pwRule: "PW: 6文字以上", loginFail: "エラー", pwMismatch: "不一致", joinSuccess: "登録完了！", last100: "デジタル分析", totalSpins: "参加回数", winRate: "勝率",
-            howTxt: getHowHtml("使い方", "公平性の証明", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "ゲームルール", "ベット：12秒間", "CLOSED：ベット締切", "抽選：6.5秒間のホイール回転")
+            howTxt: getHowHtml("公平性の証明", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "ゲームルール", "ベット：12秒間", "CLOSED：ベット締切", "抽選：6.5秒間のホイール回転")
         }
     };
 
@@ -290,12 +291,9 @@
     function applyI18n() {
         const t = i18n[currentLang] || i18n.en;
         document.getElementById('displayId').innerText = `${t.welcome} ${currentId}`;
-        document.getElementById('closedTxt').innerText = t.closed; 
-        document.getElementById('navHome').innerText = t.home; 
-        document.getElementById('navRank').innerText = t.rank; 
-        document.getElementById('navHow').innerText = t.how; 
-        document.getElementById('navStats').innerText = t.stats; 
-        document.getElementById('navLogin').innerText = (currentId === "GUEST") ? t.login : t.logout;
+        document.getElementById('closedTxt').innerText = t.closed; document.getElementById('navHome').innerText = t.home; 
+        document.getElementById('navRank').innerText = t.rank; document.getElementById('navHow').innerText = t.how; 
+        document.getElementById('navStats').innerText = t.stats; document.getElementById('navLogin').innerText = (currentId === "GUEST") ? t.login : t.logout;
         document.getElementById('th-pick').innerText = t.pick; document.getElementById('th-bet').innerText = t.bet;
         document.getElementById('th-res').innerText = t.res; document.getElementById('th-win').innerText = t.win;
         document.getElementById('howContent').innerHTML = t.howTxt; document.getElementById('rankMainTitle').innerText = t.rankTitle;
@@ -339,18 +337,18 @@
         }
     }
 
-    // 지난 결과 바 렌더링 - 색상별 높이 차별화 (v5.49 수정)
+    // 지난 결과 바 렌더링 - 상단 일직선 고정 (v5.49 정밀 수정)
     function updateHistoryUI() { 
         const strip = document.getElementById('historyStrip'); strip.innerHTML = ''; 
         const reversedData = [...globalHistory].slice(-100).reverse(); 
         reversedData.forEach((color, idx) => { if(idx < 55) { 
             const bar = document.createElement('div'); 
-            let heightClass = 'h-black'; // Default
-            if(color === '#ffcc00') heightClass = 'h-gold';
-            else if(color === '#00e5ff') heightClass = 'h-blue';
-            else if(color === '#ff3333') heightClass = 'h-red';
+            let hClass = 'h-black';
+            if(color === '#ffcc00') hClass = 'h-gold';
+            else if(color === '#00e5ff') hClass = 'h-blue';
+            else if(color === '#ff3333') hClass = 'h-red';
             
-            bar.className = `hist-bar ${heightClass}`; 
+            bar.className = `hist-bar ${hClass}`; 
             bar.style.backgroundColor = color; strip.appendChild(bar); 
         }}); 
     }
