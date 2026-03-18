@@ -18,7 +18,7 @@
         html, body { margin: 0; padding: 0; width: 100%; height: 100dvh; overflow: hidden; touch-action: manipulation; background: #1e2128; color: white; font-family: 'Pretendard', sans-serif; }
         .main-container { width: 100%; max-width: 500px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
 
-        /* [v6.0] 언어선택 오버레이 */
+        /* [v6.0] 언어선택 오버레이 - 투명도 0.2 */
         #langOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2); z-index: 5000; display: flex; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
         .lang-list { display: flex; flex-direction: column; gap: 12px; width: 240px; }
         .lang-btn { background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.25); color: #fff; padding: 18px 20px; border-radius: 12px; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: background 0.2s; }
@@ -131,7 +131,7 @@
         <div class="user-id" id="displayId">Welcome Guest</div>
         <div style="display:flex; gap:8px; align-items:center;">
             <button id="soundToggle" onclick="toggleMute()" style="background:none; border:none; font-size:1.1rem; color:#fff; cursor:pointer;">🔊</button>
-            <div class="balance-box"><span id="balance">100.0</span> TON</div>
+            <div class="balance-box"><span id="balance">50.0</span> TON</div>
             <button id="btnBuyTop" onclick="switchTab('wallet', document.querySelectorAll('.nav-item')[4])" style="background:var(--buy-color); color:#fff; border:none; padding:4px 8px; border-radius:4px; font-weight:800; font-size:0.7rem;">BUY</button>
         </div>
     </header>
@@ -249,7 +249,6 @@
                     <div id="myAddr" style="background:#000; padding:8px; border-radius:4px; font-size:0.45rem; color:var(--accent); border:1px solid #222; overflow:hidden; text-overflow:ellipsis;">UQAr...k9Z2_m7X1pQ9w_Bot_System_V6_Golden</div>
                 </div>
             </div>
-
             <button onclick="handleLogout()" style="width:92%; height:50px; background:rgba(255,51,51,0.05); color:var(--red); border:1px solid rgba(255,51,51,0.2); border-radius:12px; font-weight:900; margin-top:20px;">LOGOUT</button>
         </div>
     </div>
@@ -269,7 +268,7 @@
 
 <script>
     const tg = window.Telegram.WebApp; tg.expand();
-    let currentLang = 'en', currentId = "GUEST", balance = 100.0, currentPhone = "";
+    let currentLang = 'en', currentId = "GUEST", balance = 50.0, currentPhone = ""; // [v6.0] 게스트 초기 밸런스 50.0
     let isSpinning = false, myBet = null, globalHistory = [], stats = { black: 0, red: 0, blue: 0, gold: 0 };
     let myGameStats = { total: 0, wins: 0 }, isMuted = false, audioInitialized = false, liveBoardTotals = { black:0, red:0, blue:0, gold:0 };
     let roundBotBetTotal = 0, currentRotation = 0, currentRoundResult = null; 
@@ -288,7 +287,7 @@
         ko: { welcome: "환영합니다", buy: "구매", closed: "마감", live: "실시간 현황", home: "홈", rank: "랭킹", how: "사용법", stats: "통계", login: "지갑", pick: "선택", bet: "수량", res: "결과", win: "당첨", rankTitle: "TOP 100 주간 랭킹", rhRank: "순위", rhId: "아이디", rhBet: "배팅", rhWin: "당첨", rhRate: "승률", pwRule: "비번: 6자 이상!", loginFail: "오류", pwMismatch: "불일치", joinSuccess: "연결 성공!", last100: "24H 디지털 분석", totalSpins: "참여 라운드", winRate: "나의 승률", howTxt: getHowHtml("증명 가능한 공정성", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON 배팅 규칙", "배팅 구간: 12초간 자유 배팅", "CLOSED: 배팅 마감 및 연산", "추첨: 6.5초간 휠 회전", "TON 코인 이용 가이드", "지갑 탭에서 [DEPOSIT] 버튼을 클릭하여 개인 입금 주소를 생성합니다. 해당 주소로 TON을 전송하면 네트워크 확인 후 즉시 게임 밸런스에 반영됩니다.", "지갑 탭의 [WITHDRAW]를 선택하고 본인의 외부 TON 지갑 주소와 수량을 입력합니다. [SEND TON] 클릭 시 실시간으로 전송 처리가 시작됩니다.") },
         en: { welcome: "Welcome", buy: "BUY", closed: "CLOSED", live: "LIVE STATUS", home: "Home", rank: "Ranking", how: "How", stats: "Stats", login: "Wallet", pick: "Pick", bet: "Amt", res: "Result", win: "Winner", rankTitle: "WEEKLY TOP 100 RANKING", rhRank: "#", rhId: "User ID", rhBet: "Bet", rhWin: "Win", rhRate: "Rate", pwRule: "PW: 6+ chars.", loginFail: "Error", pwMismatch: "Mismatch", joinSuccess: "Connected!", last100: "24H ANALYSIS", totalSpins: "TOTAL SPINS", winRate: "WIN RATE", howTxt: getHowHtml("Provably Fair", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON Betting Rules", "Betting: 12s active window", "CLOSED: Finalizing results", "Spin: 6.5s animation", "TON Coin Guide", "Click [DEPOSIT] in the Wallet tab to generate your unique address. Send TON to this address, and it will be credited to your balance after network confirmation.", "Go to [WITHDRAW] in the Wallet tab, enter your external TON address and amount, then click [SEND TON] to initiate an instant transfer.") },
         cn: { welcome: "欢迎", buy: "购买", closed: "结束", live: "实时状态", home: "首页", rank: "排行", how: "使用", stats: "统计", login: "钱包", pick: "选择", bet: "数量", res: "结果", win: "获胜", rankTitle: "每周前 100 名排行榜", rhRank: "排名", rhId: "用户ID", rhBet: "赌注", rhWin: "奖金", rhRate: "胜率", pwRule: "密码：6位以上", loginFail: "错误", pwMismatch: "不匹配", joinSuccess: "连接成功！", last100: "24H 数字分析", totalSpins: "总轮数", winRate: "胜率", howTxt: getHowHtml("公平性证明", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "游戏规则", "投注阶段：12秒", "CLOSED：投注结束", "抽奖：6.5秒转盘旋转", "TON 充值与换取指南", "在钱包选项卡中点击 [DEPOSIT] 生成专属充值地址。将 TON 发送到该地址，网络确认后金额将自动充入您的余额。", "选择钱包选项卡中的 [WITHDRAW]，输入您的外部 TON 钱包地址 and 金额，点击 [SEND TON] 即可开始实时转账处理。") },
-        jp: { welcome: "ようこそ", buy: "購入", closed: "締切", live: "ライブ状況", home: "ホーム", rank: "ランク", how: "使い方", stats: "統計", login: "ウォレット", pick: "選択", bet: "数量", res: "結果", win: "当選者", rankTitle: "週間トップ100ランキング", rhRank: "順位", rhId: "ユーザーID", rhBet: "ベット", rhWin: "当選", rhRate: "勝率", pwRule: "PW: 6文字以上", loginFail: "エラー", pwMismatch: "不一致", joinSuccess: "接続完了!", last100: "24H デジタル 분석", totalSpins: "参加回수", winRate: "勝率", howTxt: getHowHtml("公平性の証明", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "ゲームルール", "ベット：12秒間", "CLOSED：ベット締切", "抽選：6.5秒間のホイール回転", "TONコインご利用ガイド", "ウォレットタブの [DEPOSIT] をクリックして、個人用の入금アドレスを生成します。そのアドレスにTONを送信すると、確認後にバランスに反映されます。", "ウォレットタブ의 [WITHDRAW] を選択し、外部のTONウォレットアドレスと数量を入力します。[SEND TON] をクリックすると、即座に出金処理が開始されます。") }
+        jp: { welcome: "ようこそ", buy: "購入", closed: "締切", live: "ライブ状況", home: "ホーム", rank: "ランク", how: "使い方", stats: "統計", login: "ウォレット", pick: "選択", bet: "数量", res: "結果", win: "当選者", rankTitle: "週間トップ100ランキング", rhRank: "順위", rhId: "ユーザーID", rhBet: "ベット", rhWin: "当選", rhRate: "勝率", pwRule: "PW: 6文字以上", loginFail: "エラー", pwMismatch: "不一致", joinSuccess: "接続完了!", last100: "24H デジタル 분석", totalSpins: "参加回수", winRate: "勝率", howTxt: getHowHtml("公平性の証明", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "ゲームルール", "ベット：12秒間", "CLOSED：ベット締切", "抽選：6.5秒間のホイール回転", "TONコインご利用ガイド", "ウォレットタブの [DEPOSIT] をクリックして、個人用の入금アドレスを生成します。そのアドレスにTON을 送信すると、確認後にバランスに反映されます。", "ウォレットタブ의 [WITHDRAW] 를 선택하고, 외부의TONウォレットアドレスと数量を入力します。[SEND TON] 을 클릭하면, 即座に出金処理が開始されます。") }
     };
 
     const canvas = document.getElementById('wheelCanvas'), ctx = canvas.getContext('2d'), timerBar = document.getElementById('timerBar'), betOverlay = document.getElementById('betOverlay');
@@ -309,7 +308,7 @@
         ['black', 'red', 'blue', 'gold'].forEach((c, i) => { const label = clrs[c][currentLang] || clrs[c]['en']; document.getElementById(`cl${i+1}`).innerText = label; document.getElementById(`sl${i+1}`).innerText = label; });
     }
 
-    /* [v6.0] 텔레그램 전화번호 승인 + 10 TON 보상 로직 */
+    /* [v6.0] 텔레그램 전화번호 승인 보상 로직 */
     function requestTelegramContact() {
         tg.requestContact((shared) => {
             if (shared && tg.initDataUnsafe.user) {
@@ -322,12 +321,13 @@
                 let bonusGiven = false;
 
                 if (!users[username]) {
-                    users[username] = { pw: "telegram_auth", balance: 100.0, myGameStats: { total:0, wins:0 }, phone: phone, tgId: telegramId, is_rewarded: true };
-                    users[username].balance += 10.0; // 신규 가입 보상
+                    // [v6.0] 전화번호로 가입 시 기본 0.0 + 보너스 10.0
+                    users[username] = { pw: "telegram_auth", balance: 10.0, myGameStats: { total:0, wins:0 }, phone: phone, tgId: telegramId, is_rewarded: true };
                     bonusGiven = true;
                 } else {
+                    // [v6.0] 기존 유저 첫 인증 시 10.0 보상
                     if (!users[username].is_rewarded) {
-                        users[username].balance += 10.0; // 기존 유저 첫 인증 보상
+                        users[username].balance += 10.0;
                         users[username].is_rewarded = true;
                         bonusGiven = true;
                     }
@@ -344,9 +344,7 @@
                 
                 if(bonusGiven) alert("🎁 10 TON 보너스가 지급되었습니다!");
                 updateLoginState(true);
-            } else {
-                alert("인증이 취소되었습니다.");
-            }
+            } else { alert("인증이 취소되었습니다."); }
         });
     }
 
@@ -438,8 +436,23 @@
         } 
     }
 
-    function handleLoginSubmit() { const id = document.getElementById('loginId').value.trim(), pw = document.getElementById('loginPw').value, pwChk = document.getElementById('loginPwCheck').value, t = i18n[currentLang] || i18n.en; if(!id || pw.length < 6) { document.getElementById('loginMsg').innerText = t.pwRule; return; } let users = JSON.parse(localStorage.getItem('db_users') || '{}'); if(users[id]) { if(users[id].pw === pw) { currentId = id; balance = users[id].balance; myGameStats = users[id].myGameStats; currentPhone = users[id].phone || ""; sessionStorage.setItem('loggedInUser', id); updateLoginState(true); } else document.getElementById('loginMsg').innerText = t.loginFail; } else { if(pw !== pwChk) { document.getElementById('loginMsg').innerText = t.pwMismatch; return; } users[id] = { pw, balance: 100.0, myGameStats: { total: 0, wins: 0 } }; localStorage.setItem('db_users', JSON.stringify(users)); currentId = id; sessionStorage.setItem('loggedInUser', id); alert(t.joinSuccess); updateLoginState(true); } }
-    function handleLogout() { sessionStorage.removeItem('loggedInUser'); currentId = "GUEST"; balance = 100.0; myGameStats = { total: 0, wins: 0 }; currentPhone = ""; updateLoginState(false); switchTab('home', document.querySelector('.nav-item')); }
+    function handleLoginSubmit() { 
+        const id = document.getElementById('loginId').value.trim(), pw = document.getElementById('loginPw').value, pwChk = document.getElementById('loginPwCheck').value, t = i18n[currentLang] || i18n.en; 
+        if(!id || pw.length < 6) { document.getElementById('loginMsg').innerText = t.pwRule; return; } 
+        let users = JSON.parse(localStorage.getItem('db_users') || '{}'); 
+        if(users[id]) { 
+            if(users[id].pw === pw) { currentId = id; balance = users[id].balance; myGameStats = users[id].myGameStats; currentPhone = users[id].phone || ""; sessionStorage.setItem('loggedInUser', id); updateLoginState(true); } 
+            else document.getElementById('loginMsg').innerText = t.loginFail; 
+        } else { 
+            if(pw !== pwChk) { document.getElementById('loginMsg').innerText = t.pwMismatch; return; } 
+            // [v6.0] 신규 가입 시 초기 밸런스 0.0
+            users[id] = { pw, balance: 0.0, myGameStats: { total: 0, wins: 0 } }; 
+            localStorage.setItem('db_users', JSON.stringify(users)); 
+            currentId = id; balance = 0.0; sessionStorage.setItem('loggedInUser', id); alert(t.joinSuccess); updateLoginState(true); 
+        } 
+    }
+
+    function handleLogout() { sessionStorage.removeItem('loggedInUser'); currentId = "GUEST"; balance = 50.0; myGameStats = { total: 0, wins: 0 }; currentPhone = ""; updateLoginState(false); switchTab('home', document.querySelector('.nav-item')); }
     
     function updateLoginState(isLoggedIn) { 
         document.getElementById('loginForm').style.display = isLoggedIn ? 'none' : 'flex'; 
@@ -465,5 +478,6 @@
 
     checkSession(); syncHistory(); drawWheel(); updateBalUI(); applyI18n(); setInterval(tick, 100);
 </script>
+<div style="position:fixed; bottom:80px; width:100%; text-align:center; color:#444; font-size:0.5rem; pointer-events:none;">v6.0 TON Golden Master</div>
 </body>
 </html>
