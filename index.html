@@ -18,7 +18,7 @@
         html, body { margin: 0; padding: 0; width: 100%; height: 100dvh; overflow: hidden; touch-action: manipulation; background: #1e2128; color: white; font-family: 'Pretendard', sans-serif; }
         .main-container { width: 100%; max-width: 500px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
 
-        /* [언어선택] 오버레이 - v5.49 사양 (rgba 0.2) */
+        /* [v5.49] 언어선택 오버레이 - 투명도 0.2 */
         #langOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2); z-index: 5000; display: flex; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
         .lang-list { display: flex; flex-direction: column; gap: 12px; width: 240px; }
         .lang-btn { background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.25); color: #fff; padding: 18px 20px; border-radius: 12px; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: background 0.2s; }
@@ -27,7 +27,7 @@
         .user-id { font-size: 0.8rem; font-weight: 700; border-left: 3px solid var(--accent); padding-left: 10px; }
         .balance-box { background: rgba(0, 136, 204, 0.1); padding: 5px 10px; border-radius: 6px; border: 1px solid var(--point-color); color: var(--point-color); font-weight: 800; font-size: 0.85rem; }
 
-        /* [지난 결과 바] - 35개 제한 + 센터 정렬 Gravity UI */
+        /* [v5.49] 지난 결과 바 - 35개 제한 + 센터 정렬 Gravity UI */
         .rolls-wrapper { width: 100%; padding: 8px 15px; background: rgba(0,0,0,0.15); border-bottom: 1px solid #333; flex-shrink: 0; display: flex; justify-content: center; align-items: flex-start; min-height: 55px; }
         .history-strip { display: flex; gap: 5px; height: 40px; width: auto; align-items: flex-start; justify-content: center; overflow: hidden; }
         .hist-bar { width: 3px; border-radius: 1.5px; flex-shrink: 0; transition: all 0.3s; }
@@ -42,13 +42,13 @@
         .content-view { flex: 1; overflow-y: auto; display: none; padding-bottom: 90px; width: 100%; align-items: center; }
         .content-view.active { display: flex; flex-direction: column; }
 
-        /* [휠 섹션] - 세그먼트 UI 및 정중앙 드로잉 */
+        /* [v5.49] 휠 섹션 - 세그먼트 UI */
         .wheel-section { position: relative; margin: 25px 0; width: 230px; height: 230px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; }
         .wheel-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-weight: 900; font-size: 1.8rem; color: var(--accent); text-shadow: 0 0 10px var(--accent); opacity: 0.8; pointer-events: none; }
         .pointer { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); width: 14px; height: 20px; background: #fff; clip-path: polygon(50% 100%, 0% 0%, 100% 0%); z-index: 25; transition: background-color 0.1s linear; }
 
-        /* [컨트롤 및 CLOSED 오버레이 범위 제한] */
+        /* [v5.49] 컨트롤 박스 한정 CLOSED 오버레이 */
         .overlay-container { width: 100%; padding: 0 15px; position: relative; }
         .controls { position: relative; width: 100%; background: var(--card); padding: 15px; border-radius: 12px; border: 1px solid #333; overflow: hidden; }
         #betOverlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); z-index: 100; display: none; align-items: center; justify-content: center; pointer-events: none; border-radius: 12px; }
@@ -58,7 +58,7 @@
         #betInput { flex: 1; background: #000; border: 1px solid #333; color: var(--accent); padding: 12px; border-radius: 8px; text-align: center; font-weight: 900; outline: none; -moz-appearance: textfield; }
         #betInput::-webkit-outer-spin-button, #betInput::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
-        /* 배팅 버튼 */
+        /* [v5.49] 버튼 선택 색상 사양 */
         .bet-buttons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 12px; }
         .btn { height: 65px; background: transparent; border: 1.5px solid transparent; border-radius: 4px; font-weight: 900; font-size: 1.1rem; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
         .btn-black { border-color: #555; color: #777; } .btn-red { border-color: var(--red); color: var(--red); }
@@ -77,7 +77,7 @@
         .bet-list { padding: 3px; flex: 1; display: flex; flex-direction: column; gap: 3px; overflow: hidden; }
         .bet-item { display: flex; justify-content: space-between; font-size: 0.48rem; font-weight: 700; background: rgba(255,255,255,0.05); padding: 2px; border-radius: 3px; }
 
-        /* [지갑 탭 전용] */
+        /* [지갑 탭] */
         .wallet-card { width: 92%; background: var(--card); border: 1px solid #333; border-radius: 15px; padding: 20px; margin-top: 15px; }
         .wallet-balance-big { font-size: 1.8rem; font-weight: 900; color: var(--accent); text-align: center; margin: 10px 0; }
         .wallet-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
@@ -91,7 +91,7 @@
         .manual-card { background: var(--card); border: 1px solid #333; border-radius: 15px; padding: 20px; }
         .manual-title { font-size: 0.95rem; font-weight: 900; color: var(--accent); margin-bottom: 12px; border-bottom: 1px solid #222; padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }
         .manual-text { font-size: 0.78rem; color: #bbb; line-height: 1.65; }
-        .manual-formula { background: #000; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 0.7rem; color: var(--point-color); margin: 10px 0; border: 1px solid #222; text-align: center; }
+        .manual-formula { background: #000; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 0.7rem; color: var(--accent); margin: 10px 0; border: 1px solid #222; text-align: center; }
         .manual-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 800; margin-right: 5px; background: #333; color: var(--gold); }
 
         .digital-stats { width: 92%; background: #000; border: 1px solid #333; padding: 15px; border-radius: 12px; margin-top: 10px; }
@@ -160,10 +160,10 @@
             <div class="live-betting-area">
                 <div id="liveTitle" style="font-size:0.7rem; color:#8899aa; margin-bottom:8px; font-weight:900; text-align:center;">LIVE STATUS</div>
                 <div class="live-grid">
-                    <div class="live-col" style="border-top-color:var(--black);"><div class="col-head"><span class="col-label" id="cl1">BLACK</span><span id="t-black" class="col-total">0</span></div><div id="l-black" class="bet-list"></div></div>
-                    <div class="live-col" style="border-top-color:var(--red);"><div class="col-head"><span class="col-label" id="cl2">RED</span><span id="t-red" class="col-total">0</span></div><div id="l-red" class="bet-list"></div></div>
-                    <div class="live-col" style="border-top-color:var(--blue);"><div class="col-head"><span class="col-label" id="cl3">BLUE</span><span id="t-blue" class="col-total">0</span></div><div id="l-blue" class="bet-list"></div></div>
-                    <div class="live-col" style="border-top-color:var(--gold);"><div class="col-head"><span class="col-label" id="cl4">GOLD</span><span id="t-gold" class="col-total">0</span></div><div id="l-gold" class="bet-list"></div></div>
+                    <div class="live-col" style="border-top-color:var(--black);"><div class="col-head"><span class="col-label" id="cl1">BLACK</span><span id="t-black" class="col-total">0.0</span></div><div id="l-black" class="bet-list"></div></div>
+                    <div class="live-col" style="border-top-color:var(--red);"><div class="col-head"><span class="col-label" id="cl2">RED</span><span id="t-red" class="col-total">0.0</span></div><div id="l-red" class="bet-list"></div></div>
+                    <div class="live-col" style="border-top-color:var(--blue);"><div class="col-head"><span class="col-label" id="cl3">BLUE</span><span id="t-blue" class="col-total">0.0</span></div><div id="l-blue" class="bet-list"></div></div>
+                    <div class="live-col" style="border-top-color:var(--gold);"><div class="col-head"><span class="col-label" id="cl4">GOLD</span><span id="t-gold" class="col-total">0.0</span></div><div id="l-gold" class="bet-list"></div></div>
                 </div>
             </div>
         </div>
@@ -239,7 +239,8 @@
     let currentLang = 'en', currentId = "GUEST", balance = 100.0;
     let isSpinning = false, myBet = null, globalHistory = [], stats = { black: 0, red: 0, blue: 0, gold: 0 };
     let myGameStats = { total: 0, wins: 0 }, isMuted = false, audioInitialized = false, liveBoardTotals = { black:0, red:0, blue:0, gold:0 };
-    let roundBotBetTotal = 0, currentRotation = 0, currentRoundResult = null;
+    let roundBotBetTotal = 0, currentRotation = 0, currentRoundResult = null; 
+    const CYCLE_MS = 20000, SPIN_DURATION = 6500, RESULT_WAIT = 2000, FREEZE_PERIOD = SPIN_DURATION + RESULT_WAIT, BETTING_PERIOD = CYCLE_MS - FREEZE_PERIOD;
 
     const sectors = [{color:'#ffcc00', name:'gold', mult:50, weight: 1},{color:'#0088cc', name:'blue', mult:5, weight: 10},{color:'#ff3333', name:'red', mult:3, weight: 17},{color:'#444444', name:'black', mult:2, weight: 28}];
     const wheelMap = []; sectors.forEach(s => { for(let i=0; i<s.weight; i++) wheelMap.push(s); });
@@ -257,7 +258,6 @@
         jp: { welcome: "ようこそ", buy: "購入", closed: "締切", live: "ライブ状況", home: "ホーム", rank: "ランク", how: "使い方", stats: "統計", login: "ウォレット", pick: "選択", bet: "数量", res: "結果", win: "当選者", rankTitle: "週間トップ100ランキング", rhRank: "順位", rhId: "ユーザーID", rhBet: "ベット", rhWin: "当選", rhRate: "勝率", pwRule: "PW: 6文字以上", loginFail: "エラー", pwMismatch: "不一致", joinSuccess: "接続完了!", last100: "24H デジタル分析", totalSpins: "参加回数", winRate: "勝率", howTxt: getHowHtml("公平性の証明", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "ゲームルール", "ベット：12秒間", "CLOSED：ベット締切", "抽選：6.5秒間のホイール回転") }
     };
 
-    const CYCLE_MS = 20000, SPIN_DURATION = 6500, RESULT_WAIT = 2000, FREEZE_PERIOD = SPIN_DURATION + RESULT_WAIT, BETTING_PERIOD = CYCLE_MS - FREEZE_PERIOD;
     const canvas = document.getElementById('wheelCanvas'), ctx = canvas.getContext('2d'), timerBar = document.getElementById('timerBar'), betOverlay = document.getElementById('betOverlay');
 
     function setLanguage(lang) { currentLang = lang; localStorage.setItem('db_wheel_lang', lang); document.getElementById('langOverlay').style.display = 'none'; applyI18n(); }
@@ -272,6 +272,7 @@
         document.getElementById('howContent').innerHTML = t.howTxt; document.getElementById('rankMainTitle').innerText = t.rankTitle;
         document.getElementById('lblLast100Stats').innerText = t.last100;
         document.getElementById('lbl-total').innerText = t.totalSpins; document.getElementById('lbl-winrate').innerText = t.winRate;
+        document.getElementById('btnBuyTop').innerText = t.buy;
         const colors = { black: { ko: "블랙", en: "BLACK", cn: "黑色", jp: "ブラック" }, red: { ko: "레드", en: "RED", cn: "红色", jp: "レッド" }, blue: { ko: "블루", en: "BLUE", cn: "蓝色", jp: "ブルー" }, gold: { ko: "골드", en: "GOLD", cn: "金色", jp: "ゴールド" } };
         ['black', 'red', 'blue', 'gold'].forEach((c, i) => { const label = colors[c][currentLang] || colors[c]['en']; document.getElementById(`cl${i+1}`).innerText = label; document.getElementById(`sl${i+1}`).innerText = label; });
         handleIdInput();
@@ -334,7 +335,6 @@
         return (angle + 360) % 360; 
     }
     
-    /* [v5.49 무결성] 결과 박제 및 물리적 정밀 타격 */
     function startSpin() { 
         isSpinning = true; const masterSeed = Math.floor(Date.now() / CYCLE_MS); 
         currentRoundResult = getWinIndex(masterSeed); 
@@ -363,7 +363,7 @@
             myBet = null; document.querySelectorAll('.bet-buttons .btn').forEach(b => b.classList.remove('selected')); 
             liveBoardTotals = { black:0, red:0, blue:0, gold:0 }; 
             document.querySelectorAll('.bet-list').forEach(l => l.innerHTML = ''); 
-            document.querySelectorAll('.col-total').forEach(t => t.innerText = '0'); 
+            document.querySelectorAll('.col-total').forEach(t => t.innerText = '0.0'); 
             canvas.style.transition = 'none'; 
             canvas.style.transform = `rotate(${currentRotation % 360}deg)`; 
             updateBalUI(); currentRoundResult = null;
@@ -372,7 +372,6 @@
 
     function getWinIndex(seed) { const rv = (seed * 9301 + 49297) % 233280; return { index: (rv % 56) }; }
 
-    /* [v6.0 TON] 배팅 시스템 */
     function handleUserBet(type) { 
         const el = Date.now() % CYCLE_MS; if(el < FREEZE_PERIOD || el > CYCLE_MS - 1000 || myBet) return; 
         const amt = parseFloat(document.getElementById('betInput').value); 
@@ -388,7 +387,6 @@
     }
     function adjBet(v) { let input = document.getElementById('betInput'), n = parseFloat(input.value) + v; if(n >= 0.1) input.value = n.toFixed(1); }
 
-    /* [v5.49 & v6.0] 봇 배팅 엔진 - TON 최적화 */
     function deterministicGlobalSpawn(elapsed) {
         if (elapsed < FREEZE_PERIOD || elapsed > CYCLE_MS - 1000 || roundBotBetTotal >= 7.4) return;
         const ts = Math.floor(Date.now() / 100), r = (ts * 9301 + 49297) % 233280;
@@ -396,13 +394,13 @@
         const spawnChance = ( (roundSeed + ts) % 15 < 3 ) ? 25 : 5; 
         if ((r % 100) < spawnChance) { 
             const botId = generateRealBotId(r);
-            const weights = [55, 35, 15, 3]; // Black, Red, Blue, Gold 가중치
+            const weights = [55, 35, 15, 3];
             const totalWeight = weights.reduce((a, b) => a + b, 0);
             let selector = r % totalWeight, selectedIdx = 0;
             for(let i=0; i<4; i++) { if(selector < weights[i]) { selectedIdx = i; break; } selector -= weights[i]; }
             const types = ['black', 'red', 'blue', 'gold'];
             const type = types[selectedIdx];
-            let amount = (type === 'gold') ? ((r % 5) + 1) * 0.1 : ((r % 25) + 1) * 0.1; // Gold는 0.5T 이내 제한
+            let amount = (type === 'gold') ? ((r % 5) + 1) * 0.1 : ((r % 25) + 1) * 0.1; 
             if (roundBotBetTotal + amount > 7.4) amount = 7.4 - roundBotBetTotal;
             if (amount < 0.1) return;
             roundBotBetTotal += amount;
@@ -425,7 +423,6 @@
         else { const adjs = ["Top", "Lucky", "Ace", "Big", "Spin", "Pro", "Vip", "Win"]; const nouns = ["Star", "Boss", "Player", "King", "One", "Hero", "Master", "Peak"]; return adjs[seed % 8] + nouns[(seed/7 >> 0) % 8] + (seed % 99); }
     }
 
-    /* 탭 전환 및 24시간 통계 */
     function switchTab(id, el) { 
         document.querySelectorAll('.content-view').forEach(v => v.classList.remove('active')); 
         document.getElementById('view-' + id).classList.add('active'); 
@@ -454,7 +451,6 @@
         } 
     }
 
-    /* 계정 처리 */
     function handleIdInput() { const id = document.getElementById('loginId').value.trim(); const users = JSON.parse(localStorage.getItem('db_users') || '{}'); document.getElementById('pwConfirmGroup').style.display = (id && users[id]) ? 'none' : 'flex'; }
     function handleLoginSubmit() { const id = document.getElementById('loginId').value.trim(), pw = document.getElementById('loginPw').value, pwChk = document.getElementById('loginPwCheck').value, t = i18n[currentLang] || i18n.en; if(!id || pw.length < 6) { document.getElementById('loginMsg').innerText = t.pwRule; return; } let users = JSON.parse(localStorage.getItem('db_users') || '{}'); if(users[id]) { if(users[id].pw === pw) { currentId = id; balance = users[id].balance; myGameStats = users[id].myGameStats; sessionStorage.setItem('loggedInUser', id); updateLoginState(true); } else document.getElementById('loginMsg').innerText = t.loginFail; } else { if(pw !== pwChk) { document.getElementById('loginMsg').innerText = t.pwMismatch; return; } users[id] = { pw, balance: 100.0, myGameStats: { total: 0, wins: 0 } }; localStorage.setItem('db_users', JSON.stringify(users)); currentId = id; sessionStorage.setItem('loggedInUser', id); alert(t.joinSuccess); updateLoginState(true); } }
     function handleLogout() { sessionStorage.removeItem('loggedInUser'); currentId = "GUEST"; balance = 100.0; myGameStats = { total: 0, wins: 0 }; updateLoginState(false); switchTab('home', document.querySelector('.nav-item')); }
