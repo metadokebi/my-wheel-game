@@ -306,19 +306,15 @@
         ['black', 'red', 'blue', 'gold'].forEach((c, i) => { const label = clrs[c][currentLang] || clrs[c]['en']; document.getElementById(`cl${i+1}`).innerText = label; document.getElementById(`sl${i+1}`).innerText = label; });
     }
 
-    /* [v6.0] 텔레그램 ID 자동 입력 */
     function autoFillTelegramId() {
         if (currentId === "GUEST") {
             const user = tg.initDataUnsafe?.user;
-            if (user && user.username) {
-                document.getElementById('loginId').value = `@${user.username}`;
-            } else if (user && user.id) {
-                document.getElementById('loginId').value = `User_${user.id}`;
-            }
+            if (user && user.username) { document.getElementById('loginId').value = `@${user.username}`; } 
+            else if (user && user.id) { document.getElementById('loginId').value = `User_${user.id}`; }
         }
     }
 
-    /* [v6.0] 전화번호 인증 보상 */
+    /* [v6.0] 전화번호 인증 보상 로직 (10.0 TON 고정 및 산술 오류 방지) */
     function requestTelegramContact() {
         tg.requestContact((shared) => {
             if (shared && tg.initDataUnsafe.user) {
@@ -328,16 +324,20 @@
                 let users = JSON.parse(localStorage.getItem('db_users') || '{}');
 
                 if (!users[username]) {
+                    // 신규 유저로 간주 및 즉시 10.0 부여 (0.0에서 시작)
                     users[username] = { pw: "telegram_auth", balance: 10.0, myGameStats: { total:0, wins:0 }, phone: phone, tgId: user.id, is_rewarded: true };
                 } else if (!users[username].is_rewarded) {
-                    users[username].balance += 10.0;
+                    // 기존 유저 첫 인증 시 10.0 추가
+                    users[username].balance = parseFloat(users[username].balance) + 10.0;
                     users[username].is_rewarded = true;
                 }
                 users[username].phone = phone;
                 localStorage.setItem('db_users', JSON.stringify(users));
-                currentId = username; currentPhone = phone; balance = users[username].balance; myGameStats = users[username].myGameStats;
+                
+                // 전역 변수 동기화
+                currentId = username; currentPhone = phone; balance = parseFloat(users[username].balance); myGameStats = users[username].myGameStats;
                 sessionStorage.setItem('loggedInUser', username);
-                alert("🎁 10 TON 보상이 지급되었습니다!");
+                alert("🎁 10 TON Reward Credited!");
                 updateLoginState(true);
             }
         });
@@ -392,15 +392,21 @@
     function renderStats() { const daySeed = Math.floor(Date.now() / (1000 * 60 * 60 * 24)), pseudoRandom = (offset) => ((daySeed + offset) * 9301 + 49297) % 233280 / 233280; const counts = { black: 49.5 + (pseudoRandom(1) * 1.2), red: 29.8 + (pseudoRandom(2) * 1.1), blue: 17.5 + (pseudoRandom(3) * 0.8), gold: 1.6 + (pseudoRandom(4) * 0.4) }; ['black', 'red', 'blue', 'gold'].forEach(c => { const val = counts[c].toFixed(1); document.getElementById(`val-${c}`).innerText = `${val}%`; document.getElementById(`bar-${c}`).style.width = `${val}%`; }); document.getElementById('st-total').innerText = myGameStats.total; document.getElementById('st-winrate').innerText = (myGameStats.total > 0 ? (myGameStats.wins/myGameStats.total*100).toFixed(1) : 0) + "%"; }
     function renderRanking() { const tbody = document.getElementById('rankingBody'); tbody.innerHTML = ''; const adjs = ["Top", "Vip", "Win", "Pro", "Lucky", "Ace", "Big", "King", "Wolf", "Spin"]; const nouns = ["Star", "Boss", "Player", "User", "Champ", "Master", "Peak", "Hero", "Peak", "One"]; for(let i=1; i<=100; i++) { const seed = i * 1234.56; let botId = adjs[Math.floor(seed % adjs.length)] + nouns[Math.floor((seed/7) % nouns.length)] + (Math.floor(seed % 99)); const maskedId = botId.length > 3 ? botId.slice(0, -3) + "***" : botId + "***"; const totalBet = (2000 - i * 15 + Math.floor(seed % 100)) * 1.5, winRate = (54 - (i/4) + (seed % 2)).toFixed(1), totalWin = (totalBet * (winRate/100) * 1.85); tbody.innerHTML += `<tr><td>${i}</td><td style="color:var(--accent); text-align:left; padding-left:15px; font-size:0.55rem;">${maskedId}</td><td>${totalBet.toFixed(1)}T</td><td style="color:var(--accent)">${totalWin.toFixed(1)}T</td><td>${winRate}%</td></tr>`; } }
 
+    /* [v6.0] 제로 베이스 로그인 로직 (체험 머니 이월 방지) */
     function handleLoginSubmit() { 
         const id = document.getElementById('loginId').value.trim(), pw = document.getElementById('loginPw').value, pwChk = document.getElementById('loginPwCheck').value, t = i18n[currentLang] || i18n.en; 
         if(!id || pw.length < 6) { document.getElementById('loginMsg').innerText = t.pwRule; return; } 
         let users = JSON.parse(localStorage.getItem('db_users') || '{}'); 
+        
         if(users[id]) { 
-            if(users[id].pw === pw) { currentId = id; balance = users[id].balance; myGameStats = users[id].myGameStats; currentPhone = users[id].phone || ""; sessionStorage.setItem('loggedInUser', id); updateLoginState(true); } else document.getElementById('loginMsg').innerText = t.loginFail; 
+            if(users[id].pw === pw) { 
+                currentId = id; balance = parseFloat(users[id].balance); myGameStats = users[id].myGameStats; currentPhone = users[id].phone || ""; sessionStorage.setItem('loggedInUser', id); updateLoginState(true); 
+            } else document.getElementById('loginMsg').innerText = t.loginFail; 
         } else { 
             if(pw !== pwChk) { document.getElementById('loginMsg').innerText = t.pwMismatch; return; } 
-            users[id] = { pw, balance: 0.0, myGameStats: { total: 0, wins: 0 } }; localStorage.setItem('db_users', JSON.stringify(users)); 
+            // 신규 가입 시 게스트 밸런스 무시하고 0.0 TON 시작
+            users[id] = { pw, balance: 0.0, myGameStats: { total: 0, wins: 0 }, is_rewarded: false }; 
+            localStorage.setItem('db_users', JSON.stringify(users)); 
             currentId = id; balance = 0.0; sessionStorage.setItem('loggedInUser', id); alert(t.joinSuccess); updateLoginState(true); 
         } 
     }
@@ -412,7 +418,7 @@
         applyI18n(); updateBalUI(); 
     }
     
-    function checkSession() { const sUser = sessionStorage.getItem('loggedInUser'); if(sUser) { let users = JSON.parse(localStorage.getItem('db_users') || '{}'); if(users[sUser]) { currentId = sUser; balance = users[sUser].balance; myGameStats = users[sUser].myGameStats; currentPhone = users[sUser].phone || ""; updateLoginState(true); } } }
+    function checkSession() { const sUser = sessionStorage.getItem('loggedInUser'); if(sUser) { let users = JSON.parse(localStorage.getItem('db_users') || '{}'); if(users[sUser]) { currentId = sUser; balance = parseFloat(users[sUser].balance); myGameStats = users[sUser].myGameStats; currentPhone = users[sUser].phone || ""; updateLoginState(true); } } }
     function initAudio() { audioInitialized = true; }
     function toggleMute() { isMuted = !isMuted; document.getElementById('soundToggle').innerText = isMuted ? "🔇" : "🔊"; }
     function playSound(id) { if(!isMuted && audioInitialized) { const s = document.getElementById(id); s.currentTime = 0; s.play().catch(()=>{}); } }
