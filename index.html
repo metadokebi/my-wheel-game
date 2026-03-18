@@ -18,7 +18,7 @@
         html, body { margin: 0; padding: 0; width: 100%; height: 100dvh; overflow: hidden; touch-action: manipulation; background: #1e2128; color: white; font-family: 'Pretendard', sans-serif; }
         .main-container { width: 100%; max-width: 500px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
 
-        /* 언어 선택 오버레이 - 투명도 0.7 고정 사양 */
+        /* [언어선택] 오버레이 - 0.7 투명도 + 블러 고정 */
         #langOverlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0, 0, 0, 0.7); 
@@ -26,29 +26,20 @@
             backdrop-filter: blur(12px); 
         }
         .lang-list { display: flex; flex-direction: column; gap: 12px; width: 240px; }
-        .lang-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 18px 20px; border-radius: 12px; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 15px; cursor: pointer; }
+        .lang-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 18px 20px; border-radius: 12px; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: background 0.2s; }
 
         header { padding: 12px 18px; background: rgba(0,0,0,0.4); display: flex; justify-content: space-between; align-items: center; z-index: 100; }
         .user-id { font-size: 0.8rem; font-weight: 700; border-left: 3px solid var(--accent); padding-left: 10px; }
         .balance-box { background: rgba(255, 149, 0, 0.05); padding: 5px 10px; border-radius: 6px; border: 1px solid var(--point-color); color: var(--point-color); font-weight: 800; font-size: 0.85rem; }
 
-        /* 지난 결과 바 - 상단 일직선 정렬 및 아래로 길이 확장 (v5.49 정밀 수정) */
-        .rolls-wrapper { 
-            width: 100%; padding: 8px 15px; background: rgba(0,0,0,0.2); 
-            border-bottom: 1px solid #333; flex-shrink: 0; 
-            display: flex; justify-content: center; align-items: flex-start; min-height: 55px;
-        }
-        .history-strip { 
-            display: flex; gap: 4px; height: 40px; width: auto; 
-            align-items: flex-start; /* 위쪽 일직선 정렬 */
-            justify-content: center; overflow: hidden; 
-        }
+        /* [지난 결과 바] - 상단 정렬 + Gravity UI 고정 */
+        .rolls-wrapper { width: 100%; padding: 8px 15px; background: rgba(0,0,0,0.15); border-bottom: 1px solid #333; flex-shrink: 0; display: flex; justify-content: center; align-items: flex-start; min-height: 55px; }
+        .history-strip { display: flex; gap: 4px; height: 40px; width: auto; align-items: flex-start; justify-content: center; overflow: hidden; }
         .hist-bar { width: 3px; border-radius: 1.5px; flex-shrink: 0; transition: all 0.3s; }
-        /* 색상별 높이 차별화 (v5.49 Gravity Spec) */
         .hist-bar.h-black { height: 16px; opacity: 0.6; }
         .hist-bar.h-red { height: 24px; opacity: 0.9; }
         .hist-bar.h-blue { height: 32px; opacity: 1; }
-        .hist-bar.h-gold { height: 37px; width: 4px; box-shadow: 0 0 10px var(--gold); z-index: 5; } /* 40px -> 37px 조정 */
+        .hist-bar.h-gold { height: 37px; width: 4px; box-shadow: 0 0 10px var(--gold); z-index: 5; }
 
         .timer-container { width: 100%; height: 6px; background: #000; position: relative; flex-shrink: 0; }
         #timerBar { position: absolute; left: 0; top: 0; height: 100%; width: 0%; transition: width 0.1s linear; }
@@ -56,13 +47,13 @@
         .content-view { flex: 1; overflow-y: auto; display: none; padding-bottom: 90px; width: 100%; align-items: center; }
         .content-view.active { display: flex; flex-direction: column; }
 
-        /* 휠 섹션 */
+        /* [휠 섹션] - RNG 시각적 일치 로직 고정 */
         .wheel-section { position: relative; margin: 25px 0; width: 230px; height: 230px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; }
         .wheel-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-weight: 900; font-size: 1.8rem; color: var(--accent); text-shadow: 0 0 10px var(--accent); opacity: 0.8; pointer-events: none; }
         .pointer { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); width: 14px; height: 20px; background: #fff; clip-path: polygon(50% 100%, 0% 0%, 100% 0%); z-index: 25; transition: background-color 0.1s linear; }
 
-        /* 컨트롤 구역 */
+        /* [와이드 컨트롤 구역] */
         .overlay-container { width: 100%; padding: 0 15px; position: relative; }
         .controls { width: 100%; background: var(--card); padding: 15px; border-radius: 12px; border: 1px solid #333; }
         #betInput { flex: 1; background: #000; border: 1px solid #333; color: var(--accent); padding: 12px; border-radius: 8px; text-align: center; font-weight: 900; outline: none; }
@@ -75,7 +66,7 @@
         .btn.selected.btn-blue { background: var(--blue); border-color: var(--blue); color: #000; box-shadow: 0 0 15px rgba(0,229,255,0.4); }
         .btn.selected.btn-gold { background: var(--gold); border-color: var(--gold); color: #000; box-shadow: 0 0 15px rgba(255,204,0,0.4); }
 
-        /* 라이브 배팅 영역 */
+        /* [라이브 배팅 보드] */
         .live-betting-area { width: 100%; margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid #333; }
         .live-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
         .live-col { background: rgba(0,0,0,0.4); border-radius: 8px; min-height: 110px; border-top: 3px solid #444; overflow: hidden; display: flex; flex-direction: column; }
@@ -85,16 +76,16 @@
         .bet-list { padding: 3px; flex: 1; display: flex; flex-direction: column; gap: 3px; overflow: hidden; }
         .bet-item { display: flex; justify-content: space-between; font-size: 0.48rem; font-weight: 700; background: rgba(255,255,255,0.05); padding: 2px; border-radius: 3px; }
 
-        /* 사용법 전용 스타일 */
+        /* [사용법 전문 강화 레이아웃] */
         .manual-container { width: 94%; margin-top: 10px; display: flex; flex-direction: column; gap: 15px; }
         .manual-card { background: var(--card); border: 1px solid #333; border-radius: 15px; padding: 20px; }
         .manual-section { margin-bottom: 20px; }
-        .manual-title { font-size: 0.95rem; font-weight: 900; color: var(--accent); margin-bottom: 12px; border-bottom: 1px solid #222; padding-bottom: 8px; }
+        .manual-title { font-size: 0.95rem; font-weight: 900; color: var(--accent); margin-bottom: 12px; border-bottom: 1px solid #222; padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }
         .manual-text { font-size: 0.78rem; color: #bbb; line-height: 1.65; }
         .manual-formula { background: #000; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 0.7rem; color: var(--gold); margin: 10px 0; border: 1px solid #222; text-align: center; }
         .manual-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 800; margin-right: 5px; background: #333; color: var(--gold); }
 
-        /* 통계 및 로그인 고정 UI */
+        /* [통계 및 로그인 골든 마스터 UI 고정] */
         .digital-stats { width: 92%; background: #000; border: 1px solid #333; padding: 15px; border-radius: 12px; margin-top: 10px; }
         .stat-bar-bg { width: 100%; height: 8px; background: #111; border-radius: 4px; overflow: hidden; margin-top: 5px; }
         .stat-bar-fill { height: 100%; width: 0%; transition: width 1s ease-out; }
@@ -104,6 +95,7 @@
         .log-table { width: 95%; border-collapse: collapse; font-size: 0.7rem; background: rgba(0,0,0,0.4); border-radius: 10px; overflow: hidden; margin: 20px auto; }
         .log-table th { background: #1a1a1a; padding: 10px; color: var(--text-muted); font-size: 0.75rem; font-weight: 900; }
         .log-table td { padding: 8px; border-bottom: 1px solid #222; text-align: center; font-weight: 700; }
+        .winner-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
 
         nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; height: 75px; background: var(--nav-bg); display: flex; border-top: 1px solid #222; z-index: 200; padding-bottom: env(safe-area-inset-bottom); }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; }
@@ -305,12 +297,7 @@
         document.getElementById('liveTitle').innerText = t.live; document.getElementById('btnBuyTop').innerText = t.buy;
         document.getElementById('loginFormTitle').innerText = t.login; document.getElementById('btnLoginBtn').innerText = t.login;
 
-        const colors = {
-            black: { ko: "블랙", en: "BLACK", cn: "黑色", jp: "ブラック" },
-            red: { ko: "레드", en: "RED", cn: "红色", jp: "レッド" },
-            blue: { ko: "블루", en: "BLUE", cn: "蓝色", jp: "ブルー" },
-            gold: { ko: "골드", en: "GOLD", cn: "金色", jp: "ゴールド" }
-        };
+        const colors = { black: { ko: "블랙", en: "BLACK", cn: "黑色", jp: "ブラック" }, red: { ko: "레드", en: "RED", cn: "红色", jp: "レッド" }, blue: { ko: "블루", en: "BLUE", cn: "蓝色", jp: "ブルー" }, gold: { ko: "골드", en: "GOLD", cn: "金色", jp: "ゴールド" } };
         ['black', 'red', 'blue', 'gold'].forEach((c, i) => {
             const label = colors[c][currentLang] || colors[c]['en'];
             const clEl = document.getElementById(`cl${i+1}`); if(clEl) clEl.innerText = label;
@@ -337,19 +324,13 @@
         }
     }
 
-    // 지난 결과 바 렌더링 - 상단 일직선 고정 (v5.49 정밀 수정)
     function updateHistoryUI() { 
         const strip = document.getElementById('historyStrip'); strip.innerHTML = ''; 
         const reversedData = [...globalHistory].slice(-100).reverse(); 
         reversedData.forEach((color, idx) => { if(idx < 55) { 
             const bar = document.createElement('div'); 
-            let hClass = 'h-black';
-            if(color === '#ffcc00') hClass = 'h-gold';
-            else if(color === '#00e5ff') hClass = 'h-blue';
-            else if(color === '#ff3333') hClass = 'h-red';
-            
-            bar.className = `hist-bar ${hClass}`; 
-            bar.style.backgroundColor = color; strip.appendChild(bar); 
+            let hClass = 'h-black'; if(color === '#ffcc00') hClass = 'h-gold'; else if(color === '#00e5ff') hClass = 'h-blue'; else if(color === '#ff3333') hClass = 'h-red';
+            bar.className = `hist-bar ${hClass}`; bar.style.backgroundColor = color; strip.appendChild(bar); 
         }}); 
     }
 
@@ -391,8 +372,51 @@
     function initAudio() { audioInitialized = true; }
     function toggleMute() { isMuted = !isMuted; document.getElementById('soundToggle').innerText = isMuted ? "🔇" : "🔊"; }
     function playSound(id) { if(!isMuted && audioInitialized) { const s = document.getElementById(id); s.currentTime = 0; s.play().catch(()=>{}); } }
-    function deterministicGlobalSpawn() { const now = Date.now(), ts = Math.floor(now/1000), r = (ts*9301+49297)%233280; if((r%100)<28) { const botId = ["BotAce", "LuckyVip", "StarWin", "PeakPro"][r%4] + (r%99), type = (r%100)<40?'black':((r%100)<75?'red':((r%100)<95?'blue':'gold')); addLiveUI(type, botId, (Math.floor(r%15)+1)*10000); } }
-    function addLiveUI(type, user, amt) { const list = document.getElementById(`l-${type}`); if(!list || [...list.querySelectorAll('span')].some(s => s.innerText === user)) return; liveBoardTotals[type] += amt; document.getElementById(`t-${type}`).innerText = liveBoardTotals[type].toLocaleString(); const item = document.createElement('div'); item.className = 'bet-item'; item.innerHTML = `<span>${user}</span><b>${(amt/1000).toFixed(0)}k</b>`; list.prepend(item); if(list.children.length > 5) list.lastChild.remove(); }
+
+    /* [봇 생태계 고도화] - 하쿠님 요청 사양 반영 */
+    function generateRealBotId(seed) {
+        const chars = "abcdefghijklmnopqrstuvwxyz";
+        const types = ['random', 'initials', 'masked', 'pro'];
+        const type = types[seed % 4];
+        if(type === 'random') { // nnkkq 스타일 (무작위 소문자)
+            let id = ""; const len = (seed % 3) + 5;
+            for(let i=0; i<len; i++) id += chars.charAt((seed >> i) % 26);
+            return id;
+        } else if(type === 'initials') { // kmh0812 스타일
+            const inits = ["kmh", "lsy", "pjs", "hjh", "kty", "mks", "shw", "bkc"];
+            return inits[seed % inits.length] + (seed % 9999);
+        } else if(type === 'masked') { // Kim*** 스타일
+            const names = ["Kim", "Lee", "Park", "Choi", "Jung", "Kang", "Cho", "Yoon"];
+            return names[seed % names.length] + "***";
+        } else { // LuckyAce 스타일
+            const adjs = ["Top", "Lucky", "Ace", "Big", "Spin", "Pro", "Vip", "Win"];
+            const nouns = ["Star", "Boss", "Player", "King", "One", "Hero", "Master", "Peak"];
+            return adjs[seed % 8] + nouns[(seed/7 >> 0) % 8] + (seed % 99);
+        }
+    }
+
+    function deterministicGlobalSpawn() {
+        const now = Date.now(), ts = Math.floor(now/1000), r = (ts*9301+49297)%233280;
+        if((r % 100) < 30) { // 30% 확률 출현
+            const botId = generateRealBotId(r);
+            const betCount = (r % 3) + 1; // 1~3개 구역 동시 배팅
+            const types = ['black', 'red', 'blue', 'gold'];
+            for(let i=0; i<betCount; i++) {
+                const type = types[(r + i) % 4];
+                const amount = (Math.floor((r + i * 17) % 55) + 1) * 10000; // 1만 ~ 55만P
+                addLiveUI(type, botId, amount);
+            }
+        }
+    }
+
+    function addLiveUI(type, user, amt) {
+        const list = document.getElementById(`l-${type}`); if(!list) return;
+        liveBoardTotals[type] += amt; document.getElementById(`t-${type}`).innerText = liveBoardTotals[type].toLocaleString();
+        const item = document.createElement('div'); item.className = 'bet-item';
+        item.innerHTML = `<span>${user}</span><b>${(amt/1000).toFixed(0)}k</b>`;
+        list.prepend(item); if(list.children.length > 5) list.lastChild.remove();
+    }
+
     function updateLoginState(isLoggedIn) { document.getElementById('loginForm').style.display = isLoggedIn ? 'none' : 'flex'; document.getElementById('logoutForm').style.display = isLoggedIn ? 'block' : 'none'; applyI18n(); updateBalUI(); }
 
     checkSession(); syncHistory(); drawWheel(); updateBalUI(); applyI18n(); setInterval(tick, 100);
