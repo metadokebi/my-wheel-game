@@ -18,7 +18,7 @@
         html, body { margin: 0; padding: 0; width: 100%; height: 100dvh; overflow: hidden; touch-action: manipulation; background: #1e2128; color: white; font-family: 'Pretendard', sans-serif; }
         .main-container { width: 100%; max-width: 500px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
 
-        /* [언어선택] 오버레이 - 0.7 투명도 사양 고정 */
+        /* [언어선택] 오버레이 */
         #langOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 5000; display: flex; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(12px); }
         .lang-list { display: flex; flex-direction: column; gap: 12px; width: 240px; }
         .lang-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 18px 20px; border-radius: 12px; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: background 0.2s; }
@@ -27,14 +27,14 @@
         .user-id { font-size: 0.8rem; font-weight: 700; border-left: 3px solid var(--accent); padding-left: 10px; }
         .balance-box { background: rgba(255, 149, 0, 0.05); padding: 5px 10px; border-radius: 6px; border: 1px solid var(--point-color); color: var(--point-color); font-weight: 800; font-size: 0.85rem; }
 
-        /* [지난 결과 바] - 30개 제한 및 중앙 정렬 (v5.49 수정) */
+        /* [지난 결과 바] - 35개 제한 + 센터 정렬 + Gravity UI (v5.49 수정) */
         .rolls-wrapper { 
             width: 100%; padding: 8px 15px; background: rgba(0,0,0,0.15); 
             border-bottom: 1px solid #333; flex-shrink: 0; 
             display: flex; justify-content: center; align-items: flex-start; min-height: 55px; 
         }
         .history-strip { 
-            display: flex; gap: 4px; height: 40px; width: auto; 
+            display: flex; gap: 5px; height: 40px; width: auto; 
             align-items: flex-start; justify-content: center; overflow: hidden; 
         }
         .hist-bar { width: 3px; border-radius: 1.5px; flex-shrink: 0; transition: all 0.3s; }
@@ -72,7 +72,7 @@
         .btn.selected.btn-black { background: #222; color: #fff; }
         .btn.selected.btn-red { background: var(--red); color: #fff; box-shadow: 0 0 15px rgba(255,51,51,0.4); }
         .btn.selected.btn-blue { background: var(--blue); color: #fff; box-shadow: 0 0 15px rgba(0,229,255,0.4); }
-        .btn.selected.btn-gold { background: var(--gold); color: #000; box-shadow: 0 0 15px rgba(255,204,0,0.4); }
+        .btn.selected.btn-gold { background: var(--gold); border-color: var(--gold); color: #000; box-shadow: 0 0 15px rgba(255,204,0,0.4); }
 
         .live-betting-area { width: 100%; margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid #333; }
         .live-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
@@ -83,7 +83,7 @@
         .bet-list { padding: 3px; flex: 1; display: flex; flex-direction: column; gap: 3px; overflow: hidden; }
         .bet-item { display: flex; justify-content: space-between; font-size: 0.48rem; font-weight: 700; background: rgba(255,255,255,0.05); padding: 2px; border-radius: 3px; }
 
-        /* [사용법 전문 매뉴얼] */
+        /* [사용법 및 통계/로그인 고정 UI] */
         .manual-container { width: 94%; margin-top: 10px; display: flex; flex-direction: column; gap: 15px; }
         .manual-card { background: var(--card); border: 1px solid #333; border-radius: 15px; padding: 20px; }
         .manual-section { margin-bottom: 20px; }
@@ -92,7 +92,6 @@
         .manual-formula { background: #000; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 0.7rem; color: var(--point-color); margin: 10px 0; border: 1px solid #222; text-align: center; }
         .manual-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 800; margin-right: 5px; background: #333; color: var(--gold); }
 
-        /* [통계 및 로그인 고정 UI] */
         .digital-stats { width: 92%; background: #000; border: 1px solid #333; padding: 15px; border-radius: 12px; margin-top: 10px; }
         .stat-bar-bg { width: 100%; height: 8px; background: #111; border-radius: 4px; overflow: hidden; margin-top: 5px; }
         .stat-bar-fill { height: 100%; width: 0%; transition: width 1s ease-out; }
@@ -229,7 +228,7 @@
     let currentLang = 'en', currentId = "GUEST", balance = 1000000;
     let isSpinning = false, myBet = null, globalHistory = [], stats = { black: 0, red: 0, blue: 0, gold: 0 };
     let myGameStats = { total: 0, wins: 0 }, isMuted = false, audioInitialized = false, liveBoardTotals = { black:0, red:0, blue:0, gold:0 };
-    let roundBotBetTotal = 0, currentRotation = 0, currentRoundResult = null;
+    let roundBotBetTotal = 0, currentRotation = 0, currentRoundResult = null; 
 
     const sectors = [{color:'#ffcc00', name:'gold', mult:50, weight: 1},{color:'#00e5ff', name:'blue', mult:5, weight: 10},{color:'#ff3333', name:'red', mult:3, weight: 17},{color:'#444444', name:'black', mult:2, weight: 28}];
     const wheelMap = []; sectors.forEach(s => { for(let i=0; i<s.weight; i++) wheelMap.push(s); });
@@ -237,7 +236,7 @@
     shuffleWheel();
 
     function getHowHtml(fairTitle, formula, rulesTitle, r1, r2, r3) {
-        return `<div class="manual-card"><div class="manual-section"><div class="manual-title">💎 ${fairTitle}</div><div class="manual-text">Spin4 uses deterministic algorithms based on UTC timestamps. Results are tamper-proof.<div class="manual-formula">${formula}</div><span class="manual-badge">LCG Algorithm</span> Every round is generated using <b>UTC Millisecond Timestamp</b> as seed.</div></div><div class="manual-section"><div class="manual-title">🎮 ${rulesTitle}</div><div class="manual-text">Real-time multiplayer environment with a 20s cycle.<br><br>1. <span class="manual-badge">12.0s</span> <b>${r1}</b><br>2. <span class="manual-badge">1.0s</span> <b>${r2}</b><br>3. <span class="manual-badge">6.5s</span> <b>${r3}</b></div></div></div>`;
+        return `<div class="manual-card"><div class="manual-section"><div class="manual-title">💎 ${fairTitle}</div><div class="manual-text">Spin4 uses deterministic algorithms based on UTC timestamps.<div class="manual-formula">${formula}</div><span class="manual-badge">LCG Algorithm</span> Every round is generated using <b>UTC Millisecond Timestamp</b> as seed.</div></div><div class="manual-section"><div class="manual-title">🎮 ${rulesTitle}</div><div class="manual-text">Real-time multiplayer environment with a 20s cycle.<br><br>1. <span class="manual-badge">12.0s</span> <b>${r1}</b><br>2. <span class="manual-badge">1.0s</span> <b>${r2}</b><br>3. <span class="manual-badge">6.5s</span> <b>${r3}</b></div></div></div>`;
     }
 
     const i18n = {
@@ -263,20 +262,19 @@
         handleIdInput();
     }
 
-    // [v5.49 무결성] 상단 히스토리 바 30개 제한 동기화
+    // [v5.49 무결성] 상단 히스토리 바 - 시드 동기화 및 35개 제한 (v5.49 수정)
     function syncHistory() { 
         const currentMasterSeed = Math.floor(Date.now() / CYCLE_MS);
         globalHistory = []; 
-        for(let i=1; i<=30; i++) { // 100 -> 30개로 수정
+        for(let i=1; i<=35; i++) { // 35개로 제한
             const resIdx = getWinIndex(currentMasterSeed - i).index;
             globalHistory.push(wheelMap[resIdx].color); 
         } 
         updateHistoryUI(); 
     }
-
     function updateHistoryUI() { 
         const strip = document.getElementById('historyStrip'); strip.innerHTML = ''; 
-        const reversedData = [...globalHistory].slice(-30).reverse(); // 30개 슬라이스
+        const reversedData = [...globalHistory].slice(-35).reverse(); 
         reversedData.forEach((color, idx) => {
             const bar = document.createElement('div'); 
             let hClass = 'h-black'; if(color === '#ffcc00') hClass = 'h-gold'; else if(color === '#00e5ff') hClass = 'h-blue'; else if(color === '#ff3333') hClass = 'h-red';
@@ -284,7 +282,6 @@
         }); 
     }
 
-    // [절대 좌표 동기화] 드로잉 엔진
     function drawWheel() { 
         const arc = (Math.PI * 2) / 56, radius = 260, gap = 0.025; 
         ctx.clearRect(0,0,560,560); ctx.lineWidth = 14; 
@@ -325,7 +322,6 @@
         return (angle + 360) % 360; 
     }
     
-    // [절대 무결성] 결과 선행 확정 및 물리 회전
     function startSpin() { 
         isSpinning = true; 
         const masterSeed = Math.floor(Date.now() / CYCLE_MS); 
@@ -343,8 +339,7 @@
     function resolve(win) { 
         document.getElementById('wheelPointer').style.backgroundColor = win.color; 
         globalHistory.push(win.color); 
-        setTimeout(() => updateHistoryUI(), 500); // 버퍼 지연 업데이트
-
+        setTimeout(() => updateHistoryUI(), 500);
         if(myBet) { 
             myGameStats.total++; const winStatus = myBet.type === win.name; 
             if(winStatus) { balance += (myBet.amount * win.mult); myGameStats.wins++; playSound('sndWin'); } else playSound('sndLose'); 
@@ -378,6 +373,7 @@
     function initAudio() { audioInitialized = true; }
     function toggleMute() { isMuted = !isMuted; document.getElementById('soundToggle').innerText = isMuted ? "🔇" : "🔊"; }
     function playSound(id) { if(!isMuted && audioInitialized) { const s = document.getElementById(id); s.currentTime = 0; s.play().catch(()=>{}); } }
+
     function generateRealBotId(seed) { const chars = "abcdefghijklmnopqrstuvwxyz"; const types = ['random', 'initials', 'masked', 'pro']; const type = types[seed % 4]; if(type === 'random') { let id = ""; const len = (seed % 3) + 5; for(let i=0; i<len; i++) id += chars.charAt((seed >> i) % 26); return id; } else if(type === 'initials') { const inits = ["kmh", "lsy", "pjs", "hjh", "kty", "mks", "shw", "bkc"]; return inits[seed % inits.length] + (seed % 9999); } else if(type === 'masked') { const names = ["Kim", "Lee", "Park", "Choi", "Jung", "Kang", "Cho", "Yoon"]; return names[seed % names.length] + "***"; } else { const adjs = ["Top", "Lucky", "Ace", "Big", "Spin", "Pro", "Vip", "Win"]; const nouns = ["Star", "Boss", "Player", "King", "One", "Hero", "Master", "Peak"]; return adjs[seed % 8] + nouns[(seed/7 >> 0) % 8] + (seed % 99); } }
     function deterministicGlobalSpawn(elapsed) { if (elapsed < FREEZE_PERIOD || elapsed > CYCLE_MS - 1000 || roundBotBetTotal >= 740000) return; const ts = Math.floor(Date.now() / 100), r = (ts * 9301 + 49297) % 233280; const roundSeed = Math.floor(Date.now() / CYCLE_MS); const spawnChance = ( (roundSeed + ts) % 15 < 3 ) ? 25 : 5; if ((r % 100) < spawnChance) { const botId = generateRealBotId(r); const types = ['black', 'red', 'blue', 'gold']; const weights = [55, 35, 15, 3]; const totalWeight = weights.reduce((a, b) => a + b, 0); let selector = r % totalWeight, selectedIdx = 0; for(let i=0; i<4; i++) { if(selector < weights[i]) { selectedIdx = i; break; } selector -= weights[i]; } const type = types[selectedIdx]; let amount = (type === 'gold') ? (Math.floor(r % 5) + 1) * 10000 : (Math.floor((r + selectedIdx * 31) % 25) + 1) * 10000; if (roundBotBetTotal + amount > 740000) amount = 740000 - roundBotBetTotal; if (amount <= 0) return; roundBotBetTotal += amount; addLiveUI(type, botId, amount); } }
     function addLiveUI(type, user, amt) { const list = document.getElementById(`l-${type}`); if(!list) return; liveBoardTotals[type] += amt; document.getElementById(`t-${type}`).innerText = liveBoardTotals[type].toLocaleString(); const item = document.createElement('div'); item.className = 'bet-item'; item.innerHTML = `<span>${user}</span><b>${(amt/1000).toFixed(0)}k</b>`; list.prepend(item); if(list.children.length > 5) list.lastChild.remove(); }
