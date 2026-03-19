@@ -26,8 +26,6 @@
 
         header { padding: 12px 18px; background: rgba(0,0,0,0.4); display: flex; justify-content: space-between; align-items: center; z-index: 100; flex-shrink: 0; }
         .user-id { font-size: 0.8rem; font-weight: 700; border-left: 3px solid var(--accent); padding-left: 10px; }
-        
-        /* [골든마스터] 상단 대칭 UI */
         .balance-box { background: rgba(0, 217, 255, 0.1); padding: 5px 8px; border-radius: 6px; border: 1px solid var(--point-color); color: var(--point-color); font-weight: 800; font-size: 0.75rem; height: 32px; display: flex; align-items: center; justify-content: center; min-width: 95px; }
         #btnBuyTop { background: rgba(255, 242, 0, 0.1); padding: 5px 8px; border-radius: 6px; border: 1px solid var(--buy-color); color: var(--buy-color); font-weight: 900; font-size: 0.75rem; cursor: pointer; height: 32px; display: flex; align-items: center; justify-content: center; gap: 4px; text-shadow: 0 0 5px rgba(255, 242, 0, 0.5); min-width: 95px; }
 
@@ -78,7 +76,7 @@
         .bet-list { padding: 3px; flex: 1; display: flex; flex-direction: column; gap: 3px; overflow: hidden; }
         .bet-item { display: flex; justify-content: space-between; font-size: 0.48rem; font-weight: 700; background: rgba(255,255,255,0.05); padding: 2px; border-radius: 3px; }
 
-        /* [PvP 모달] 위아래 정렬 및 배팅버튼 스타일 고정 */
+        /* [PvP 모달] 👤 아이콘 정렬 및 컬러 테두리 고정 */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; align-items: flex-end; justify-content: center; z-index: 1000; }
         .modal-content { background: #1a1d26; border-radius: 20px 20px 0 0; width: 100%; max-width: 500px; padding: 25px; border-top: 1px solid #333; }
         .battle-selector-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 25px; }
@@ -89,25 +87,18 @@
         .selector-card.active span { color: var(--battle-pink); }
         .color-selector-grid { display: flex; gap: 8px; margin-bottom: 25px; }
         .color-btn { flex: 1; height: 50px; border-radius: 6px; border: 1.5px solid transparent; background: transparent; font-weight: 900; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        /* 선택 시 배경 반전 (배팅 버튼 로직) */
         .color-btn.active.btn-red { background: var(--red) !important; color: #fff !important; }
         .color-btn.active.btn-blue { background: var(--blue) !important; color: #fff !important; }
         .color-btn.active.btn-green { background: #00ff66 !important; color: #000 !important; }
         .color-btn.active.btn-yellow { background: var(--gold) !important; color: #000 !important; }
         .btn-create-final { width: 100%; height: 55px; background: var(--battle-pink); color: #fff; border: none; border-radius: 12px; font-weight: 900; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 15px rgba(245, 90, 106, 0.3); }
 
-        /* [수정 사항] 배팅 내역 Pill Shape 디자인 */
+        /* [Pill Shape] 배팅 내역 디자인 */
         .log-table { width: 95%; border-collapse: collapse; font-size: 0.7rem; background: rgba(0,0,0,0.4); border-radius: 10px; overflow: hidden; margin: 20px auto; flex-shrink: 0; }
         .log-table th { background: #1a1a1a; padding: 10px; color: var(--text-muted); font-size: 0.75rem; font-weight: 900; }
         .log-table td { padding: 8px; border-bottom: 1px solid #222; text-align: center; font-weight: 700; vertical-align: middle; }
-        
-        /* v7.0 공용 Pill 스타일 (Pick & Winner 모두 사용) */
-        .ui-pill { 
-            display: inline-block; 
-            width: 34px; 
-            height: 10px; 
-            border-radius: 5px; 
-            box-shadow: 0 0 5px rgba(255,255,255,0.1); 
-        }
+        .ui-pill { display: inline-block; width: 34px; height: 10px; border-radius: 5px; box-shadow: 0 0 5px rgba(255,255,255,0.1); }
 
         /* [순정 복구] 지갑/사용법/통계 */
         .wallet-card { width: 92%; background: var(--card); border: 1px solid #333; border-radius: 15px; padding: 20px; margin-top: 15px; }
@@ -347,9 +338,9 @@
         en: { welcome: "Welcome", buy: "💎 WALLET", closed: "CLOSED", live: "LIVE STATUS", home: "Home", battle: "Battle", rank: "Ranking", how: "How", stats: "Stats", pick: "Pick", bet: "Amt", res: "Result", win: "Winner", freeTitle: "Get Free 10 TON Reward", freeSub: "Claim your 10 TON now!", vWallet: "Virtual Wallet Address", deposit: "DEPOSIT", withdraw: "WITHDRAW", sendTon: "SEND TON", logout: "LOGOUT",
             howTxt: getHowHtml("Provably Fair", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON Betting Rules", "Betting: 14s active window", "CLOSED: Finalizing results", "Spin: 4.5s animation", "TON Coin Guide", "Click [DEPOSIT] in the Wallet tab to generate your unique address. Send TON to this address, and it will be credited to your balance after network confirmation.", "Go to [WITHDRAW] in the Wallet tab, enter your external TON address and amount, then click [SEND TON] to initiate an instant transfer.") },
         cn: { welcome: "欢迎", buy: "💎 钱包", closed: "已截止", live: "实时状态", home: "首页", battle: "对决", rank: "排行榜", how: "玩法", stats: "统计", pick: "选择", bet: "金额", res: "结果", win: "获胜者", freeTitle: "免费领取 10 TON", freeSub: "认证后立即领取 10 TON!", vWallet: "虚拟钱包地址", deposit: "充值", withdraw: "提现", sendTon: "立即转账", logout: "登出",
-            howTxt: getHowHtml("公平证明", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON 投注规则", "投注阶段：14秒自由投注", "CLOSED：投注截止并计算", "抽奖：4.5秒转盘旋转", "TON 使用指南", "在钱包选项卡中点击 [DEPOSIT] 生成您的个人充值地址。将 TON 发送到该地址，网络确认后将立即反映在游戏余额중中。", "选择钱包选项卡中的 [WITHDRAW]，输入您的外部 TON 钱包地址和金额。点击 [SEND TON] 将立即开始转账处理。") },
-        jp: { welcome: "ようこそ", buy: "💎 ウォレット", closed: "締切", live: "ライブ状況", home: "홈", battle: "対決", rank: "ランキング", how: "使い方", stats: "統計", pick: "選択", bet: "数量", res: "結果", win: "当選者", freeTitle: "10 TON 無料ゲット", freeSub: "認証後、即座에 10 TON 贈呈！", vWallet: "仮想ウォレットアドレス", deposit: "入금", withdraw: "出금", sendTon: "送信する", logout: "ログアウト",
-            howTxt: getHowHtml("証明可能な公平性", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON ベッティング規則", "ベット期間：14秒間の自由ベット", "CLOSED：ベット締切および演算", "抽選：4.5秒間のホイール回転", "TON コ인利用ガイド", "ウォレットタブで [DEPOSIT] 버튼을 클릭하여 개인용 입금 주소를 생성합니다. 그 주소에 TON을 전송하면 네트워크 확인 후 즉시 게임 밸런스에 반영됩니다.", "ウォレットタブ의 [WITHDRAW]를 선택하고 자신의 외부 TON 지갑 주소와 수량을 입력합니다. [SEND TON] 클릭 시 실시간으로 전송 처리가 시작됩니다.") }
+            howTxt: getHowHtml("公平证明", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON 投注规则", "投注阶段：14秒自由投注", "CLOSED：投注截止并计算", "抽奖：4.5秒转盘旋转", "TON 使用指南", "在钱包选项卡中点击 [DEPOSIT] 生成您的个人充치地址。将 TON 发送到该地址，网络确认后将立即反映在游戏余额중中。", "选择钱包选项卡中的 [WITHDRAW]，输入您的外部 TON 钱包地址和金额。点击 [SEND TON] 将立即开始转账处理。") },
+        jp: { welcome: "ようこそ", buy: "💎 ウォレット", closed: "締切", live: "ライブ状況", home: "홈", battle: "対결", rank: "ランキング", how: "使い方", stats: "統計", pick: "選択", bet: "数量", res: "結果", win: "当選者", freeTitle: "10 TON 無料ゲット", freeSub: "認証後、即座에 10 TON 贈呈！", vWallet: "仮想ウォレットアドレス", deposit: "入금", withdraw: "出금", sendTon: "送信する", logout: "ログアウト",
+            howTxt: getHowHtml("証明可能な公平性", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON ベッティング規則", "ベット期間：14秒間の自由ベット", "CLOSED：ベット締切および演算", "抽選：4.5秒間のホイール回転", "TON コ인利用ガイド", "ウォレットタブで [DEPOSIT] 버튼을 클릭하여 개인용 입금 주소를 생성합니다. 그 주소에 TON을 전송하면 네트워크 확인 후 즉시 게임 밸런스에 반영됩니다.", "ウォレットタブ의 [WITHDRAW]를 선택하고 자신의 외부 TON 지갑 주소와 수량을 입력합니다. [SEND TON] 클릭 시 실시간으로 전送 처리가 시작됩니다.") }
     };
 
     function setLanguage(lang) { currentLang = lang; localStorage.setItem('db_wheel_lang', lang); document.getElementById('langOverlay').style.display = 'none'; applyI18n(); }
@@ -363,13 +354,6 @@
         document.getElementById('liveTitle').innerText = t.live;
         document.getElementById('th-pick').innerText = t.pick; document.getElementById('th-bet').innerText = t.bet; 
         document.getElementById('th-res').innerText = t.res; document.getElementById('th-win').innerText = t.win;
-        const lblFreeTitle = document.getElementById('lblFreeTitle'); if(lblFreeTitle) lblFreeTitle.innerText = t.freeTitle;
-        const lblFreeSub = document.getElementById('lblFreeSub'); if(lblFreeSub) lblFreeSub.innerText = t.freeSub;
-        const lbVWallet = document.getElementById('lblVWallet'); if(lbVWallet) lbVWallet.innerText = t.vWallet;
-        const btnDep = document.getElementById('btnDeposit'); if(btnDep) btnDep.innerText = t.deposit;
-        const btnWit = document.getElementById('btnWithdraw'); if(btnWit) btnWit.innerText = t.withdraw;
-        const btnSnd = document.getElementById('btnSendTon'); if(btnSnd) btnSnd.innerText = t.sendTon;
-        const btnLout = document.getElementById('btnLogout'); if(btnLout) btnLout.innerText = t.logout;
     }
 
     // PvP Logic
@@ -384,6 +368,8 @@
             const btn = document.createElement('div'); btn.className = `color-btn ${c.class}` + (idx === 0 ? ' active' : ''); 
             btn.style.border = `1.5px solid var(--${c.name.toLowerCase()})`; btn.style.color = `var(--${c.name.toLowerCase()})`;
             if(c.name === 'Green') { btn.style.border = `1.5px solid #00ff66`; btn.style.color = `#00ff66`; }
+            /* [v7.0 고정] 노란색 테두리 명시적 추가 */
+            if(c.name === 'Yellow') { btn.style.border = `1.5px solid var(--gold)`; btn.style.color = `var(--gold)`; }
             btn.innerText = c.name; btn.onclick = () => { document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); selectedBattleColor = c.name; }; area.appendChild(btn); 
         }); 
         selectedBattleColor = colors[0].name; 
@@ -440,13 +426,8 @@
         if(myBet) { 
             myGameStats.total++; const winS = myBet.type === win.name; 
             if(winS) { balance = Number(balance) + (myBet.amount * win.mult); myGameStats.wins++; playSound('sndWin'); } else playSound('sndLose'); 
-            /* [v7.0 수정] Pick(나의 선택)과 Winner(결과) 모두 Pill Shape 적용 */
-            const row = `<tr>
-                <td><div class="ui-pill" style="background:var(--${myBet.type})"></div></td>
-                <td>${myBet.amount.toFixed(1)}T</td>
-                <td>${winS ? 'Win' : 'Lost'}</td>
-                <td><div class="ui-pill" style="background:${win.color}"></div></td>
-            </tr>`; 
+            /* [v7.0 고정] Pick & Winner 모두 Pill Shape 적용 */
+            const row = `<tr><td><div class="ui-pill" style="background:var(--${myBet.type})"></div></td><td>${myBet.amount.toFixed(1)}T</td><td>${winS ? 'Win' : 'Lost'}</td><td><div class="ui-pill" style="background:${win.color}"></div></td></tr>`; 
             document.getElementById('myLogBody').insertAdjacentHTML('afterbegin', row); 
         } 
         if(currentId !== "GUEST") { let u = JSON.parse(localStorage.getItem('db_users')); if(u[currentId]) { u[currentId].balance = Number(balance).toFixed(1); u[currentId].myGameStats = myGameStats; localStorage.setItem('db_users', JSON.stringify(u)); } } 
