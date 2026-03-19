@@ -43,7 +43,6 @@
         .content-view { flex: 1; overflow-y: auto; display: none; padding-bottom: 90px; width: 100%; align-items: center; }
         .content-view.active { display: flex; flex-direction: column; }
 
-        /* [메인 게임] 디자인 */
         .wheel-section { position: relative; margin: 25px 0; width: 230px; height: 230px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; }
         .wheel-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-weight: 900; font-size: 1.8rem; color: var(--accent); text-shadow: 0 0 10px var(--accent); opacity: 0.8; pointer-events: none; }
@@ -66,7 +65,6 @@
         .btn.selected.btn-blue { background: var(--blue); border-color: var(--blue); color: #fff; box-shadow: 0 0 15px rgba(0,217,255,0.4); }
         .btn.selected.btn-gold { background: var(--gold); border-color: var(--gold); color: #000; box-shadow: 0 0 15px rgba(255,204,0,0.4); }
 
-        /* [라이브 배팅] 봇 디자인 복구 */
         .live-betting-area { width: 100%; margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid #333; }
         .live-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
         .live-col { background: rgba(0,0,0,0.4); border-radius: 8px; min-height: 105px; border-top: 3px solid #444; overflow: hidden; display: flex; flex-direction: column; }
@@ -76,14 +74,12 @@
         .bet-list { padding: 3px; flex: 1; display: flex; flex-direction: column; gap: 3px; overflow: hidden; }
         .bet-item { display: flex; justify-content: space-between; font-size: 0.48rem; font-weight: 700; background: rgba(255,255,255,0.05); padding: 2px; border-radius: 3px; }
 
-        /* [Battle] 참가자 세로 나열 레이아웃 */
         .battle-participants { width: 95%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 15px; display: none; }
         .p-col { display: flex; flex-direction: column; gap: 5px; }
         .p-head { padding: 4px; text-align: center; border-radius: 4px; font-size: 0.5rem; font-weight: 900; }
         .p-list { display: flex; flex-direction: column; gap: 3px; }
         .p-item { background: rgba(255,255,255,0.04); padding: 3px; border-radius: 3px; font-size: 0.45rem; text-align: center; font-weight: 700; overflow: hidden; }
 
-        /* [v6.7/6.8] PvP 생성 모달 고도화 UI */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; align-items: flex-end; justify-content: center; z-index: 1000; }
         .modal-content { background: #1a1d26; border-radius: 20px 20px 0 0; width: 100%; max-width: 500px; padding: 25px; border-top: 1px solid #333; }
         .battle-selector-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 25px; }
@@ -98,11 +94,10 @@
         .color-btn.active.btn-green { background: #00ff66 !important; color: #000 !important; }
         .color-btn.active.btn-yellow { background: var(--gold) !important; color: #000 !important; }
         
-        /* [v7.0 골든마스터] 대결 생성 버튼 비활성화 스타일 */
+        /* 대결 생성 버튼 비활성화 스타일 (골든마스터 사양) */
         .btn-create-final { width: 100%; height: 55px; background: var(--battle-pink); color: #fff; border: none; border-radius: 12px; font-weight: 900; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 15px rgba(245, 90, 106, 0.3); }
         .btn-create-final:disabled { background: #444 !important; color: #888 !important; cursor: not-allowed; box-shadow: none !important; }
 
-        /* [순정 복구] 지갑/사용법/통계 디자인 */
         .wallet-card { width: 92%; background: var(--card); border: 1px solid #333; border-radius: 15px; padding: 20px; margin-top: 15px; }
         .wallet-user-info { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding-bottom: 10px; }
         .wallet-balance-big { font-size: 2.2rem; font-weight: 900; color: var(--accent); text-align: center; margin: 20px 0; }
@@ -358,7 +353,7 @@
             cRed: "红色", cBlue: "蓝色", cGreen: "绿色", cYellow: "黄色",
             howTxt: getHowHtml("公平证明", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON 投注规则", "投注阶段：14秒自由投注", "CLOSED：投注截止并计算", "抽奖：4.5秒转盘旋转", "TON 使用指南", "在钱包选项卡中点击 [DEPOSIT] 生成您的个人充치地址。将 TON 发送到该地址，网络确认后将立即反映在游戏余额중中。", "选择钱包选项卡中的 [WITHDRAW]，输入您的外部 TON 钱包地址和金额。点击 [SEND TON] 将立即开始转账处理。") },
         jp: { welcome: "ようこそ", buy: "💎 ウォレット", closed: "締切", live: "ライブ状況", home: "홈", battle: "対決", rank: "ランキング", how: "使い方", stats: "統計", pick: "選択", bet: "数量", res: "結果", win: "当選者", freeTitle: "10 TON 무료 겟", freeSub: "인증 후 즉시 10 TON 증정!", vWallet: "가상 지갑 주소", deposit: "입금", withdraw: "출금", sendTon: "전송하기", logout: "로그아웃",
-            btLobby: "⚔️ バトルアリーナ", btSub: "新しい対決を作って挑戦しましょう！", bt2u: "2人", bt3u: "3人", bt4u: "4人", btChoose: "色を選択してください:", btBal: "保有残高", btVal: "対決金额 (TON):", btCnt: "対決回数:", btCreate: "対결作成", btWaiting: "ユーザー待機中...", btLeave: "対결을 떠나기", btTotal: "배틀 합계",
+            btLobby: "⚔️ バトルアリーナ", btSub: "新しい対決を作って挑戦しましょう！", bt2u: "2人", bt3u: "3人", bt4u: "4인", btChoose: "色を選択してください:", btBal: "保有残高", btVal: "対決金额 (TON):", btCnt: "対決回数:", btCreate: "対결作成", btWaiting: "ユーザー待機中...", btLeave: "対결을 떠나기", btTotal: "배틀 합계",
             cRed: "레드", cBlue: "블루", cGreen: "그린", cYellow: "옐로우",
             howTxt: getHowHtml("証明可能な公平性", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON ベッティング規則", "ベット期間：14秒間の自由ベット", "CLOSED：ベット締切および演算", "抽選：4.5秒間のホイール回転", "TON コ인利用ガイド", "ウォレットタブで [DEPOSIT] 버튼을 클릭하여 개인용 입금 주소를 생성합니다. 그 주소에 TON을 전송하면 네트워크 확인 후 즉시 게임 밸런스에 반영됩니다.", "ウォレットタブ의 [WITHDRAW]를 선택하고 자신의 외부 TON 지갑 주소와 수량을 입력합니다. [SEND TON] 클릭 시 실시간으로 전송 처리가 시작됩니다.") }
     };
@@ -429,14 +424,15 @@
 
     function leaveBattle() { myBattleRoom = null; document.getElementById('mainStandardUI').style.display = 'block'; document.getElementById('battleParticipants').style.display = 'none'; document.getElementById('battleCenterTon').style.display = 'none'; updateBalUI(); }
 
-    // Bot Engine
+    /* [v7.0 골든마스터] 실제 사람같은 봇 닉네임 로직 복구 */
     function generateRealBotId(seed) { 
         const types = ['random', 'initials', 'masked', 'pro']; const type = types[seed % 4]; 
         if(type === 'random') { let id = ""; const chars = "abcdefghijklmnopqrstuvwxyz"; for(let i=0; i<6; i++) id += chars.charAt((seed >> i) % 26); return id; } 
-        else if(type === 'initials') { const inits = ["kmh", "lsy", "pjs", "hjh", "kty"]; return inits[seed % inits.length] + (seed % 999); } 
-        else if(type === 'masked') { const names = ["Kim", "Lee", "Park", "Choi", "Jung"]; return names[seed % names.length] + "***"; } 
-        else { const adjs = ["Top", "Lucky", "Ace", "Big"]; const nouns = ["Star", "Boss", "Player", "King"]; return adjs[seed % 4] + nouns[(seed/7 >> 0) % 4] + (seed % 99); } 
+        else if(type === 'initials') { const inits = ["kmh", "lsy", "pjs", "hjh", "kty", "jsy", "min", "hjk"]; return inits[seed % inits.length] + (seed % 999); } 
+        else if(type === 'masked') { const names = ["Kim", "Lee", "Park", "Choi", "Jung", "Kang", "Cho", "Han"]; return names[seed % names.length] + "***"; } 
+        else { const adjs = ["Top", "Lucky", "Ace", "Big", "Cool", "Rich"]; const nouns = ["Star", "Boss", "Player", "King", "Ton", "Hero"]; return adjs[seed % 6] + nouns[(seed/7 >> 0) % 6] + (seed % 99); } 
     }
+    
     function deterministicGlobalSpawn(elapsed) { 
         if (elapsed < FREEZE_PERIOD || elapsed > CYCLE_MS - 100 || roundBotBetTotal >= 7.4) return; 
         const ts = Math.floor(Date.now() / 100), r = (ts * 9301 + 49297) % 233280, roundSeed = Math.floor(Date.now() / CYCLE_MS);
@@ -452,7 +448,6 @@
         } 
     }
 
-    // Core RNG Engine
     const canvas = document.getElementById('wheelCanvas'), ctx = canvas.getContext('2d'), timerBar = document.getElementById('timerBar'), betOverlay = document.getElementById('betOverlay');
     function drawWheel() { const arc = (Math.PI * 2) / 56, rad = 260, gap = 0.025; ctx.clearRect(0,0,560,560); ctx.lineWidth = 14; for (let i = 0; i < 56; i++) { ctx.beginPath(); ctx.strokeStyle = wheelMap[i].color; const sA = i * arc + Math.PI/2 - arc/2 + gap; const eA = (i + 1) * arc + Math.PI/2 - arc/2 - gap; ctx.arc(280, 280, rad, sA, eA); ctx.stroke(); } }
     function syncHistory() { const ms = Math.floor(Date.now() / CYCLE_MS); globalHistory = []; for(let i=1; i<=35; i++) { globalHistory.push(wheelMap[getWinIndex(ms - i).index].color); } updateHistoryUI(); }
