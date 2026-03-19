@@ -213,11 +213,11 @@
 
             <div style="text-align:center; color:#555; font-size:0.65rem; margin-bottom:12px;">--- SPECIAL REWARD ---</div>
             <button id="btnQuickEvent" class="btn-quick-connect" onclick="requestTelegramContact()">
-                <div class="event-badge">+10 TON FREE</div>
+                <div class="event-badge" id="badgeFree">+10 TON FREE</div>
                 <span style="font-size:1.2rem;">📱</span>
                 <div style="display:flex; flex-direction:column; align-items:flex-start;">
-                    <span style="font-size:0.85rem;">Get Free 10 TON Reward</span>
-                    <span style="font-size:0.55rem; opacity:0.8;">인증 즉시 10 TON을 드립니다!</span>
+                    <span style="font-size:0.85rem;" id="lblFreeTitle">Get Free 10 TON Reward</span>
+                    <span style="font-size:0.55rem; opacity:0.8;" id="lblFreeSub">인증 즉시 10 TON을 드립니다!</span>
                 </div>
             </button>
         </div>
@@ -233,20 +233,20 @@
                 </div>
                 <div class="wallet-balance-big"><span id="w-bal">0.0</span> <small style="font-size:0.9rem;">TON</small></div>
                 <div class="wallet-actions">
-                    <button class="action-btn btn-deposit" onclick="alert('Deposit Address Generated!')">DEPOSIT</button>
-                    <button class="action-btn btn-withdraw" onclick="toggleWithdraw()">WITHDRAW</button>
+                    <button class="action-btn btn-deposit" id="btnDeposit" onclick="alert('Deposit Address Generated!')">DEPOSIT</button>
+                    <button class="action-btn btn-withdraw" id="btnWithdraw" onclick="toggleWithdraw()">WITHDRAW</button>
                 </div>
                 <div id="withdrawGroup" style="display:none;" class="withdraw-input-group">
-                    <input type="text" class="wallet-input" placeholder="Recipient TON Address">
-                    <input type="number" class="wallet-input" placeholder="Amount (TON)">
-                    <button class="action-btn" style="background:var(--accent); color:#000;">SEND TON</button>
+                    <input type="text" class="wallet-input" id="witAddr" placeholder="Recipient TON Address">
+                    <input type="number" class="wallet-input" id="witAmt" placeholder="Amount (TON)">
+                    <button class="action-btn" id="btnSendTon" style="background:var(--accent); color:#000;">SEND TON</button>
                 </div>
                 <div style="margin-top:20px;">
-                    <div style="font-size:0.6rem; color:var(--text-muted); margin-bottom:5px;">Virtual Wallet Address</div>
+                    <div style="font-size:0.6rem; color:var(--text-muted); margin-bottom:5px;" id="lblVWallet">Virtual Wallet Address</div>
                     <div id="myAddr" style="background:#000; padding:8px; border-radius:4px; font-size:0.45rem; color:var(--accent); border:1px solid #222; overflow:hidden; text-overflow:ellipsis;">UQAr...Golden_V6_TON_System</div>
                 </div>
             </div>
-            <button onclick="handleLogout()" style="width:92%; height:50px; background:rgba(255,51,51,0.05); color:var(--red); border:1px solid rgba(255,51,51,0.2); border-radius:12px; font-weight:900; margin-top:20px;">LOGOUT</button>
+            <button onclick="handleLogout()" id="btnLogout" style="width:92%; height:50px; background:rgba(255,51,51,0.05); color:var(--red); border:1px solid rgba(255,51,51,0.2); border-radius:12px; font-weight:900; margin-top:20px;">LOGOUT</button>
         </div>
     </div>
 
@@ -277,12 +277,22 @@
     shuffleWheel();
 
     function getHowHtml(fairTitle, formula, rulesTitle, r1, r2, r3, tonTitle, depStep, witStep) {
-        return `<div class="manual-card"><div class="manual-section"><div class="manual-title">💎 ${fairTitle}</div><div class="manual-text">Spin4 uses deterministic algorithms based on UTC timestamps.<div class="manual-formula">${formula}</div><span class="manual-badge">LCG Algorithm</span> Every round is generated using <b>UTC Millisecond Timestamp</b> as seed.</div></div><div class="manual-section" style="margin-top:20px;"><div class="manual-title">🎮 ${rulesTitle}</div><div class="manual-text">Real-time TON multiplayer environment.<br><br>1. <span class="manual-badge">12.0s</span> <b>${r1}</b><br>2. <span class="manual-badge">1.0s</span> <b>${r2}</b><br>3. <span class="manual-badge">6.5s</span> <b>${r3}</b></div></div><div class="manual-section" style="margin-top:20px;"><div class="manual-title">💰 ${tonTitle}</div><div class="manual-text"><b class="manual-highlight">1. DEPOSIT (충전)</b><br>${depStep}<br><br><b class="manual-highlight">2. WITHDRAW (환전)</b><br>${witStep}</div></div></div>`;
+        return `<div class="manual-card"><div class="manual-section"><div class="manual-title">💎 ${fairTitle}</div><div class="manual-text">Spin4 uses deterministic algorithms based on UTC timestamps.<div class="manual-formula">${formula}</div><span class="manual-badge">LCG Algorithm</span> Every round is generated using <b>UTC Millisecond Timestamp</b> as seed.</div></div><div class="manual-section" style="margin-top:20px;"><div class="manual-title">🎮 ${rulesTitle}</div><div class="manual-text">Real-time TON multiplayer environment.<br><br>1. <span class="manual-badge">12.0s</span> <b>${r1}</b><br>2. <span class="manual-badge">1.0s</span> <b>${r2}</b><br>3. <span class="manual-badge">6.5s</span> <b>${r3}</b></div></div><div class="manual-section" style="margin-top:20px;"><div class="manual-title">💰 ${tonTitle}</div><div class="manual-text"><b class="manual-highlight">1. DEPOSIT</b><br>${depStep}<br><br><b class="manual-highlight">2. WITHDRAW</b><br>${witStep}</div></div></div>`;
     }
 
     const i18n = {
-        ko: { welcome: "환영합니다", buy: "구매", closed: "마감", live: "실시간 현황", home: "홈", rank: "랭킹", how: "사용법", stats: "통계", login: "지갑", pick: "선택", bet: "수량", res: "결과", win: "당첨", rankTitle: "TOP 100 주간 랭킹", last100: "24H 디지털 분석", totalSpins: "참여 라운드", winRate: "나의 승률", howTxt: getHowHtml("증명 가능한 공정성", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON 배팅 규칙", "배팅 구간: 12초간 자유 배팅", "CLOSED: 배팅 마감 및 연산", "추첨: 6.5초간 휠 회전", "TON 코인 이용 가이드", "지갑 탭에서 [DEPOSIT] 버튼을 클릭하여 개인 입금 주소를 생성합니다. 해당 주소로 TON을 전송하면 네트워크 확인 후 즉시 게임 밸런스에 반영됩니다.", "지갑 탭의 [WITHDRAW]를 선택하고 본인의 외부 TON 지갑 주소와 수량을 입력합니다. [SEND TON] 클릭 시 실시간으로 전송 처리가 시작됩니다.") },
-        en: { welcome: "Welcome", buy: "BUY", closed: "CLOSED", live: "LIVE STATUS", home: "Home", rank: "Ranking", how: "How", stats: "Stats", login: "Wallet", pick: "Pick", bet: "Amt", res: "Result", win: "Winner", rankTitle: "WEEKLY TOP 100 RANKING", last100: "24H ANALYSIS", totalSpins: "TOTAL SPINS", winRate: "WIN RATE", howTxt: getHowHtml("Provably Fair", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON Betting Rules", "Betting: 12s active window", "CLOSED: Finalizing results", "Spin: 6.5s animation", "TON Coin Guide", "Click [DEPOSIT] in the Wallet tab to generate your unique address. Send TON to this address, and it will be credited to your balance after network confirmation.", "Go to [WITHDRAW] in the Wallet tab, enter your external TON address and amount, then click [SEND TON] to initiate an instant transfer.") }
+        ko: { welcome: "환영합니다", buy: "구매", closed: "마감", live: "실시간 현황", home: "홈", rank: "랭킹", how: "사용법", stats: "통계", login: "지갑", pick: "선택", bet: "수량", res: "결과", win: "당첨", rankTitle: "TOP 100 주간 랭킹", last100: "24H 디지털 분석", totalSpins: "참여 라운드", winRate: "나의 승률", 
+            freeTitle: "인증 혜택", freeSub: "인증 즉시 10 TON 증정!", vWallet: "가상 지갑 주소", deposit: "충전", withdraw: "환전", sendTon: "전송하기", logout: "로그아웃", pwRule: "비밀번호는 6자 이상이어야 합니다.", loginFail: "비밀번호가 일치하지 않습니다.", pwMismatch: "비밀번호 확인이 일치하지 않습니다.", joinSuccess: "가입 및 로그인이 완료되었습니다.",
+            howTxt: getHowHtml("증명 가능한 공정성", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON 배팅 규칙", "배팅 구간: 12초간 자유 배팅", "CLOSED: 배팅 마감 및 연산", "추첨: 6.5초간 휠 회전", "TON 코인 이용 가이드", "지갑 탭에서 [DEPOSIT] 버튼을 클릭하여 개인 입금 주소를 생성합니다. 해당 주소로 TON을 전송하면 네트워크 확인 후 즉시 게임 밸런스에 반영됩니다.", "지갑 탭의 [WITHDRAW]를 선택하고 본인의 외부 TON 지갑 주소와 수량을 입력합니다. [SEND TON] 클릭 시 실시간으로 전송 처리가 시작됩니다.") },
+        en: { welcome: "Welcome", buy: "BUY", closed: "CLOSED", live: "LIVE STATUS", home: "Home", rank: "Ranking", how: "How", stats: "Stats", login: "Wallet", pick: "Pick", bet: "Amt", res: "Result", win: "Winner", rankTitle: "WEEKLY TOP 100 RANKING", last100: "24H ANALYSIS", totalSpins: "TOTAL SPINS", winRate: "WIN RATE", 
+            freeTitle: "Get Free 10 TON Reward", freeSub: "Claim your 10 TON now!", vWallet: "Virtual Wallet Address", deposit: "DEPOSIT", withdraw: "WITHDRAW", sendTon: "SEND TON", logout: "LOGOUT", pwRule: "Password must be at least 6 characters.", loginFail: "Incorrect password.", pwMismatch: "Passwords do not match.", joinSuccess: "Registration and login successful.",
+            howTxt: getHowHtml("Provably Fair", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON Betting Rules", "Betting: 12s active window", "CLOSED: Finalizing results", "Spin: 6.5s animation", "TON Coin Guide", "Click [DEPOSIT] in the Wallet tab to generate your unique address. Send TON to this address, and it will be credited to your balance after network confirmation.", "Go to [WITHDRAW] in the Wallet tab, enter your external TON address and amount, then click [SEND TON] to initiate an instant transfer.") },
+        cn: { welcome: "欢迎", buy: "购买", closed: "已截止", live: "实时状态", home: "首页", rank: "排行榜", how: "玩法", stats: "统计", login: "钱包", pick: "选择", bet: "金额", res: "结果", win: "获胜者", rankTitle: "每周前100名排行榜", last100: "24小时数据分析", totalSpins: "累计旋转", winRate: "我的胜率", 
+            freeTitle: "免费领取 10 TON", freeSub: "认证后立即领取 10 TON!", vWallet: "虚拟钱包地址", deposit: "充值", withdraw: "提现", sendTon: "立即转账", logout: "登出", pwRule: "密码至少需要6位。", loginFail: "密码错误。", pwMismatch: "密码确认不匹配。", joinSuccess: "注册并登录成功。",
+            howTxt: getHowHtml("公平证明", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON 投注规则", "投注阶段：12秒自由投注", "CLOSED：投注截止并计算", "抽奖：6.5秒转盘旋转", "TON 使用指南", "在钱包选项卡中点击 [DEPOSIT] 生成您的个人充值地址。将 TON 发送到该地址，网络确认后将立即反映在游戏余额中。", "选择钱包选项卡中的 [WITHDRAW]，输入您的外部 TON 钱包地址和金额。点击 [SEND TON] 将立即开始转账处理。") },
+        jp: { welcome: "ようこそ", buy: "購入", closed: "締切", live: "ライブ状況", home: "ホーム", rank: "ランキング", how: "使い方", stats: "統計", login: "ウォレット", pick: "選択", bet: "数量", res: "結果", win: "当選者", rankTitle: "週間トップ100ランキング", last100: "24H デジタル分析", totalSpins: "合計スピン", winRate: "私の勝率", 
+            freeTitle: "10 TON 無料ゲット", freeSub: "認証後、即座に 10 TON 贈呈！", vWallet: "仮想ウォレットアドレス", deposit: "入金", withdraw: "出金", sendTon: "送信する", logout: "ログアウト", pwRule: "パスワードは6文字以上必要です。", loginFail: "パスワードが正しくありません。", pwMismatch: "パスワード確認が一致しません。", joinSuccess: "登録とログインが完了しました。",
+            howTxt: getHowHtml("証明可能な公平性", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON ベッティング規則", "ベット期間：12秒間の自由ベット", "CLOSED：ベット締切および演算", "抽選：6.5秒間のホイール回転", "TON コイン利用ガイド", "ウォレットタブで [DEPOSIT] ボタンをクリックして、個人用入金アドレスを生成します。そのアドレスに TON を送信すると、ネットワーク確認後、即座にゲームバランスに反映されます。", "ウォレットタブの [WITHDRAW] を選択し、自身の外部 TON ウォレットアドレスと数量を入力します。[SEND TON] をクリックすると、リアルタイムで送金処理が開始されます。") }
     };
 
     const canvas = document.getElementById('wheelCanvas'), ctx = canvas.getContext('2d'), timerBar = document.getElementById('timerBar'), betOverlay = document.getElementById('betOverlay');
@@ -297,6 +307,28 @@
         document.getElementById('howContent').innerHTML = t.howTxt; document.getElementById('rankMainTitle').innerText = t.rankTitle;
         document.getElementById('lblLast100Stats').innerText = t.last100; document.getElementById('lbl-total').innerText = t.totalSpins; 
         document.getElementById('lbl-winrate').innerText = t.winRate; document.getElementById('btnBuyTop').innerText = t.buy;
+        document.getElementById('liveTitle').innerText = t.live;
+        document.getElementById('th-pick').innerText = t.pick; document.getElementById('th-bet').innerText = t.bet; document.getElementById('th-res').innerText = t.res; document.getElementById('th-win').innerText = t.win;
+        
+        // Wallet View Texts
+        const lbFree = document.getElementById('lblFreeTitle'); if(lbFree) lbFree.innerText = t.freeTitle;
+        const lbFreeSub = document.getElementById('lblFreeSub'); if(lbFreeSub) lbFreeSub.innerText = t.freeSub;
+        const lbVWallet = document.getElementById('lblVWallet'); if(lbVWallet) lbVWallet.innerText = t.vWallet;
+        const btnDep = document.getElementById('btnDeposit'); if(btnDep) btnDep.innerText = t.deposit;
+        const btnWit = document.getElementById('btnWithdraw'); if(btnWit) btnWit.innerText = t.withdraw;
+        const btnSnd = document.getElementById('btnSendTon'); if(btnSnd) btnSnd.innerText = t.sendTon;
+        const btnLout = document.getElementById('btnLogout'); if(btnLout) btnLout.innerText = t.logout;
+        
+        // Dynamic elements
+        document.getElementById('cl1').innerText = (currentLang === 'en' ? 'BLACK' : (currentLang === 'ko' ? '블랙' : (currentLang === 'cn' ? '黑色' : 'ブラック')));
+        document.getElementById('cl2').innerText = (currentLang === 'en' ? 'RED' : (currentLang === 'ko' ? '레드' : (currentLang === 'cn' ? '红色' : 'レッド')));
+        document.getElementById('cl3').innerText = (currentLang === 'en' ? 'BLUE' : (currentLang === 'ko' ? '블루' : (currentLang === 'cn' ? '蓝色' : 'ブルー')));
+        document.getElementById('cl4').innerText = (currentLang === 'en' ? 'GOLD' : (currentLang === 'ko' ? '골드' : (currentLang === 'cn' ? '金色' : 'ゴールド')));
+        
+        document.getElementById('sl1').innerText = document.getElementById('cl1').innerText;
+        document.getElementById('sl2').innerText = document.getElementById('cl2').innerText;
+        document.getElementById('sl3').innerText = document.getElementById('cl3').innerText;
+        document.getElementById('sl4').innerText = document.getElementById('cl4').innerText;
     }
 
     function autoFillTelegramId() {
@@ -307,7 +339,6 @@
         }
     }
 
-    /* [v6.0] 전화번호 인증 보상 리셋 로직 (절대값 강제 할당으로 백만 단위 오류 차단) */
     function requestTelegramContact() {
         tg.requestContact((shared) => {
             if (shared && tg.initDataUnsafe.user) {
@@ -315,21 +346,16 @@
                 const phone = tg.initDataUnsafe.contact?.phone_number || "Verified";
                 const username = user.username || `user_${user.id}`;
                 let users = JSON.parse(localStorage.getItem('db_users') || '{}');
-
                 if (!users[username]) {
-                    // 신규 유저는 무조건 10.0으로 셋팅 (더하기 연산 배제)
                     users[username] = { pw: "telegram_auth", balance: 10.0, myGameStats: { total:0, wins:0 }, phone: phone, tgId: user.id, is_rewarded: true };
                 } else if (!users[username].is_rewarded) {
-                    // 기존 유저 첫 인증 시, 기존 금액 상관없이 10.0 고정 (하쿠님 요청 사항)
                     users[username].balance = 10.0;
                     users[username].is_rewarded = true;
                 }
                 users[username].phone = phone;
                 localStorage.setItem('db_users', JSON.stringify(users));
-                
-                // 전역 상태 즉시 동기화 (Number 타입 강제)
                 currentId = username; 
-                balance = 10.0; // 전역 변수 직접 할당
+                balance = 10.0;
                 myGameStats = users[username].myGameStats;
                 sessionStorage.setItem('loggedInUser', username);
                 alert("🎁 10 TON Reward Credited!");
@@ -387,7 +413,6 @@
     function renderStats() { const daySeed = Math.floor(Date.now() / (1000 * 60 * 60 * 24)), pseudoRandom = (offset) => ((daySeed + offset) * 9301 + 49297) % 233280 / 233280; const counts = { black: 49.5 + (pseudoRandom(1) * 1.2), red: 29.8 + (pseudoRandom(2) * 1.1), blue: 17.5 + (pseudoRandom(3) * 0.8), gold: 1.6 + (pseudoRandom(4) * 0.4) }; ['black', 'red', 'blue', 'gold'].forEach(c => { const val = counts[c].toFixed(1); document.getElementById(`val-${c}`).innerText = `${val}%`; document.getElementById(`bar-${c}`).style.width = `${val}%`; }); document.getElementById('st-total').innerText = myGameStats.total; document.getElementById('st-winrate').innerText = (myGameStats.total > 0 ? (myGameStats.wins/myGameStats.total*100).toFixed(1) : 0) + "%"; }
     function renderRanking() { const tbody = document.getElementById('rankingBody'); tbody.innerHTML = ''; const adjs = ["Top", "Vip", "Win", "Pro", "Lucky", "Ace", "Big", "King", "Wolf", "Spin"]; const nouns = ["Star", "Boss", "Player", "User", "Champ", "Master", "Peak", "Hero", "Peak", "One"]; for(let i=1; i<=100; i++) { const seed = i * 1234.56; let botId = adjs[Math.floor(seed % adjs.length)] + nouns[Math.floor((seed/7) % nouns.length)] + (Math.floor(seed % 99)); const maskedId = botId.length > 3 ? botId.slice(0, -3) + "***" : botId + "***"; const totalBet = (2000 - i * 15 + Math.floor(seed % 100)) * 1.5, winRate = (54 - (i/4) + (seed % 2)).toFixed(1), totalWin = (totalBet * (winRate/100) * 1.85); tbody.innerHTML += `<tr><td>${i}</td><td style="color:var(--accent); text-align:left; padding-left:15px; font-size:0.55rem;">${maskedId}</td><td>${totalBet.toFixed(1)}T</td><td style="color:var(--accent)">${totalWin.toFixed(1)}T</td><td>${winRate}%</td></tr>`; } }
 
-    /* [v6.0] 제로 리셋 로그인 (게스트 밸런스 완전 소거) */
     function handleLoginSubmit() { 
         const id = document.getElementById('loginId').value.trim(), pw = document.getElementById('loginPw').value, pwChk = document.getElementById('loginPwCheck').value, t = i18n[currentLang] || i18n.en; 
         if(!id || pw.length < 6) { document.getElementById('loginMsg').innerText = t.pwRule; return; } 
@@ -396,7 +421,7 @@
         if(users[id]) { 
             if(users[id].pw === pw) { 
                 currentId = id; 
-                balance = Number(users[id].balance || 0); // 기존 게스트 50 무시
+                balance = Number(users[id].balance || 0); 
                 myGameStats = users[id].myGameStats; 
                 currentPhone = users[id].phone || ""; 
                 sessionStorage.setItem('loggedInUser', id); 
