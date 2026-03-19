@@ -85,10 +85,6 @@
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
         .btn-quick-connect { width: 100%; height: 60px; background: linear-gradient(135deg, #0088cc, #00aaff); color: #fff; border: 2px solid var(--gold); border-radius: 12px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 20px; position: relative; }
 
-        .tx-history { width: 92%; margin-top: 20px; }
-        .tx-title { font-size: 0.75rem; font-weight: 900; color: var(--text-muted); margin-bottom: 10px; padding-left: 5px; }
-        .tx-item { background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
-
         .manual-container { width: 94%; margin-top: 10px; display: flex; flex-direction: column; gap: 15px; }
         .manual-card { background: var(--card); border: 1px solid #333; border-radius: 15px; padding: 20px; }
         .manual-title { font-size: 0.95rem; font-weight: 900; color: var(--accent); margin-bottom: 12px; border-bottom: 1px solid #222; padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }
@@ -270,13 +266,12 @@
     let myGameStats = { total: 0, wins: 0 }, isMuted = false, audioInitialized = false, liveBoardTotals = { black:0, red:0, blue:0, gold:0 };
     let roundBotBetTotal = 0, currentRotation = 0, currentRoundResult = null; 
 
-    /* [v6.1] 사이클 시간 상수 정밀 수정 (하쿠님 요청 사양) */
-    const CYCLE_MS = 20000;      // 전체 20초
-    const SPIN_DURATION = 4500;  // 회전 4.5초
-    const RESULT_WAIT = 500;     // 결과 0.5초
-    const CLOSE_DURATION = 1000; // 마감(CLOSED) 1초
-    const FREEZE_PERIOD = SPIN_DURATION + RESULT_WAIT + CLOSE_DURATION; // 비배팅 구간 (총 6초)
-    const BETTING_PERIOD = CYCLE_MS - FREEZE_PERIOD; // 배팅 구간 (14초)
+    const CYCLE_MS = 20000;
+    const SPIN_DURATION = 4500;
+    const RESULT_WAIT = 500;
+    const CLOSE_DURATION = 1000;
+    const FREEZE_PERIOD = SPIN_DURATION + RESULT_WAIT + CLOSE_DURATION;
+    const BETTING_PERIOD = CYCLE_MS - FREEZE_PERIOD;
 
     const sectors = [{color:'#ffcc00', name:'gold', mult:50, weight: 1},{color:'#0088cc', name:'blue', mult:5, weight: 10},{color:'#ff3333', name:'red', mult:3, weight: 17},{color:'#444444', name:'black', mult:2, weight: 28}];
     const wheelMap = []; sectors.forEach(s => { for(let i=0; i<s.weight; i++) wheelMap.push(s); });
@@ -298,8 +293,8 @@
             freeTitle: "免费领取 10 TON", freeSub: "认证后立即领取 10 TON!", vWallet: "虚拟钱包地址", deposit: "充值", withdraw: "提现", sendTon: "立即转账", logout: "登出", pwRule: "密码至少需要6位。", loginFail: "密码错误。", pwMismatch: "密码确认不匹配。", joinSuccess: "注册并登录成功。",
             howTxt: getHowHtml("公平证明", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON 投注规则", "投注阶段：14秒自由投注", "CLOSED：投注截止并计算", "抽奖：4.5秒转盘旋转", "TON 使用指南", "在钱包选项卡中点击 [DEPOSIT] 生成您的个人充值地址。将 TON 发送到该地址，网络确认后将立即反映在游戏余额中。", "选择钱包选项卡中的 [WITHDRAW]，输入您的外部 TON 钱包地址和金额。点击 [SEND TON] 将立即开始转账处理。") },
         jp: { welcome: "ようこそ", buy: "購入", closed: "締切", live: "ライブ状況", home: "ホーム", rank: "ランキング", how: "使い方", stats: "統計", login: "ウォレット", pick: "選択", bet: "数量", res: "結果", win: "当選者", rankTitle: "週間トップ100ランキング", last100: "24H デジタル分析", totalSpins: "合計スピン", winRate: "私の勝率", 
-            freeTitle: "10 TON 無料ゲット", freeSub: "認証後、即座에 10 TON 贈呈！", vWallet: "仮想ウォレットアドレス", deposit: "入金", withdraw: "出金", sendTon: "送信する", logout: "ログアウト", pwRule: "パスワードは6文字以上必要です。", loginFail: "パスワードが正しくありません。", pwMismatch: "パスワード確認が一致しません。", joinSuccess: "登録とログインが完了しました。",
-            howTxt: getHowHtml("証明可能な公平性", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON ベッティング規則", "ベット期間：14秒間の自由ベット", "CLOSED：ベット締切および演算", "抽選：4.5秒間のホイール回転", "TON コイン利用ガイド", "ウォレットタブで [DEPOSIT] ボタンをクリックして、個人用入금アドレスを生成します。そのアドレスに TON を送信すると、ネットワーク確認後、即座にゲームバランスに反映されます。", "ウォレットタブの [WITHDRAW] を選択し、自身の外部 TON ウォレットアドレスと数量を入力します。[SEND TON] をクリックすると、リアルタイムで送金処理が開始されます。") }
+            freeTitle: "10 TON 無料ゲット", freeSub: "認証後、即座に 10 TON 贈呈！", vWallet: "仮想ウォレットアドレス", deposit: "入金", withdraw: "出金", sendTon: "送信する", logout: "ログアウト", pwRule: "パスワードは6文字以上必要です。", loginFail: "パスワードが正しくありません。", pwMismatch: "パスワード確認が一致しません。", joinSuccess: "登録とログインが完了しました。",
+            howTxt: getHowHtml("証明可能な公平性", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON ベッティング規則", "ベット期間：14秒間の自由ベット", "CLOSED：ベット締切および演算", "抽選：4.5秒間のホイール回転", "TON コ인利用ガイド", "ウォレットタブで [DEPOSIT] ボタンをクリックして、個人用入金アドレスを生成します。そのアドレスに TON を送信すると、ネットワーク確認後、即座にゲームバランスに反映されます。", "ウォレットタブの [WITHDRAW] を選択し、自身の外部 TON ウォレットアドレスと数量を入力します。[SEND TON] をクリックすると、リアルタイムで送金処理が開始されます。") }
     };
 
     const canvas = document.getElementById('wheelCanvas'), ctx = canvas.getContext('2d'), timerBar = document.getElementById('timerBar'), betOverlay = document.getElementById('betOverlay');
@@ -385,10 +380,8 @@
 
     function tick() {
         const now = Date.now(), elapsed = now % CYCLE_MS, pointer = document.getElementById('wheelPointer');
-        /* [v6.1] 배팅 14초 후 6초간 프리즈 (마감1+회전4.5+결과0.5) */
         if (elapsed < FREEZE_PERIOD) {
             timerBar.style.width = "0%"; betOverlay.style.display = "flex";
-            // 마감 1초가 지난 시점(elapsed >= 1000)에서 스핀 시작
             if (elapsed >= CLOSE_DURATION && elapsed < CLOSE_DURATION + 200 && !isSpinning) { startSpin(); roundBotBetTotal = 0; }
             if(isSpinning) { const rot = getCurrentRotation(), arc = 360 / 56, normalizedRot = (360 - (rot % 360)) % 360, visualIdx = Math.floor((normalizedRot + arc/2) % 360 / arc) % 56; pointer.style.backgroundColor = wheelMap[visualIdx].color; }
         } else {
@@ -397,7 +390,21 @@
     }
 
     function getCurrentRotation() { const st = window.getComputedStyle(canvas, null), tr = st.getPropertyValue("transform"); if(tr === "none") return 0; const v = tr.split('(')[1].split(')')[0].split(','); const angle = Math.round(Math.atan2(parseFloat(v[1]), parseFloat(v[0])) * (180/Math.PI)); return (angle + 360) % 360; }
-    function startSpin() { isSpinning = true; const masterSeed = Math.floor(Date.now() / CYCLE_MS); currentRoundResult = getWinIndex(masterSeed); const arc = 360 / 56, targetRelativeAngle = (360 - (currentRoundResult.index * arc)) % 360, currentMod = currentRotation % 360, delta = (targetRelativeAngle - currentMod + 360) % 360; currentRotation += (360 * 10) + delta; canvas.style.transition = `transform ${SPIN_DURATION}ms cubic-bezier(0.1, 0, 0.05, 1)`; canvas.style.transform = `rotate(${currentRotation}deg)`; setTimeout(() => resolve(wheelMap[currentRoundResult.index]), SPIN_DURATION); }
+    
+    /* [v6.1] 천천히 감속하며 멈추는 Easing 연출 추가 */
+    function startSpin() { 
+        isSpinning = true; 
+        const masterSeed = Math.floor(Date.now() / CYCLE_MS); 
+        currentRoundResult = getWinIndex(masterSeed); 
+        const arc = 360 / 56, targetRelativeAngle = (360 - (currentRoundResult.index * arc)) % 360, currentMod = currentRotation % 360, delta = (targetRelativeAngle - currentMod + 360) % 360; 
+        currentRotation += (360 * 10) + delta; 
+        
+        // 감속 곡선을 더 길게(0, 0, 1) 설정하여 멈출 때 아주 천천히 감속하도록 수정
+        canvas.style.transition = `transform ${SPIN_DURATION}ms cubic-bezier(0.1, 0, 0, 1)`; 
+        canvas.style.transform = `rotate(${currentRotation}deg)`; 
+        setTimeout(() => resolve(wheelMap[currentRoundResult.index]), SPIN_DURATION); 
+    }
+
     function resolve(win) { 
         document.getElementById('wheelPointer').style.backgroundColor = win.color; globalHistory.push(win.color); setTimeout(() => updateHistoryUI(), 100);
         if(myBet) { myGameStats.total++; const winStatus = myBet.type === win.name; if(winStatus) { balance = Number(balance) + (myBet.amount * win.mult); myGameStats.wins++; playSound('sndWin'); } else playSound('sndLose'); const row = `<tr><td>${myBet.type.toUpperCase()}</td><td>${myBet.amount.toFixed(1)}T</td><td>${winStatus ? 'Win' : 'Lost'}</td><td><span class="winner-dot" style="background:${win.color}"></span></td></tr>`; document.getElementById('myLogBody').insertAdjacentHTML('afterbegin', row); } 
