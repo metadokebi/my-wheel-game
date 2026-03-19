@@ -14,20 +14,19 @@
             --text-muted: #8899aa; --nav-bg: #16191e;
             --point-color: #00d9ff; --buy-color: #fff200;
             --battle-pink: #f55a6a;
+            --green: #00ff66;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html, body { margin: 0; padding: 0; width: 100%; height: 100dvh; overflow: hidden; touch-action: manipulation; background: #1e2128; color: white; font-family: 'Pretendard', sans-serif; }
         .main-container { width: 100%; max-width: 500px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
 
-        /* 언어 선택 오버레이 */
+        /* [골든마스터] 언어 선택 */
         #langOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2); z-index: 5000; display: flex; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
         .lang-list { display: flex; flex-direction: column; gap: 12px; width: 240px; }
         .lang-btn { background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.25); color: #fff; padding: 18px 20px; border-radius: 12px; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: background 0.2s; }
 
         header { padding: 12px 18px; background: rgba(0,0,0,0.4); display: flex; justify-content: space-between; align-items: center; z-index: 100; flex-shrink: 0; }
         .user-id { font-size: 0.8rem; font-weight: 700; border-left: 3px solid var(--accent); padding-left: 10px; }
-        
-        /* 상단 고정 대칭 UI */
         .balance-box { background: rgba(0, 217, 255, 0.1); padding: 5px 8px; border-radius: 6px; border: 1px solid var(--point-color); color: var(--point-color); font-weight: 800; font-size: 0.75rem; height: 32px; display: flex; align-items: center; justify-content: center; min-width: 95px; }
         #btnBuyTop { background: rgba(255, 242, 0, 0.1); padding: 5px 8px; border-radius: 6px; border: 1px solid var(--buy-color); color: var(--buy-color); font-weight: 900; font-size: 0.75rem; cursor: pointer; height: 32px; display: flex; align-items: center; justify-content: center; gap: 4px; text-shadow: 0 0 5px rgba(255, 242, 0, 0.5); min-width: 95px; }
 
@@ -45,11 +44,16 @@
         .content-view { flex: 1; overflow-y: auto; display: none; padding-bottom: 90px; width: 100%; align-items: center; }
         .content-view.active { display: flex; flex-direction: column; }
 
-        /* 메인 게임 섹션 */
+        /* [골든마스터] 메인 게임 섹션 */
         .wheel-section { position: relative; margin: 25px 0; width: 230px; height: 230px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; }
         .wheel-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-weight: 900; font-size: 1.8rem; color: var(--accent); text-shadow: 0 0 10px var(--accent); opacity: 0.8; pointer-events: none; }
         .pointer { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); width: 14px; height: 20px; background: #fff; clip-path: polygon(50% 100%, 0% 0%, 100% 0%); z-index: 25; transition: background-color 0.1s linear; }
+
+        /* [수정] 휠 중앙 배팅액 표시기 */
+        .wheel-center-ton { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 30; text-align: center; pointer-events: none; display: none; }
+        .wheel-center-ton b { display: block; font-size: 1rem; color: var(--accent); text-shadow: 0 0 10px var(--accent); }
+        .wheel-center-ton span { font-size: 0.6rem; color: #fff; opacity: 0.8; }
 
         .overlay-container { width: 100%; padding: 0 15px; position: relative; flex-shrink: 0; }
         .controls { position: relative; width: 100%; background: var(--card); padding: 15px; border-radius: 12px; border: 1px solid #333; overflow: hidden; }
@@ -59,49 +63,45 @@
         #betInput { flex: 1; background: #000; border: 1px solid #333; color: var(--accent); padding: 12px; border-radius: 8px; text-align: center; font-weight: 900; outline: none; }
         .bet-buttons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 12px; }
         .btn { height: 60px; background: transparent; border: 1.5px solid transparent; border-radius: 4px; font-weight: 900; font-size: 1.1rem; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
-        .btn-black { border-color: #555; color: #777; }
-        .btn-red { border-color: var(--red); color: var(--red); }
-        .btn-blue { border-color: var(--blue); color: var(--blue); }
-        .btn-gold { border-color: var(--gold); color: var(--gold); }
+        .btn-black { border-color: #555; color: #777; } .btn-red { border-color: var(--red); color: var(--red); } .btn-blue { border-color: var(--blue); color: var(--blue); } .btn-gold { border-color: var(--gold); color: var(--gold); }
         .btn.selected.btn-black { background: #222; color: #fff; }
         .btn.selected.btn-red { background: var(--red); border-color: var(--red); color: #fff; box-shadow: 0 0 15px rgba(255,51,51,0.4); }
         .btn.selected.btn-blue { background: var(--blue); border-color: var(--blue); color: #fff; box-shadow: 0 0 15px rgba(0,217,255,0.4); }
         .btn.selected.btn-gold { background: var(--gold); border-color: var(--gold); color: #000; box-shadow: 0 0 15px rgba(255,204,0,0.4); }
 
-        /* 라이브 봇 리스트 */
-        .live-betting-area { width: 100%; margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid #333; }
-        .live-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-        .live-col { background: rgba(0,0,0,0.4); border-radius: 8px; min-height: 105px; border-top: 3px solid #444; overflow: hidden; display: flex; flex-direction: column; }
-        .col-head { padding: 4px; text-align: center; }
-        .col-label { font-size: 0.55rem; font-weight: 900; color: var(--text-muted); display: block; }
-        .col-total { font-size: 0.6rem; font-weight: 800; color: var(--accent); }
-        .bet-list { padding: 3px; flex: 1; display: flex; flex-direction: column; gap: 3px; overflow: hidden; }
-        .bet-item { display: flex; justify-content: space-between; font-size: 0.48rem; font-weight: 700; background: rgba(255,255,255,0.05); padding: 2px; border-radius: 3px; }
+        /* [PvP 배틀 전용 디자인] */
+        .battle-game-view { width: 100%; display: flex; flex-direction: column; align-items: center; }
+        .battle-columns { width: 100%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 0 15px; margin-top: 20px; }
+        .b-col { background: rgba(0,0,0,0.3); border-radius: 10px; min-height: 120px; border-top: 3px solid #333; overflow: hidden; }
+        .b-col-head { padding: 6px; text-align: center; font-size: 0.6rem; font-weight: 900; background: rgba(255,255,255,0.05); }
+        .b-list { padding: 5px; display: flex; flex-direction: column; gap: 5px; }
+        .b-user-item { display: flex; align-items: center; gap: 4px; font-size: 0.5rem; font-weight: 700; color: #ccc; }
+        .b-user-item i { font-size: 0.7rem; }
 
-        /* [PvP 모달] 위아래 정렬 및 배팅버튼 스타일 */
+        /* [v7.0 고도화] PvP 생성 모달 */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; align-items: flex-end; justify-content: center; z-index: 1000; }
         .modal-content { background: #1a1d26; border-radius: 20px 20px 0 0; width: 100%; max-width: 500px; padding: 25px; border-top: 1px solid #333; }
         .battle-selector-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 25px; }
         .selector-card { background: #232732; border: 1.5px solid transparent; border-radius: 12px; padding: 12px 5px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; }
         .selector-card.active { border-color: var(--battle-pink); background: rgba(245, 90, 106, 0.05); }
-        .selector-card .emoji-group { font-size: 1.1rem; letter-spacing: -2px; }
+        .selector-card .emoji-group { font-size: 1.1rem; line-height: 1; letter-spacing: -2px; }
         .selector-card span { font-size: 0.75rem; font-weight: 800; color: #8899aa; }
         .selector-card.active span { color: var(--battle-pink); }
         .color-selector-grid { display: flex; gap: 8px; margin-bottom: 25px; }
         .color-btn { flex: 1; height: 50px; border-radius: 6px; border: 1.5px solid transparent; background: transparent; font-weight: 900; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
         .color-btn.active.btn-red { background: var(--red) !important; color: #fff !important; }
         .color-btn.active.btn-blue { background: var(--blue) !important; color: #fff !important; }
-        .color-btn.active.btn-green { background: #00ff66 !important; color: #000 !important; }
+        .color-btn.active.btn-green { background: var(--green) !important; color: #000 !important; }
         .color-btn.active.btn-yellow { background: var(--gold) !important; color: #000 !important; }
         .btn-create-final { width: 100%; height: 55px; background: var(--battle-pink); color: #fff; border: none; border-radius: 12px; font-weight: 900; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 15px rgba(245, 90, 106, 0.3); }
 
-        /* 배팅 내역 Pill Shape */
+        /* [Pill Shape] 배팅 내역 */
         .log-table { width: 95%; border-collapse: collapse; font-size: 0.7rem; background: rgba(0,0,0,0.4); border-radius: 10px; overflow: hidden; margin: 20px auto; flex-shrink: 0; }
         .log-table th { background: #1a1a1a; padding: 10px; color: var(--text-muted); font-size: 0.75rem; font-weight: 900; }
         .log-table td { padding: 8px; border-bottom: 1px solid #222; text-align: center; font-weight: 700; vertical-align: middle; }
         .ui-pill { display: inline-block; width: 34px; height: 10px; border-radius: 5px; box-shadow: 0 0 5px rgba(255,255,255,0.1); }
 
-        /* 지갑/사용법/통계 순정 복구 */
+        /* [순정 복구] 지갑/사용법/통계 디자인 */
         .wallet-card { width: 92%; background: var(--card); border: 1px solid #333; border-radius: 15px; padding: 20px; margin-top: 15px; }
         .wallet-user-info { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding-bottom: 10px; }
         .wallet-balance-big { font-size: 2.2rem; font-weight: 900; color: var(--accent); text-align: center; margin: 20px 0; }
@@ -110,13 +110,11 @@
         .btn-deposit { background: var(--blue); color: #000; }
         .btn-withdraw { background: #333; color: #ccc; }
         .wallet-input { background: #000; border: 1px solid #333; padding: 12px; border-radius: 8px; color: var(--accent); font-size: 0.75rem; outline: none; margin-bottom:8px; width:100%; }
-
         .manual-container { width: 94%; margin-top: 10px; display: flex; flex-direction: column; gap: 15px; }
         .manual-card { background: var(--card); border: 1px solid #333; border-radius: 15px; padding: 20px; }
         .manual-title { font-size: 0.95rem; font-weight: 900; color: var(--accent); margin-bottom: 12px; border-bottom: 1px solid #222; padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }
         .manual-text { font-size: 0.78rem; color: #bbb; line-height: 1.65; }
         .manual-formula { background: #000; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 0.7rem; color: var(--accent); margin: 10px 0; text-align: center; border: 1px solid #222; }
-
         .digital-stats { width: 92%; background: #000; border: 1px solid #333; padding: 15px; border-radius: 12px; margin-top: 10px; }
         .stat-bar-bg { width: 100%; height: 8px; background: #111; border-radius: 4px; overflow: hidden; margin-top: 5px; }
         .stat-bar-fill { height: 100%; width: 0%; transition: width 1s ease-out; }
@@ -186,6 +184,7 @@
 
     <div id="view-home" class="content-view active">
         <div class="wheel-section">
+            <div class="wheel-center-ton" id="homeWheelCenter"><b>0.0 TON</b><span>TOTAL</span></div>
             <div class="pointer" id="wheelPointer"></div>
             <div class="wheel-logo">Spin4</div>
             <canvas id="wheelCanvas" width="560" height="560"></canvas>
@@ -224,15 +223,26 @@
     </div>
 
     <div id="view-battle" class="content-view">
-        <div id="battleLobby" style="padding-top:100px; text-align:center;">
+        <div id="battleLobby" style="padding-top:80px; text-align:center; width:100%;">
             <h3 style="color:var(--blue); font-weight:900;" id="lb-lobbyTitle">⚔️ BATTLE ARENA</h3>
             <p style="font-size:0.7rem; color:#666;" id="lb-lobbySub">Create a new duel to challenge others!</p>
-            <button class="btn-create-floating" onclick="openCreateModal()">+</button>
-        </div>
-        <div id="battleWaiting" class="battle-waiting" style="display:none; margin: 50px auto;">
-            <h3 id="waitingTitle">WAITING FOR PLAYERS...</h3>
-            <div class="user-slots" id="userSlots"></div>
-            <button class="action-btn btn-withdraw" style="width:100%; margin-top:20px;" onclick="leaveBattle()" id="btn-leave">LEAVE BATTLE</button>
+            
+            <div id="activeBattleScreen" style="display:none; margin-top:20px;">
+                <div class="wheel-section" style="margin: 0 auto;">
+                    <div class="wheel-center-ton" style="display:block;"><b id="battleTotalTon">0.0 TON</b><span>TOTAL</span></div>
+                    <div class="pointer" style="background:#fff;"></div>
+                    <canvas id="battleWheelCanvas" width="560" height="560" style="width:100%; height:100%; border-radius:50%;"></canvas>
+                </div>
+                <div class="battle-columns">
+                    <div class="b-col" style="border-top-color:var(--red);"><div class="b-col-head">RED</div><div id="bl-red" class="b-list"></div></div>
+                    <div class="b-col" style="border-top-color:var(--blue);"><div class="b-col-head">BLUE</div><div id="bl-blue" class="b-list"></div></div>
+                    <div class="b-col" style="border-top-color:var(--green);"><div class="b-col-head">GREEN</div><div id="bl-green" class="b-list"></div></div>
+                    <div class="b-col" style="border-top-color:var(--gold);"><div class="b-col-head">YELLOW</div><div id="bl-yellow" class="b-list"></div></div>
+                </div>
+                <div id="battleStatusMsg" style="margin-top:15px; font-size:0.7rem; color:var(--battle-pink); font-weight:900; animation:pulse 1s infinite;">WAITING FOR OTHERS...</div>
+            </div>
+
+            <button class="btn-create-floating" onclick="openCreateModal()" id="btnCreateBattleMain">+</button>
         </div>
     </div>
 
@@ -282,18 +292,15 @@
                 </div>
                 <div class="wallet-balance-big"><span id="w-bal">0.0</span> <small style="font-size:0.9rem;">TON</small></div>
                 <div class="wallet-actions">
-                    <button class="action-btn btn-deposit" id="btnDeposit" onclick="alert('Deposit Address Generated!')">DEPOSIT</button>
-                    <button class="action-btn btn-withdraw" id="btnWithdraw" onclick="toggleWithdraw()">WITHDRAW</button>
+                    <button class="action-btn btn-deposit" onclick="alert('Deposit Address Generated!')">DEPOSIT</button>
+                    <button class="action-btn btn-withdraw" onclick="toggleWithdraw()">WITHDRAW</button>
                 </div>
                 <div id="withdrawGroup" style="display:none;" class="withdraw-input-group">
                     <input type="text" class="wallet-input" id="witAddr" placeholder="Recipient TON Address">
                     <input type="number" class="wallet-input" id="witAmt" placeholder="Amount (TON)">
                     <button class="action-btn" id="btnSendTon" style="background:var(--accent); color:#000;">SEND TON</button>
                 </div>
-                <div style="margin-top:20px;">
-                    <div style="font-size:0.6rem; color:var(--text-muted); margin-bottom:5px;" id="lblVWallet">Virtual Wallet Address</div>
-                    <div id="myAddr" style="background:#000; padding:8px; border-radius:4px; font-size:0.45rem; color:var(--accent); border:1px solid #222; overflow:hidden;">UQAr...Golden_V7.0_TON_System</div>
-                </div>
+                <div style="margin-top:20px;"><div id="myAddr" style="background:#000; padding:8px; border-radius:4px; font-size:0.45rem; color:var(--accent); border:1px solid #222; overflow:hidden;">UQAr...Golden_V7.0_TON_System</div></div>
             </div>
             <button onclick="handleLogout()" id="btnLogout" style="width:92%; height:50px; background:rgba(255,51,51,0.05); color:var(--red); border:1px solid rgba(255,51,51,0.2); border-radius:12px; font-weight:900; margin-top:20px;">LOGOUT</button>
         </div>
@@ -318,7 +325,10 @@
     let isSpinning = false, myBet = null, globalHistory = [], stats = { black: 0, red: 0, blue: 0, gold: 0 };
     let myGameStats = { total: 0, wins: 0 }, isMuted = false, audioInitialized = false, liveBoardTotals = { black:0, red:0, blue:0, gold:0 };
     let roundBotBetTotal = 0, currentRotation = 0, currentRoundResult = null; 
+    
+    // [v7.0] Battle State
     let battlePlayers = 2, selectedBattleColor = 'Red', duelCount = 1, myBattleRoom = null;
+    let battleIsActive = false;
 
     const CYCLE_MS = 20000, SPIN_DURATION = 4500, RESULT_WAIT = 500, CLOSE_DURATION = 1000;
     const FREEZE_PERIOD = SPIN_DURATION + RESULT_WAIT + CLOSE_DURATION;
@@ -333,7 +343,6 @@
         return `<div class="manual-card"><div class="manual-section"><div class="manual-title">💎 ${fairTitle}</div><div class="manual-text">Spin4 uses deterministic algorithms based on UTC timestamps.<div class="manual-formula">${formula}</div><span class="manual-badge">LCG Algorithm</span> Every round is generated using <b>UTC Millisecond Timestamp</b> as seed.</div></div><div class="manual-section" style="margin-top:20px;"><div class="manual-title">🎮 ${rulesTitle}</div><div class="manual-text">Real-time TON multiplayer environment.<br><br>1. <span class="manual-badge">14.0s</span> <b>${r1}</b><br>2. <span class="manual-badge">1.0s</span> <b>${r2}</b><br>3. <span class="manual-badge">4.5s</span> <b>${r3}</b></div></div><div class="manual-section" style="margin-top:20px;"><div class="manual-title">💰 ${tonTitle}</div><div class="manual-text"><b class="manual-highlight">1. DEPOSIT</b><br>${depStep}<br><br><b class="manual-highlight">2. WITHDRAW</b><br>${witStep}</div></div></div>`;
     }
 
-    /* [v7.0] 다국어 데이터 확장: PvP 생성 모달 포함 */
     const i18n = {
         ko: { welcome: "환영합니다", buy: "💎 지갑", closed: "마감", live: "실시간 현황", home: "홈", battle: "대결", rank: "랭킹", how: "사용법", stats: "통계", pick: "선택", bet: "수량", res: "결과", win: "당첨", freeTitle: "인증 혜택", freeSub: "인증 즉시 10 TON 증정!", vWallet: "가상 지갑 주소", deposit: "충전", withdraw: "환전", sendTon: "전송하기", logout: "로그아웃",
             btLobby: "⚔️ 배틀 아레나", btSub: "새로운 대결을 만들어보세요!", bt2u: "2인", bt3u: "3인", bt4u: "4인", btChoose: "색상을 선택하세요:", btBal: "보유 자산", btVal: "배틀 금액 (TON):", btCnt: "배틀 횟수:", btCreate: "대결 생성", btWaiting: "유저 대기 중...", btLeave: "대결 나가기",
@@ -342,101 +351,123 @@
         en: { welcome: "Welcome", buy: "💎 WALLET", closed: "CLOSED", live: "LIVE STATUS", home: "Home", battle: "Battle", rank: "Ranking", how: "How", stats: "Stats", pick: "Pick", bet: "Amt", res: "Result", win: "Winner", freeTitle: "Get Free 10 TON Reward", freeSub: "Claim your 10 TON now!", vWallet: "Virtual Wallet Address", deposit: "DEPOSIT", withdraw: "WITHDRAW", sendTon: "SEND TON", logout: "LOGOUT",
             btLobby: "⚔️ BATTLE ARENA", btSub: "Create a new duel to challenge others!", bt2u: "2 Users", bt3u: "3 Users", bt4u: "4 Users", btChoose: "Choose a color:", btBal: "Balance", btVal: "Duel Value (TON):", btCnt: "Duel Count:", btCreate: "Create Duel", btWaiting: "WAITING FOR PLAYERS...", btLeave: "LEAVE BATTLE",
             cRed: "Red", cBlue: "Blue", cGreen: "Green", cYellow: "Yellow",
-            howTxt: getHowHtml("Provably Fair", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON Betting Rules", "Betting: 14s active window", "CLOSED: Finalizing results", "Spin: 4.5s animation", "TON Coin Guide", "Click [DEPOSIT] in the Wallet tab to generate your unique address. Send TON to this address, and it will be credited to your balance after network confirmation.", "Go to [WITHDRAW] in the Wallet tab, enter your external TON address and amount, then click [SEND TON] to initiate an instant transfer.") },
-        cn: { welcome: "欢迎", buy: "💎 钱包", closed: "已截止", live: "实时状态", home: "首页", battle: "对决", rank: "排行榜", how: "玩法", stats: "统计", pick: "选择", bet: "金额", res: "结果", win: "获胜者", freeTitle: "免费领取 10 TON", freeSub: "认证后立即领取 10 TON!", vWallet: "虚拟钱包地址", deposit: "充值", withdraw: "提现", sendTon: "立即转账", logout: "登出",
-            btLobby: "⚔️ 对决竞技场", btSub: "创建一个新的对决来挑战他人！", bt2u: "2人", bt3u: "3人", bt4u: "4人", btChoose: "选择一种颜色:", btBal: "资产余额", btVal: "对决金额 (TON):", btCnt: "对决次数:", btCreate: "创建对决", btWaiting: "等待玩家中...", btLeave: "离开对决",
-            cRed: "红色", cBlue: "蓝色", cGreen: "绿色", cYellow: "黄色",
-            howTxt: getHowHtml("公平证明", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON 投注规则", "投注阶段：14秒自由投注", "CLOSED：投注截止并计算", "抽奖：4.5秒转盘旋转", "TON 使用指南", "在钱包选项卡中点击 [DEPOSIT] 生成您的个人充치地址。将 TON 发送到该地址，网络确认后将立即反映在游戏余额중中。", "选择钱包选项卡中的 [WITHDRAW]，输入您的外部 TON 钱包地址和金额。点击 [SEND TON] 将立即开始转账处理。") },
-        jp: { welcome: "ようこそ", buy: "💎 ウォレット", closed: "締切", live: "ライブ状況", home: "홈", battle: "対決", rank: "ランキング", how: "使い方", stats: "統計", pick: "選択", bet: "数量", res: "結果", win: "当選者", freeTitle: "10 TON 無料ゲット", freeSub: "認証後、即座에 10 TON 贈呈！", vWallet: "仮想ウォレットアドレス", deposit: "入금", withdraw: "出금", sendTon: "送信する", logout: "ログアウト",
-            btLobby: "⚔️ バトルアリーナ", btSub: "新しい対決を作って挑戦しましょう！", bt2u: "2人", bt3u: "3人", bt4u: "4人", btChoose: "色を選択してください:", btBal: "保有残高", btVal: "対決金額 (TON):", btCnt: "対決回数:", btCreate: "対決作成", btWaiting: "ユーザー待機中...", btLeave: "対決を離れる",
-            cRed: "レッド", cBlue: "ブルー", cGreen: "グリーン", cYellow: "イエロー",
-            howTxt: getHowHtml("証明可能な公平性", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON ベッティング規則", "ベット期間：14秒間の自由ベット", "CLOSED：ベット締切および演算", "抽選：4.5秒間のホイール回転", "TON コ인利用ガイド", "ウォレットタブで [DEPOSIT] 버튼을 클릭하여 개인용 입금 주소를 생성합니다. 그 주소에 TON을 전송하면 네트워크 확인 후 즉시 게임 밸런스에 반영됩니다.", "ウォレットタブ의 [WITHDRAW]를選択하고 자신의 외부 TON 지갑 주소와 수량을 입력합니다. [SEND TON] 클릭 시 실시간으로 전送 처리가 시작됩니다.") }
+            howTxt: getHowHtml("Provably Fair", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON Betting Rules", "Betting: 14s active window", "CLOSED: Finalizing results", "Spin: 4.5s animation", "TON Coin Guide", "Click [DEPOSIT] in the Wallet tab to generate your unique address. Send TON to this address, and it will be credited to your balance after network confirmation.", "Go to [WITHDRAW] in the Wallet tab, enter your external TON address and amount, then click [SEND TON] to initiate an instant transfer.") }
     };
 
-    const canvas = document.getElementById('wheelCanvas'), ctx = canvas.getContext('2d'), timerBar = document.getElementById('timerBar'), betOverlay = document.getElementById('betOverlay');
-
     function setLanguage(lang) { currentLang = lang; localStorage.setItem('db_wheel_lang', lang); document.getElementById('langOverlay').style.display = 'none'; applyI18n(); }
-    
-    /* [v7.0] PvP 모달 텍스트 번역 로직 추가 */
     function applyI18n() {
         const t = i18n[currentLang] || i18n.en;
         document.getElementById('displayId').innerText = `${t.welcome} ${currentId}`;
-        document.getElementById('closedTxt').innerText = t.closed; 
-        document.getElementById('navHome').innerText = t.home; 
-        document.getElementById('navBattle').innerText = t.battle; 
-        document.getElementById('navRank').innerText = t.rank; 
-        document.getElementById('navHow').innerText = t.how; 
-        document.getElementById('navStats').innerText = t.stats; 
-        document.getElementById('btnBuyTop').innerText = t.buy; 
-        document.getElementById('howContent').innerHTML = t.howTxt;
-        document.getElementById('liveTitle').innerText = t.live;
-        document.getElementById('th-pick').innerText = t.pick; 
-        document.getElementById('th-bet').innerText = t.bet; 
-        document.getElementById('th-res').innerText = t.res; 
-        document.getElementById('th-win').innerText = t.win;
-
-        // Battle Arena 다국어
-        document.getElementById('lb-lobbyTitle').innerText = t.btLobby;
-        document.getElementById('lb-lobbySub').innerText = t.btSub;
-        document.getElementById('lb-2u').innerText = t.bt2u;
-        document.getElementById('lb-3u').innerText = t.bt3u;
-        document.getElementById('lb-4u').innerText = t.bt4u;
-        document.getElementById('lb-chooseColor').innerText = t.btChoose;
-        document.getElementById('lb-balance').innerText = t.btBal;
-        document.getElementById('lb-duelVal').innerText = t.btVal;
-        document.getElementById('lb-duelCnt').innerText = t.btCnt;
+        document.getElementById('closedTxt').innerText = t.closed; document.getElementById('navHome').innerText = t.home; 
+        document.getElementById('navBattle').innerText = t.battle; document.getElementById('navRank').innerText = t.rank; 
+        document.getElementById('navHow').innerText = t.how; document.getElementById('navStats').innerText = t.stats; 
+        document.getElementById('btnBuyTop').innerText = t.buy; document.getElementById('howContent').innerHTML = t.howTxt;
+        document.getElementById('liveTitle').innerText = t.live; document.getElementById('th-pick').innerText = t.pick; 
+        document.getElementById('th-bet').innerText = t.bet; document.getElementById('th-res').innerText = t.res; document.getElementById('th-win').innerText = t.win;
+        document.getElementById('lb-lobbyTitle').innerText = t.btLobby; document.getElementById('lb-lobbySub').innerText = t.btSub;
+        document.getElementById('lb-2u').innerText = t.bt2u; document.getElementById('lb-3u').innerText = t.bt3u; document.getElementById('lb-4u').innerText = t.bt4u;
+        document.getElementById('lb-chooseColor').innerText = t.btChoose; document.getElementById('lb-balance').innerText = t.btBal;
+        document.getElementById('lb-duelVal').innerText = t.btVal; document.getElementById('lb-duelCnt').innerText = t.btCnt;
         document.getElementById('btnCreateFinal').innerText = `${t.btCreate} ${duelCount}`;
-        document.getElementById('waitingTitle').innerText = t.btWaiting;
         document.getElementById('btn-leave').innerText = t.btLeave;
-
-        renderColorButtons(battlePlayers); // 색상 버튼 이름 갱신
-
-        // Wallet 다국어 복구
-        const lbFreeTitle = document.getElementById('lblFreeTitle'); if(lbFreeTitle) lbFreeTitle.innerText = t.freeTitle;
-        const lbFreeSub = document.getElementById('lblFreeSub'); if(lbFreeSub) lbFreeSub.innerText = t.freeSub;
-        const lbVWallet = document.getElementById('lblVWallet'); if(lbVWallet) lbVWallet.innerText = t.vWallet;
-        const btnDep = document.getElementById('btnDeposit'); if(btnDep) btnDep.innerText = t.deposit;
-        const btnWit = document.getElementById('btnWithdraw'); if(btnWit) btnWit.innerText = t.withdraw;
-        const btnSnd = document.getElementById('btnSendTon'); if(btnSnd) btnSnd.innerText = t.sendTon;
-        const btnLout = document.getElementById('btnLogout'); if(btnLout) btnLout.innerText = t.logout;
+        renderColorButtons(battlePlayers);
     }
 
     // PvP Logic
     function openCreateModal() { document.getElementById('createModal').style.display = 'flex'; document.getElementById('modalBalanceText').innerText = Number(balance).toFixed(1) + " TON"; setBattlePlayers(2); }
     function closeModal() { document.getElementById('createModal').style.display = 'none'; }
     function setBattlePlayers(n) { battlePlayers = n; [2,3,4].forEach(v => { const card = document.getElementById('bp'+v); if(v === n) card.classList.add('active'); else card.classList.remove('active'); }); renderColorButtons(n); }
-    
     function renderColorButtons(n) { 
         const t = i18n[currentLang] || i18n.en;
         const area = document.getElementById('battleColorArea'); 
-        const config = [
-            {name: t.cRed, raw: 'Red', class: 'btn-red'}, {name: t.cBlue, raw: 'Blue', class: 'btn-blue'}, 
-            {name: t.cGreen, raw: 'Green', class: 'btn-green'}, {name: t.cYellow, raw: 'Yellow', class: 'btn-yellow'}
-        ];
+        const config = [{name: t.cRed, raw: 'Red', class: 'btn-red'}, {name: t.cBlue, raw: 'Blue', class: 'btn-blue'}, {name: t.cGreen, raw: 'Green', class: 'btn-green'}, {name: t.cYellow, raw: 'Yellow', class: 'btn-yellow'}];
         const colors = config.slice(0, n); area.innerHTML = ''; 
         colors.forEach((c, idx) => { 
-            const btn = document.createElement('div'); btn.className = `color-btn ${c.class}` + (selectedBattleColor === c.raw ? ' active' : (idx === 0 && !selectedBattleColor ? ' active' : '')); 
-            btn.style.border = `1.5px solid var(--${c.raw.toLowerCase()})`; btn.style.color = `var(--${c.raw.toLowerCase()})`;
-            if(c.raw === 'Green') { btn.style.border = `1.5px solid #00ff66`; btn.style.color = `#00ff66`; }
-            if(c.raw === 'Yellow') { btn.style.border = `1.5px solid var(--gold)`; btn.style.color = `var(--gold)`; }
+            const btn = document.createElement('div'); btn.className = `color-btn ${c.class}` + (selectedBattleColor === c.raw ? ' active' : ''); 
+            btn.style.border = `1.5px solid var(--${c.raw.toLowerCase() === 'yellow' ? 'gold' : c.raw.toLowerCase()})`; 
             btn.innerText = c.name; btn.onclick = () => { document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); selectedBattleColor = c.raw; }; area.appendChild(btn); 
         }); 
-        if(!selectedBattleColor) selectedBattleColor = colors[0].raw; 
+    }
+    function adjDuelCount(v) { const t = i18n[currentLang] || i18n.en; duelCount = Math.max(1, Math.min(10, duelCount + v)); document.getElementById('duelCountText').innerText = duelCount; document.getElementById('btnCreateFinal').innerText = `${t.btCreate} ${duelCount}`; }
+    
+    // [v7.0] Battle Simulation Start
+    function confirmCreateBattle() { 
+        const val = parseFloat(document.getElementById('battleBetInput').value); const cost = val * duelCount; 
+        if(cost > balance || val < 0.1) return; 
+        balance -= cost; updateBalUI(); 
+        myBattleRoom = { bet: val, maxPlayers: battlePlayers, players: [], color: selectedBattleColor, count: duelCount, currentTotal: val };
+        document.getElementById('lb-lobbySub').style.display = 'none';
+        document.getElementById('btnCreateBattleMain').style.display = 'none';
+        document.getElementById('activeBattleScreen').style.display = 'block';
+        
+        // 내 캐릭터 추가
+        addPlayerToBattleColumn(selectedBattleColor, "ME (You)");
+        startBattleSimulation();
+        closeModal();
     }
 
-    function adjDuelCount(v) { 
-        const t = i18n[currentLang] || i18n.en;
-        duelCount = Math.max(1, Math.min(10, duelCount + v)); 
-        document.getElementById('duelCountText').innerText = duelCount; 
-        document.getElementById('btnCreateFinal').innerText = `${t.btCreate} ${duelCount}`; 
+    function addPlayerToBattleColumn(color, name) {
+        const list = document.getElementById(`bl-${color.toLowerCase()}`);
+        const item = document.createElement('div');
+        item.className = 'b-user-item';
+        item.innerHTML = `<i>👤</i><span>${name}</span>`;
+        list.appendChild(item);
     }
 
-    function confirmCreateBattle() { const val = parseFloat(document.getElementById('battleBetInput').value); const cost = val * duelCount; if(cost > balance || val < 0.1) return; balance -= cost; updateBalUI(); myBattleRoom = { bet: val, maxPlayers: battlePlayers, players: ["ME"], color: selectedBattleColor, count: duelCount }; renderBattleWaiting(); closeModal(); }
-    function renderBattleWaiting() { document.getElementById('battleLobby').style.display = 'none'; document.getElementById('battleWaiting').style.display = 'block'; const slots = document.getElementById('userSlots'); slots.innerHTML = ''; for(let i=0; i<myBattleRoom.maxPlayers; i++) { const f = (i===0); slots.innerHTML += `<div class="slot ${f ? 'filled' : ''}">${f ? '👤' : '?'}</div>`; } }
-    function leaveBattle() { if(!myBattleRoom) return; balance += (myBattleRoom.bet * myBattleRoom.count); updateBalUI(); myBattleRoom = null; document.getElementById('battleLobby').style.display = 'block'; document.getElementById('battleWaiting').style.display = 'none'; }
-    function resolveBattle(winName) { if(!myBattleRoom) return; const myWin = (winName === myBattleRoom.color.toLowerCase()); if(myWin) { const prize = myBattleRoom.bet * myBattleRoom.maxPlayers; balance += prize; alert(`⚔️ BATTLE WIN! +${prize.toFixed(1)} TON`); } else alert(`⚔️ BATTLE LOST...`); myBattleRoom = null; document.getElementById('battleLobby').style.display = 'block'; document.getElementById('battleWaiting').style.display = 'none'; updateBalUI(); }
+    function startBattleSimulation() {
+        battleIsActive = true;
+        let joined = 1;
+        const colors = battlePlayers === 2 ? ['Red', 'Blue'] : (battlePlayers === 3 ? ['Red', 'Blue', 'Green'] : ['Red', 'Blue', 'Green', 'Yellow']);
+        
+        const simInterval = setInterval(() => {
+            if (joined < battlePlayers) {
+                const botName = generateRealBotId(Date.now() + joined);
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                addPlayerToBattleColumn(randomColor, botName);
+                myBattleRoom.currentTotal += myBattleRoom.bet;
+                document.getElementById('battleTotalTon').innerText = myBattleRoom.currentTotal.toFixed(1) + " TON";
+                joined++;
+            } else {
+                clearInterval(simInterval);
+                document.getElementById('battleStatusMsg').innerText = "ALL PLAYERS READY! SPINNING...";
+                setTimeout(() => triggerBattleSpin(), 1500);
+            }
+        }, 1500);
+    }
 
-    // 봇 엔진 복구
+    function triggerBattleSpin() {
+        const canvasB = document.getElementById('battleWheelCanvas');
+        const seed = Math.floor(Date.now() / 1000);
+        const winIdx = (seed * 9301 + 49297) % 233280 % 56;
+        const win = wheelMap[winIdx];
+        const arc = 360 / 56, target = (360 - (winIdx * arc)) % 360;
+        
+        canvasB.style.transition = `transform ${SPIN_DURATION}ms cubic-bezier(0.1, 0, 0, 1)`;
+        canvasB.style.transform = `rotate(${3600 + target}deg)`;
+        
+        setTimeout(() => {
+            const myWin = (win.name === myBattleRoom.color.toLowerCase() || (win.name === 'gold' && myBattleRoom.color === 'Yellow'));
+            if(myWin) {
+                const prize = myBattleRoom.bet * myBattleRoom.maxPlayers;
+                balance += prize; alert(`⚔️ WIN! RECEIVED ${prize.toFixed(1)} TON`);
+            } else alert(`⚔️ LOST... Winner: ${win.name.toUpperCase()}`);
+            resetBattleArena();
+        }, SPIN_DURATION + 500);
+    }
+
+    function resetBattleArena() {
+        battleIsActive = false; myBattleRoom = null;
+        document.getElementById('activeBattleScreen').style.display = 'none';
+        document.getElementById('lb-lobbySub').style.display = 'block';
+        document.getElementById('btnCreateBattleMain').style.display = 'flex';
+        document.querySelectorAll('.b-list').forEach(l => l.innerHTML = '');
+        document.getElementById('battleTotalTon').innerText = "0.0 TON";
+        updateBalUI();
+    }
+
+    function leaveBattle() { location.reload(); }
+
+    // [v7.0 복구] 봇 엔진
     function generateRealBotId(seed) { 
         const types = ['random', 'initials', 'masked', 'pro']; const type = types[seed % 4]; 
         if(type === 'random') { let id = ""; const chars = "abcdefghijklmnopqrstuvwxyz"; for(let i=0; i<6; i++) id += chars.charAt((seed >> i) % 26); return id; } 
@@ -445,7 +476,7 @@
         else { const adjs = ["Top", "Lucky", "Ace", "Big"]; const nouns = ["Star", "Boss", "Player", "King"]; return adjs[seed % 4] + nouns[(seed/7 >> 0) % 4] + (seed % 99); } 
     }
     function deterministicGlobalSpawn(elapsed) { 
-        if (elapsed < FREEZE_PERIOD || elapsed > CYCLE_MS - 100 || roundBotBetTotal >= 7.4) return; 
+        if (elapsed < FREEZE_PERIOD || elapsed > CYCLE_MS - 100 || roundBotBetTotal >= 7.4 || battleIsActive) return; 
         const ts = Math.floor(Date.now() / 100), r = (ts * 9301 + 49297) % 233280, roundSeed = Math.floor(Date.now() / CYCLE_MS);
         const spawnChance = ((roundSeed + ts) % 15 < 3) ? 25 : 5;
         if ((r % 100) < spawnChance) { 
@@ -459,7 +490,10 @@
         } 
     }
 
-    // RNG 엔진
+    // Core Logic
+    const ctxB = document.getElementById('battleWheelCanvas').getContext('2d');
+    function drawWheelB() { const arc = (Math.PI * 2) / 56, rad = 260; for (let i = 0; i < 56; i++) { ctxB.beginPath(); ctxB.strokeStyle = wheelMap[i].color; ctxB.lineWidth = 14; ctxB.arc(280, 280, rad, i * arc + Math.PI/2 - arc/2, (i + 1) * arc + Math.PI/2 - arc/2); ctxB.stroke(); } }
+    
     function drawWheel() { const arc = (Math.PI * 2) / 56, rad = 260, gap = 0.025; ctx.clearRect(0,0,560,560); ctx.lineWidth = 14; for (let i = 0; i < 56; i++) { ctx.beginPath(); ctx.strokeStyle = wheelMap[i].color; const sA = i * arc + Math.PI/2 - arc/2 + gap; const eA = (i + 1) * arc + Math.PI/2 - arc/2 - gap; ctx.arc(280, 280, rad, sA, eA); ctx.stroke(); } }
     function syncHistory() { const ms = Math.floor(Date.now() / CYCLE_MS); globalHistory = []; for(let i=1; i<=35; i++) { globalHistory.push(wheelMap[getWinIndex(ms - i).index].color); } updateHistoryUI(); }
     function updateHistoryUI() { const s = document.getElementById('historyStrip'); s.innerHTML = ''; const r = [...globalHistory].slice(-35).reverse(); r.forEach((c) => { const b = document.createElement('div'); let h = 'h-black'; if(c === '#ffcc00') h = 'h-gold'; else if(c === '#00d9ff') h = 'h-blue'; else if(c === '#ff3333') h = 'h-red'; b.className = `hist-bar ${h}`; b.style.backgroundColor = c; s.appendChild(b); }); }
@@ -477,7 +511,7 @@
     function startSpin() { isSpinning = true; const s = Math.floor(Date.now() / CYCLE_MS); currentRoundResult = getWinIndex(s); const arc = 360/56, tar = (360 - (currentRoundResult.index * arc)) % 360, curM = currentRotation % 360, d = (tar - curM + 360) % 360; currentRotation += (360 * 10) + d; canvas.style.transition = `transform ${SPIN_DURATION}ms cubic-bezier(0.1, 0, 0, 1)`; canvas.style.transform = `rotate(${currentRotation}deg)`; setTimeout(() => resolve(wheelMap[currentRoundResult.index]), SPIN_DURATION); }
     
     function resolve(win) { 
-        document.getElementById('wheelPointer').style.backgroundColor = win.color; globalHistory.push(win.color); updateHistoryUI(); if(myBattleRoom) resolveBattle(win.name); 
+        document.getElementById('wheelPointer').style.backgroundColor = win.color; globalHistory.push(win.color); updateHistoryUI(); 
         if(myBet) { 
             myGameStats.total++; const winS = myBet.type === win.name; if(winS) { balance = Number(balance) + (myBet.amount * win.mult); myGameStats.wins++; playSound('sndWin'); } else playSound('sndLose'); 
             const row = `<tr><td><div class="ui-pill" style="background:var(--${myBet.type})"></div></td><td>${myBet.amount.toFixed(1)}T</td><td>${winS ? 'Win' : 'Lost'}</td><td><div class="ui-pill" style="background:${win.color}"></div></td></tr>`; 
@@ -493,7 +527,7 @@
     function adjBet(v) { let i = document.getElementById('betInput'), n = parseFloat(i.value) + v; if(n >= 0.1) i.value = n.toFixed(1); }
     function switchTab(id, el) { document.querySelectorAll('.content-view').forEach(v => v.classList.remove('active')); document.getElementById('view-' + id).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); if(el) el.classList.add('active'); if(id === 'wallet') autoFillTelegramId(); if(id === 'ranking') renderRanking(); if(id === 'recommend') renderStats(); applyI18n(); }
     function renderStats() { const c = { black: 49.5, red: 30.2, blue: 18.7, gold: 1.6 }; ['black', 'red', 'blue', 'gold'].forEach(k => { const v = c[k].toFixed(1); document.getElementById(`val-${k}`).innerText = `${v}%`; document.getElementById(`bar-${k}`).style.width = `${v}%`; }); document.getElementById('st-total').innerText = myGameStats.total; document.getElementById('st-winrate').innerText = (myGameStats.total > 0 ? (myGameStats.wins/myGameStats.total*100).toFixed(1) : 0) + "%"; }
-    function renderRanking() { const tbody = document.getElementById('rankingBody'); tbody.innerHTML = ''; for(let i=1; i<=100; i++) { tbody.innerHTML += `<tr><td>${i}</td><td style="color:var(--accent);">Player***</td><td>${(1000-i*10)}T</td><td>${(500-i*5)}T</td><td>55%</td></tr>`; } }
+    function renderRanking() { const tbody = document.getElementById('rankingBody'); tbody.innerHTML = ''; for(let i=1; i<=20; i++) { tbody.innerHTML += `<tr><td>${i}</td><td style="color:var(--accent);">Player***</td><td>${(1000-i*10)}T</td><td>${(500-i*5)}T</td><td>55%</td></tr>`; } }
     function autoFillTelegramId() { if (currentId === "GUEST") { const user = tg.initDataUnsafe?.user; if (user && user.username) document.getElementById('loginId').value = `@${user.username}`; } }
     function requestTelegramContact() { tg.requestContact((shared) => { if (shared && tg.initDataUnsafe.user) { const u = tg.initDataUnsafe.user; let users = JSON.parse(localStorage.getItem('db_users') || '{}'); const name = u.username || `u${u.id}`; users[name] = { pw: "auth", balance: 10.0, myGameStats: { total:0, wins:0 }, is_rewarded: true }; localStorage.setItem('db_users', JSON.stringify(users)); currentId = name; balance = 10.0; updateLoginState(true); alert("🎁 10 TON Credited!"); } }); }
     function handleLoginSubmit() { const id = document.getElementById('loginId').value, pw = document.getElementById('loginPw').value; let users = JSON.parse(localStorage.getItem('db_users') || '{}'); if(users[id] && users[id].pw === pw) { currentId = id; balance = Number(users[id].balance); myGameStats = users[id].myGameStats; updateLoginState(true); } else { users[id] = { pw, balance: 0.0, myGameStats:{total:0, wins:0} }; localStorage.setItem('db_users', JSON.stringify(users)); currentId = id; balance = 0.0; updateLoginState(true); } }
@@ -505,7 +539,7 @@
     function addLiveUI(type, user, amt) { const list = document.getElementById(`l-${type}`); if(!list) return; liveBoardTotals[type] += amt; document.getElementById(`t-${type}`).innerText = liveBoardTotals[type].toFixed(1); const item = document.createElement('div'); item.className = 'bet-item'; item.innerHTML = `<span>${user}</span><b>${amt.toFixed(1)}T</b>`; list.prepend(item); if(list.children.length > 5) list.lastChild.remove(); }
     function toggleWithdraw() { const g = document.getElementById('withdrawGroup'); g.style.display = g.style.display === 'none' ? 'flex' : 'none'; }
 
-    syncHistory(); drawWheel(); updateBalUI(); applyI18n(); setInterval(tick, 100);
+    syncHistory(); drawWheel(); drawWheelB(); updateBalUI(); applyI18n(); setInterval(tick, 100);
 </script>
 <div style="position:fixed; bottom:80px; width:100%; text-align:center; color:#333; font-size:0.5rem; pointer-events:none;">v7.0 TON Golden Master</div>
 </body>
