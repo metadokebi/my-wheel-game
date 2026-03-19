@@ -43,12 +43,13 @@
         .content-view { flex: 1; overflow-y: auto; display: none; padding-bottom: 90px; width: 100%; align-items: center; }
         .content-view.active { display: flex; flex-direction: column; }
 
-        /* [메인 게임] 레이아웃 및 버튼 */
+        /* [메인 게임] 휠 섹션 */
         .wheel-section { position: relative; margin: 25px 0; width: 230px; height: 230px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; }
         .wheel-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-weight: 900; font-size: 1.8rem; color: var(--accent); text-shadow: 0 0 10px var(--accent); opacity: 0.8; pointer-events: none; }
         .pointer { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); width: 14px; height: 20px; background: #fff; clip-path: polygon(50% 100%, 0% 0%, 100% 0%); z-index: 25; transition: background-color 0.1s linear; }
 
+        /* [배팅 컨트롤] */
         .overlay-container { width: 100%; padding: 0 15px; position: relative; flex-shrink: 0; }
         .controls { position: relative; width: 100%; background: var(--card); padding: 15px; border-radius: 12px; border: 1px solid #333; overflow: hidden; }
         #betOverlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); z-index: 100; display: none; align-items: center; justify-content: center; pointer-events: none; border-radius: 12px; }
@@ -66,7 +67,7 @@
         .btn.selected.btn-blue { background: var(--blue); border-color: var(--blue); color: #fff; box-shadow: 0 0 15px rgba(0,217,255,0.4); }
         .btn.selected.btn-gold { background: var(--gold); border-color: var(--gold); color: #000; box-shadow: 0 0 15px rgba(255,204,0,0.4); }
 
-        /* [라이브 봇] 구역 */
+        /* [라이브 봇] 리스트 */
         .live-betting-area { width: 100%; margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid #333; }
         .live-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
         .live-col { background: rgba(0,0,0,0.4); border-radius: 8px; min-height: 105px; border-top: 3px solid #444; overflow: hidden; display: flex; flex-direction: column; }
@@ -76,7 +77,7 @@
         .bet-list { padding: 3px; flex: 1; display: flex; flex-direction: column; gap: 3px; overflow: hidden; }
         .bet-item { display: flex; justify-content: space-between; font-size: 0.48rem; font-weight: 700; background: rgba(255,255,255,0.05); padding: 2px; border-radius: 3px; }
 
-        /* [PvP 모달] 최신 이모지 위아래 정렬 & 배팅버튼 스타일 */
+        /* [PvP 모달] 카드형 디자인 유지 */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; align-items: flex-end; justify-content: center; z-index: 1000; }
         .modal-content { background: #1a1d26; border-radius: 20px 20px 0 0; width: 100%; max-width: 500px; padding: 25px; border-top: 1px solid #333; }
         .battle-selector-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 25px; }
@@ -92,6 +93,20 @@
         .color-btn.active.btn-green { background: #00ff66 !important; color: #000 !important; }
         .color-btn.active.btn-yellow { background: var(--gold) !important; color: #000 !important; }
         .btn-create-final { width: 100%; height: 55px; background: var(--battle-pink); color: #fff; border: none; border-radius: 12px; font-weight: 900; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 15px rgba(245, 90, 106, 0.3); }
+
+        /* [배팅 내역] Winner Pill 디자인 수정 사항 */
+        .log-table { width: 95%; border-collapse: collapse; font-size: 0.7rem; background: rgba(0,0,0,0.4); border-radius: 10px; overflow: hidden; margin: 20px auto; flex-shrink: 0; }
+        .log-table th { background: #1a1a1a; padding: 10px; color: var(--text-muted); font-size: 0.75rem; font-weight: 900; }
+        .log-table td { padding: 8px; border-bottom: 1px solid #222; text-align: center; font-weight: 700; vertical-align: middle; }
+        
+        /* v7.0: 동그라미에서 가로로 긴 네모(Pill)로 변경 */
+        .winner-pill { 
+            display: inline-block; 
+            width: 32px; 
+            height: 10px; 
+            border-radius: 5px; 
+            box-shadow: 0 0 5px rgba(255,255,255,0.1); 
+        }
 
         /* [순정 복구] 지갑/사용법/통계 */
         .wallet-card { width: 92%; background: var(--card); border: 1px solid #333; border-radius: 15px; padding: 20px; margin-top: 15px; }
@@ -112,10 +127,6 @@
         .digital-stats { width: 92%; background: #000; border: 1px solid #333; padding: 15px; border-radius: 12px; margin-top: 10px; }
         .stat-bar-bg { width: 100%; height: 8px; background: #111; border-radius: 4px; overflow: hidden; margin-top: 5px; }
         .stat-bar-fill { height: 100%; width: 0%; transition: width 1s ease-out; }
-
-        .log-table { width: 95%; border-collapse: collapse; font-size: 0.7rem; background: rgba(0,0,0,0.4); border-radius: 10px; overflow: hidden; margin: 20px auto; flex-shrink: 0; }
-        .log-table th { background: #1a1a1a; padding: 10px; color: var(--text-muted); font-size: 0.75rem; font-weight: 900; }
-        .log-table td { padding: 8px; border-bottom: 1px solid #222; text-align: center; font-weight: 700; }
 
         nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; height: 75px; background: var(--nav-bg); display: flex; border-top: 1px solid #222; z-index: 200; padding-bottom: env(safe-area-inset-bottom); }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; }
@@ -214,7 +225,7 @@
             </div>
         </div>
         <table class="log-table">
-            <thead><tr><th id="th-pick">Pick</th><th id="th-bet">Bet</th><th id="th-res">Result</th><th id="th-win">Winner</th></tr></thead>
+            <thead><tr><th id="th-pick">Pick</th><th id="th-bet">Amt</th><th id="th-res">Result</th><th id="th-win">Winner</th></tr></thead>
             <tbody id="myLogBody"></tbody>
         </table>
     </div>
@@ -272,18 +283,24 @@
         </div>
         <div id="logoutForm" style="display:none; width:100%; align-items:center; flex-direction:column;">
             <div class="wallet-card">
-                <div class="wallet-user-info"><div><span id="w-userId" style="font-size:0.8rem; font-weight:800; color:var(--accent);">@Guest</span><br><span id="w-userPhone" style="font-size:0.55rem; color:var(--text-muted);">No phone linked</span></div></div>
+                <div class="wallet-user-info">
+                    <div><span id="w-userId" style="font-size:0.8rem; font-weight:800; color:var(--accent);">@Guest</span><br><span id="w-userPhone" style="font-size:0.55rem; color:var(--text-muted);">No phone linked</span></div>
+                    <span id="w-statusBadge" style="font-size:0.55rem; background:rgba(255,204,0,0.1); color:var(--gold); padding:2px 6px; border-radius:4px; font-weight:900;">Verified</span>
+                </div>
                 <div class="wallet-balance-big"><span id="w-bal">0.0</span> <small style="font-size:0.9rem;">TON</small></div>
                 <div class="wallet-actions">
-                    <button class="action-btn btn-deposit" onclick="alert('Deposit Address Generated!')">DEPOSIT</button>
-                    <button class="action-btn btn-withdraw" onclick="toggleWithdraw()">WITHDRAW</button>
+                    <button class="action-btn btn-deposit" id="btnDeposit" onclick="alert('Deposit Address Generated!')">DEPOSIT</button>
+                    <button class="action-btn btn-withdraw" id="btnWithdraw" onclick="toggleWithdraw()">WITHDRAW</button>
                 </div>
                 <div id="withdrawGroup" style="display:none;" class="withdraw-input-group">
                     <input type="text" class="wallet-input" id="witAddr" placeholder="Recipient TON Address">
                     <input type="number" class="wallet-input" id="witAmt" placeholder="Amount (TON)">
                     <button class="action-btn" id="btnSendTon" style="background:var(--accent); color:#000;">SEND TON</button>
                 </div>
-                <div style="margin-top:20px;"><div id="myAddr" style="background:#000; padding:8px; border-radius:4px; font-size:0.45rem; color:var(--accent); border:1px solid #222; overflow:hidden;">UQAr...Golden_V7.0_TON_System</div></div>
+                <div style="margin-top:20px;">
+                    <div style="font-size:0.6rem; color:var(--text-muted); margin-bottom:5px;" id="lblVWallet">Virtual Wallet Address</div>
+                    <div id="myAddr" style="background:#000; padding:8px; border-radius:4px; font-size:0.45rem; color:var(--accent); border:1px solid #222; overflow:hidden;">UQAr...Golden_V7.0_TON_System</div>
+                </div>
             </div>
             <button onclick="handleLogout()" id="btnLogout" style="width:92%; height:50px; background:rgba(255,51,51,0.05); color:var(--red); border:1px solid rgba(255,51,51,0.2); border-radius:12px; font-weight:900; margin-top:20px;">LOGOUT</button>
         </div>
@@ -329,10 +346,12 @@
         en: { welcome: "Welcome", buy: "💎 WALLET", closed: "CLOSED", live: "LIVE STATUS", home: "Home", battle: "Battle", rank: "Ranking", how: "How", stats: "Stats", pick: "Pick", bet: "Amt", res: "Result", win: "Winner", freeTitle: "Get Free 10 TON Reward", freeSub: "Claim your 10 TON now!", vWallet: "Virtual Wallet Address", deposit: "DEPOSIT", withdraw: "WITHDRAW", sendTon: "SEND TON", logout: "LOGOUT",
             howTxt: getHowHtml("Provably Fair", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON Betting Rules", "Betting: 14s active window", "CLOSED: Finalizing results", "Spin: 4.5s animation", "TON Coin Guide", "Click [DEPOSIT] in the Wallet tab to generate your unique address. Send TON to this address, and it will be credited to your balance after network confirmation.", "Go to [WITHDRAW] in the Wallet tab, enter your external TON address and amount, then click [SEND TON] to initiate an instant transfer.") },
         cn: { welcome: "欢迎", buy: "💎 钱包", closed: "已截止", live: "实时状态", home: "首页", battle: "对决", rank: "排行榜", how: "玩法", stats: "统计", pick: "选择", bet: "金额", res: "结果", win: "获胜者", freeTitle: "免费领取 10 TON", freeSub: "认证后立即领取 10 TON!", vWallet: "虚拟钱包地址", deposit: "充值", withdraw: "提现", sendTon: "立即转账", logout: "登出",
-            howTxt: getHowHtml("公平证明", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON 投注规则", "投注阶段：14秒自由投注", "CLOSED：投注截止并计算", "抽奖：4.5秒转盘旋转", "TON 使用指南", "在钱包选项卡中点击 [DEPOSIT] 生成您的个人充值地址。将 TON 发送到该地址，网络确认后将立即反映在游戏余额中。", "选择钱包选项卡中的 [WITHDRAW]，输入您的外部 TON 钱包地址和金额。点击 [SEND TON] 将立即开始转账处理。") },
-        jp: { welcome: "ようこそ", buy: "💎 ウォレット", closed: "締切", live: "ライブ状況", home: "홈", battle: "対決", rank: "ランキング", how: "使い方", stats: "統計", pick: "選択", bet: "数量", res: "結果", win: "当選者", freeTitle: "10 TON 無料ゲット", freeSub: "認証後、即座에 10 TON 贈呈！", vWallet: "仮想ウォレットアドレス", deposit: "入금", withdraw: "出금", sendTon: "送信する", logout: "ログアウト",
+            howTxt: getHowHtml("公平证明", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON 投注规则", "投注阶段：14秒自由投注", "CLOSED：投注截止并计算", "抽奖：4.5秒转盘旋转", "TON 使用指南", "在钱包选项卡中点击 [DEPOSIT] 生成您的个人充值地址。将 TON 发送到该地址，网络确认后将立即反映在游戏余额중中。", "选择钱包选项卡中的 [WITHDRAW]，输入您的外部 TON 钱包地址和金额。点击 [SEND TON] 将立即开始转账处理。") },
+        jp: { welcome: "ようこそ", buy: "💎 ウォレット", closed: "締切", live: "ライブ状況", home: "홈", battle: "대결", rank: "ランキング", how: "使い方", stats: "統計", pick: "選択", bet: "数量", res: "結果", win: "当選者", freeTitle: "10 TON 無料ゲット", freeSub: "認証後、即座에 10 TON 贈呈！", vWallet: "仮想ウォレットアドレス", deposit: "入금", withdraw: "出금", sendTon: "送信する", logout: "ログアウト",
             howTxt: getHowHtml("証明可能な公平性", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON ベッティング規則", "ベット期間：14秒間の自由ベット", "CLOSED：ベット締切および演算", "抽選：4.5秒間のホイール回転", "TON コ인利用ガイド", "ウォレットタブで [DEPOSIT] 버튼을 클릭하여 개인용 입금 주소를 생성합니다. 그 주소에 TON을 전송하면 네트워크 확인 후 즉시 게임 밸런스에 반영됩니다.", "ウォレットタブ의 [WITHDRAW]를 선택하고 자신의 외부 TON 지갑 주소와 수량을 입력합니다. [SEND TON] 클릭 시 실시간으로 전송 처리가 시작됩니다.") }
     };
+
+    const canvas = document.getElementById('wheelCanvas'), ctx = canvas.getContext('2d'), timerBar = document.getElementById('timerBar'), betOverlay = document.getElementById('betOverlay');
 
     function setLanguage(lang) { currentLang = lang; localStorage.setItem('db_wheel_lang', lang); document.getElementById('langOverlay').style.display = 'none'; applyI18n(); }
     function applyI18n() {
@@ -354,7 +373,7 @@
         const btnLout = document.getElementById('btnLogout'); if(btnLout) btnLout.innerText = t.logout;
     }
 
-    // [v7.0 고정] PvP Logic
+    // PvP Logic
     function openCreateModal() { document.getElementById('createModal').style.display = 'flex'; document.getElementById('modalBalanceText').innerText = Number(balance).toFixed(1) + " TON"; setBattlePlayers(2); }
     function closeModal() { document.getElementById('createModal').style.display = 'none'; }
     function setBattlePlayers(n) { battlePlayers = n; [2,3,4].forEach(v => { const card = document.getElementById('bp'+v); if(v === n) card.classList.add('active'); else card.classList.remove('active'); }); renderColorButtons(n); }
@@ -376,7 +395,7 @@
     function leaveBattle() { if(!myBattleRoom) return; balance += (myBattleRoom.bet * myBattleRoom.count); updateBalUI(); myBattleRoom = null; document.getElementById('battleLobby').style.display = 'block'; document.getElementById('battleWaiting').style.display = 'none'; }
     function resolveBattle(winName) { if(!myBattleRoom) return; const myWin = (winName === myBattleRoom.color.toLowerCase()); if(myWin) { const prize = myBattleRoom.bet * myBattleRoom.maxPlayers; balance += prize; alert(`⚔️ BATTLE WIN! +${prize.toFixed(1)} TON`); } else alert(`⚔️ BATTLE LOST...`); myBattleRoom = null; document.getElementById('battleLobby').style.display = 'block'; document.getElementById('battleWaiting').style.display = 'none'; updateBalUI(); }
 
-    // [v7.0 복구] 봇 생성 알고리즘 (정교한 ID 및 가중치 배팅)
+    // [v7.0 복구] 봇 엔진
     function generateRealBotId(seed) { 
         const types = ['random', 'initials', 'masked', 'pro']; const type = types[seed % 4]; 
         if(type === 'random') { let id = ""; const chars = "abcdefghijklmnopqrstuvwxyz"; for(let i=0; i<6; i++) id += chars.charAt((seed >> i) % 26); return id; } 
@@ -384,7 +403,6 @@
         else if(type === 'masked') { const names = ["Kim", "Lee", "Park", "Choi", "Jung"]; return names[seed % names.length] + "***"; } 
         else { const adjs = ["Top", "Lucky", "Ace", "Big"]; const nouns = ["Star", "Boss", "Player", "King"]; return adjs[seed % 4] + nouns[(seed/7 >> 0) % 4] + (seed % 99); } 
     }
-
     function deterministicGlobalSpawn(elapsed) { 
         if (elapsed < FREEZE_PERIOD || elapsed > CYCLE_MS - 100 || roundBotBetTotal >= 7.4) return; 
         const ts = Math.floor(Date.now() / 100), r = (ts * 9301 + 49297) % 233280, roundSeed = Math.floor(Date.now() / CYCLE_MS);
@@ -400,7 +418,7 @@
         } 
     }
 
-    const canvas = document.getElementById('wheelCanvas'), ctx = canvas.getContext('2d'), timerBar = document.getElementById('timerBar'), betOverlay = document.getElementById('betOverlay');
+    // Core Logic
     function drawWheel() { const arc = (Math.PI * 2) / 56, rad = 260, gap = 0.025; ctx.clearRect(0,0,560,560); ctx.lineWidth = 14; for (let i = 0; i < 56; i++) { ctx.beginPath(); ctx.strokeStyle = wheelMap[i].color; const sA = i * arc + Math.PI/2 - arc/2 + gap; const eA = (i + 1) * arc + Math.PI/2 - arc/2 - gap; ctx.arc(280, 280, rad, sA, eA); ctx.stroke(); } }
     function syncHistory() { const ms = Math.floor(Date.now() / CYCLE_MS); globalHistory = []; for(let i=1; i<=35; i++) { globalHistory.push(wheelMap[getWinIndex(ms - i).index].color); } updateHistoryUI(); }
     function updateHistoryUI() { const s = document.getElementById('historyStrip'); s.innerHTML = ''; const r = [...globalHistory].slice(-35).reverse(); r.forEach((c) => { const b = document.createElement('div'); let h = 'h-black'; if(c === '#ffcc00') h = 'h-gold'; else if(c === '#00d9ff') h = 'h-blue'; else if(c === '#ff3333') h = 'h-red'; b.className = `hist-bar ${h}`; b.style.backgroundColor = c; s.appendChild(b); }); }
@@ -419,7 +437,13 @@
     
     function resolve(win) { 
         document.getElementById('wheelPointer').style.backgroundColor = win.color; globalHistory.push(win.color); updateHistoryUI(); if(myBattleRoom) resolveBattle(win.name); 
-        if(myBet) { myGameStats.total++; const wS = myBet.type === win.name; if(wS) { balance = Number(balance) + (myBet.amount * win.mult); myGameStats.wins++; playSound('sndWin'); } else playSound('sndLose'); const row = `<tr><td>${myBet.type.toUpperCase()}</td><td>${myBet.amount.toFixed(1)}T</td><td>${wS ? 'Win' : 'Lost'}</td><td><span class="winner-dot" style="background:${win.color}"></span></td></tr>`; document.getElementById('myLogBody').insertAdjacentHTML('afterbegin', row); } 
+        if(myBet) { 
+            myGameStats.total++; const winS = myBet.type === win.name; 
+            if(winS) { balance = Number(balance) + (myBet.amount * win.mult); myGameStats.wins++; playSound('sndWin'); } else playSound('sndLose'); 
+            /* [v7.0 수정] Winner 표시를 알약(Pill) 형태의 긴 네모로 변경 */
+            const row = `<tr><td>${myBet.type.toUpperCase()}</td><td>${myBet.amount.toFixed(1)}T</td><td>${winS ? 'Win' : 'Lost'}</td><td><div class="winner-pill" style="background:${win.color}"></div></td></tr>`; 
+            document.getElementById('myLogBody').insertAdjacentHTML('afterbegin', row); 
+        } 
         if(currentId !== "GUEST") { let u = JSON.parse(localStorage.getItem('db_users')); if(u[currentId]) { u[currentId].balance = Number(balance).toFixed(1); u[currentId].myGameStats = myGameStats; localStorage.setItem('db_users', JSON.stringify(u)); } } 
         setTimeout(() => { myBet = null; document.querySelectorAll('.btn').forEach(b => b.classList.remove('selected')); liveBoardTotals = { black:0, red:0, blue:0, gold:0 }; document.querySelectorAll('.bet-list').forEach(l => l.innerHTML = ''); document.querySelectorAll('.col-total').forEach(t => t.innerText = '0.0'); canvas.style.transition = 'none'; canvas.style.transform = `rotate(${currentRotation % 360}deg)`; updateBalUI(); currentRoundResult = null; }, RESULT_WAIT); 
     }
@@ -430,7 +454,7 @@
     function adjBet(v) { let i = document.getElementById('betInput'), n = parseFloat(i.value) + v; if(n >= 0.1) i.value = n.toFixed(1); }
     function switchTab(id, el) { document.querySelectorAll('.content-view').forEach(v => v.classList.remove('active')); document.getElementById('view-' + id).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); if(el) el.classList.add('active'); if(id === 'wallet') autoFillTelegramId(); if(id === 'ranking') renderRanking(); if(id === 'recommend') renderStats(); applyI18n(); }
     function renderStats() { const c = { black: 49.5, red: 30.2, blue: 18.7, gold: 1.6 }; ['black', 'red', 'blue', 'gold'].forEach(k => { const v = c[k].toFixed(1); document.getElementById(`val-${k}`).innerText = `${v}%`; document.getElementById(`bar-${k}`).style.width = `${v}%`; }); document.getElementById('st-total').innerText = myGameStats.total; document.getElementById('st-winrate').innerText = (myGameStats.total > 0 ? (myGameStats.wins/myGameStats.total*100).toFixed(1) : 0) + "%"; }
-    function renderRanking() { const tbody = document.getElementById('rankingBody'); tbody.innerHTML = ''; for(let i=1; i<=20; i++) { tbody.innerHTML += `<tr><td>${i}</td><td style="color:var(--accent);">Player***</td><td>${(1000-i*10)}T</td><td>${(500-i*5)}T</td><td>55%</td></tr>`; } }
+    function renderRanking() { const tbody = document.getElementById('rankingBody'); tbody.innerHTML = ''; for(let i=1; i<=100; i++) { tbody.innerHTML += `<tr><td>${i}</td><td style="color:var(--accent);">Player***</td><td>${(1000-i*10)}T</td><td>${(500-i*5)}T</td><td>55%</td></tr>`; } }
     function autoFillTelegramId() { if (currentId === "GUEST") { const user = tg.initDataUnsafe?.user; if (user && user.username) document.getElementById('loginId').value = `@${user.username}`; } }
     function requestTelegramContact() { tg.requestContact((shared) => { if (shared && tg.initDataUnsafe.user) { const u = tg.initDataUnsafe.user; let users = JSON.parse(localStorage.getItem('db_users') || '{}'); const name = u.username || `u${u.id}`; users[name] = { pw: "auth", balance: 10.0, myGameStats: { total:0, wins:0 }, is_rewarded: true }; localStorage.setItem('db_users', JSON.stringify(users)); currentId = name; balance = 10.0; updateLoginState(true); alert("🎁 10 TON Credited!"); } }); }
     function handleLoginSubmit() { const id = document.getElementById('loginId').value, pw = document.getElementById('loginPw').value; let users = JSON.parse(localStorage.getItem('db_users') || '{}'); if(users[id] && users[id].pw === pw) { currentId = id; balance = Number(users[id].balance); myGameStats = users[id].myGameStats; updateLoginState(true); } else { users[id] = { pw, balance: 0.0, myGameStats:{total:0, wins:0} }; localStorage.setItem('db_users', JSON.stringify(users)); currentId = id; balance = 0.0; updateLoginState(true); } }
