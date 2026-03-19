@@ -97,7 +97,10 @@
         .color-btn.active.btn-blue { background: var(--blue) !important; color: #fff !important; }
         .color-btn.active.btn-green { background: #00ff66 !important; color: #000 !important; }
         .color-btn.active.btn-yellow { background: var(--gold) !important; color: #000 !important; }
+        
+        /* [v7.0 골든마스터] 대결 생성 버튼 비활성화 스타일 */
         .btn-create-final { width: 100%; height: 55px; background: var(--battle-pink); color: #fff; border: none; border-radius: 12px; font-weight: 900; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 15px rgba(245, 90, 106, 0.3); }
+        .btn-create-final:disabled { background: #444 !important; color: #888 !important; cursor: not-allowed; box-shadow: none !important; }
 
         /* [순정 복구] 지갑/사용법/통계 디자인 */
         .wallet-card { width: 92%; background: var(--card); border: 1px solid #333; border-radius: 15px; padding: 20px; margin-top: 15px; }
@@ -168,7 +171,7 @@
                 </div>
             </div>
         </div>
-        <button class="btn-create-final" id="btnCreateFinal" onclick="confirmCreateBattle()">Create 1 Duel</button>
+        <button class="btn-create-final" id="btnCreateFinal" onclick="confirmCreateBattle()" disabled>Create 1 Duel</button>
     </div>
 </div>
 
@@ -351,13 +354,13 @@
             cRed: "Red", cBlue: "Blue", cGreen: "Green", cYellow: "Yellow",
             howTxt: getHowHtml("Provably Fair", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON Betting Rules", "Betting: 14s active window", "CLOSED: Finalizing results", "Spin: 4.5s animation", "TON Coin Guide", "Click [DEPOSIT] in the Wallet tab to generate your unique address. Send TON to this address, and it will be credited to your balance after network confirmation.", "Go to [WITHDRAW] in the Wallet tab, enter your external TON address and amount, then click [SEND TON] to initiate an instant transfer.") },
         cn: { welcome: "欢迎", buy: "💎 钱包", closed: "已截止", live: "实时状态", home: "首页", battle: "对决", rank: "排行榜", how: "玩法", stats: "统计", pick: "选择", bet: "金额", res: "结果", win: "获胜者", freeTitle: "免费领取 10 TON", freeSub: "认证后立即领取 10 TON!", vWallet: "虚拟钱包地址", deposit: "充值", withdraw: "提现", sendTon: "立即转账", logout: "登出",
-            btLobby: "⚔️ 对决竞技场", btSub: "创建一个新的对决来挑战他人！", bt2u: "2人", bt3u: "3人", bt4u: "4人", btChoose: "选择一种颜色:", btBal: "资产余额", btVal: "对决金额 (TON):", btCnt: "对决次数:", btCreate: "创建对决", btWaiting: "等待玩家中...", btLeave: "离开对决", btTotal: "总计 배틀",
+            btLobby: "⚔️ 对决竞技场", btSub: "创建一个新的对决来挑战他人！", bt2u: "2人", bt3u: "3人", bt4u: "4人", btChoose: "选择一种颜色:", btBal: "资产余额", btVal: "对决金额 (TON):", btCnt: "对决次数:", btCreate: "创建对결", btWaiting: "等待玩家中...", btLeave: "离开对决", btTotal: "总计 배틀",
             cRed: "红色", cBlue: "蓝色", cGreen: "绿色", cYellow: "黄色",
             howTxt: getHowHtml("公平证明", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON 投注规则", "投注阶段：14秒自由投注", "CLOSED：投注截止并计算", "抽奖：4.5秒转盘旋转", "TON 使用指南", "在钱包选项卡中点击 [DEPOSIT] 生成您的个人充치地址。将 TON 发送到该地址，网络确认后将立即反映在游戏余额중中。", "选择钱包选项卡中的 [WITHDRAW]，输入您的外部 TON 钱包地址和金额。点击 [SEND TON] 将立即开始转账处理。") },
-        jp: { welcome: "ようこそ", buy: "💎 ウォレット", closed: "締切", live: "ライブ状況", home: "홈", battle: "対決", rank: "ランキング", how: "使い方", stats: "統計", pick: "選択", bet: "数量", res: "結果", win: "当選者", freeTitle: "10 TON 無料ゲット", freeSub: "認証後、即座에 10 TON 贈呈！", vWallet: "仮想ウォレットアドレス", deposit: "入금", withdraw: "出금", sendTon: "送信する", logout: "ログアウト",
-            btLobby: "⚔️ バトルアリーナ", btSub: "新しい対決を作って挑戦しましょう！", bt2u: "2人", bt3u: "3人", bt4u: "4人", btChoose: "色を選択してください:", btBal: "保有残高", btVal: "対決金额 (TON):", btCnt: "対決回数:", btCreate: "対결作成", btWaiting: "ユーザー待機中...", btLeave: "対결を離れる", btTotal: "배틀 合計",
-            cRed: "レッド", cBlue: "ブルー", cGreen: "グリーン", cYellow: "イエロー",
-            howTxt: getHowHtml("証明可能な公平性", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON ベッティング規則", "ベット期間：14秒間の自由ベット", "CLOSED：ベット締切および演算", "抽選：4.5秒間のホイール回転", "TON コ인利用ガイド", "ウォレットタブで [DEPOSIT] 버튼을 클릭하여 개인용 입금 주소를 생성합니다. 그 주소에 TON을 전송하면 네트워크 확인 후 즉시 게임 밸런스에 반영됩니다.", "ウォレットタブ의 [WITHDRAW]를選択하고 자신의 외부 TON 지갑 주소와 수량을 입력합니다. [SEND TON] 클릭 시 실시간으로 전送 처리가 시작됩니다.") }
+        jp: { welcome: "ようこそ", buy: "💎 ウォレット", closed: "締切", live: "ライブ状況", home: "홈", battle: "対決", rank: "ランキング", how: "使い方", stats: "統計", pick: "選択", bet: "数量", res: "結果", win: "当選者", freeTitle: "10 TON 무료 겟", freeSub: "인증 후 즉시 10 TON 증정!", vWallet: "가상 지갑 주소", deposit: "입금", withdraw: "출금", sendTon: "전송하기", logout: "로그아웃",
+            btLobby: "⚔️ バトルアリーナ", btSub: "新しい対決を作って挑戦しましょう！", bt2u: "2人", bt3u: "3人", bt4u: "4人", btChoose: "色を選択してください:", btBal: "保有残高", btVal: "対決金额 (TON):", btCnt: "対決回数:", btCreate: "対결作成", btWaiting: "ユーザー待機中...", btLeave: "対결을 떠나기", btTotal: "배틀 합계",
+            cRed: "레드", cBlue: "블루", cGreen: "그린", cYellow: "옐로우",
+            howTxt: getHowHtml("証明可能な公平性", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON ベッティング規則", "ベット期間：14秒間の自由ベット", "CLOSED：ベット締切および演算", "抽選：4.5秒間のホイール回転", "TON コ인利用ガイド", "ウォレットタブで [DEPOSIT] 버튼을 클릭하여 개인용 입금 주소를 생성합니다. 그 주소에 TON을 전송하면 네트워크 확인 후 즉시 게임 밸런스에 반영됩니다.", "ウォレットタブ의 [WITHDRAW]를 선택하고 자신의 외부 TON 지갑 주소와 수량을 입력합니다. [SEND TON] 클릭 시 실시간으로 전송 처리가 시작됩니다.") }
     };
 
     function setLanguage(lang) { currentLang = lang; localStorage.setItem('db_wheel_lang', lang); document.getElementById('langOverlay').style.display = 'none'; applyI18n(); }
@@ -379,15 +382,6 @@
         document.getElementById('waitingTitle').innerText = t.btWaiting; document.getElementById('btn-leave').innerText = t.btLeave;
         document.getElementById('lb-totalBet').innerText = t.btTotal;
         renderColorButtons(battlePlayers);
-
-        // Wallet Restore
-        const lbFreeTitle = document.getElementById('lblFreeTitle'); if(lbFreeTitle) lbFreeTitle.innerText = t.freeTitle;
-        const lbFreeSub = document.getElementById('lblFreeSub'); if(lbFreeSub) lbFreeSub.innerText = t.freeSub;
-        const lbVWallet = document.getElementById('lblVWallet'); if(lbVWallet) lbVWallet.innerText = t.vWallet;
-        const btnDep = document.getElementById('btnDeposit'); if(btnDep) btnDep.innerText = t.deposit;
-        const btnWit = document.getElementById('btnWithdraw'); if(btnWit) btnWit.innerText = t.withdraw;
-        const btnSnd = document.getElementById('btnSendTon'); if(btnSnd) btnSnd.innerText = t.sendTon;
-        const btnLout = document.getElementById('btnLogout'); if(btnLout) btnLout.innerText = t.logout;
     }
 
     // PvP Simulation
@@ -498,7 +492,6 @@
     function adjBet(v) { let i = document.getElementById('betInput'), n = parseFloat(i.value) + v; if(n >= 0.1) i.value = n.toFixed(1); }
     function switchTab(id, el) { document.querySelectorAll('.content-view').forEach(v => v.classList.remove('active')); document.getElementById('view-' + id).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); if(el) el.classList.add('active'); if(id === 'wallet') autoFillTelegramId(); if(id === 'ranking') renderRanking(); if(id === 'recommend') renderStats(); applyI18n(); }
     
-    /* [v7.0 복구] 통계 렌더링 로직 */
     function renderStats() { 
         const c = { black: 49.5, red: 30.2, blue: 18.7, gold: 1.6 }; 
         ['black', 'red', 'blue', 'gold'].forEach(k => { 
