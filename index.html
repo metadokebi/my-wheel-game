@@ -11,6 +11,7 @@
             --card: #1a1d23; --accent: #00f2ff;
             --gold: #ffcc00; --blue: #00d9ff; 
             --red: #ff3333; --black: #444444; 
+            --green: #2ecc71; /* PvP용 그린 추가 */
             --text-muted: #8899aa; --nav-bg: #16191e;
             --point-color: #00d9ff; --buy-color: #fff200;
             --battle-pink: #f55a6a;
@@ -19,7 +20,6 @@
         html, body { margin: 0; padding: 0; width: 100%; height: 100dvh; overflow: hidden; touch-action: manipulation; background: #1e2128; color: white; font-family: 'Pretendard', sans-serif; }
         .main-container { width: 100%; max-width: 500px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
 
-        /* [v7.0] 언어 선택 오버레이 */
         #langOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2); z-index: 5000; display: flex; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
         .lang-list { display: flex; flex-direction: column; gap: 12px; width: 240px; }
         .lang-btn { background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.25); color: #fff; padding: 18px 20px; border-radius: 12px; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: background 0.2s; }
@@ -27,7 +27,6 @@
         header { padding: 12px 18px; background: rgba(0,0,0,0.4); display: flex; justify-content: space-between; align-items: center; z-index: 100; flex-shrink: 0; }
         .user-id { font-size: 0.8rem; font-weight: 700; border-left: 3px solid var(--accent); padding-left: 10px; }
         
-        /* [v7.0] 상단 대칭 UI 고정 */
         .balance-box { background: rgba(0, 217, 255, 0.1); padding: 5px 8px; border-radius: 6px; border: 1px solid var(--point-color); color: var(--point-color); font-weight: 800; font-size: 0.75rem; height: 32px; display: flex; align-items: center; justify-content: center; min-width: 95px; }
         #btnBuyTop { background: rgba(255, 242, 0, 0.1); padding: 5px 8px; border-radius: 6px; border: 1px solid var(--buy-color); color: var(--buy-color); font-weight: 900; font-size: 0.75rem; cursor: pointer; height: 32px; display: flex; align-items: center; justify-content: center; gap: 4px; text-shadow: 0 0 5px rgba(255, 242, 0, 0.5); min-width: 95px; }
 
@@ -45,7 +44,6 @@
         .content-view { flex: 1; overflow-y: auto; display: none; padding-bottom: 90px; width: 100%; align-items: center; }
         .content-view.active { display: flex; flex-direction: column; }
 
-        /* [v7.0] 배팅 버튼 색상 및 UI 복구 */
         .wheel-section { position: relative; margin: 25px 0; width: 230px; height: 230px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; }
         .wheel-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-weight: 900; font-size: 1.8rem; color: var(--accent); text-shadow: 0 0 10px var(--accent); opacity: 0.8; pointer-events: none; }
@@ -59,27 +57,46 @@
         #betInput { flex: 1; background: #000; border: 1px solid #333; color: var(--accent); padding: 12px; border-radius: 8px; text-align: center; font-weight: 900; outline: none; }
         .bet-buttons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 12px; }
         .btn { height: 60px; background: transparent; border: 1.5px solid transparent; border-radius: 4px; font-weight: 900; font-size: 1.1rem; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
-        
-        .btn-black { border-color: #555; color: #777; }
-        .btn-red { border-color: var(--red); color: var(--red); }
-        .btn-blue { border-color: var(--blue); color: var(--blue); }
-        .btn-gold { border-color: var(--gold); color: var(--gold); }
-
+        .btn-black { border-color: #555; color: #777; } .btn-red { border-color: var(--red); color: var(--red); }
+        .btn-blue { border-color: var(--blue); color: var(--blue); } .btn-gold { border-color: var(--gold); color: var(--gold); }
         .btn.selected.btn-black { background: #222; color: #fff; }
         .btn.selected.btn-red { background: var(--red); border-color: var(--red); color: #fff; box-shadow: 0 0 15px rgba(255,51,51,0.4); }
         .btn.selected.btn-blue { background: var(--blue); border-color: var(--blue); color: #fff; box-shadow: 0 0 15px rgba(0,217,255,0.4); }
         .btn.selected.btn-gold { background: var(--gold); border-color: var(--gold); color: #000; box-shadow: 0 0 15px rgba(255,204,0,0.4); }
 
-        .live-betting-area { width: 100%; margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid #333; }
-        .live-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-        .live-col { background: rgba(0,0,0,0.4); border-radius: 8px; min-height: 105px; border-top: 3px solid #444; overflow: hidden; display: flex; flex-direction: column; }
-        .col-head { padding: 4px; text-align: center; }
-        .col-label { font-size: 0.55rem; font-weight: 900; color: var(--text-muted); display: block; }
-        .col-total { font-size: 0.6rem; font-weight: 800; color: var(--accent); }
-        .bet-list { padding: 3px; flex: 1; display: flex; flex-direction: column; gap: 3px; overflow: hidden; }
-        .bet-item { display: flex; justify-content: space-between; font-size: 0.48rem; font-weight: 700; background: rgba(255,255,255,0.05); padding: 2px; border-radius: 3px; }
+        /* [v7.0 고도화] PvP 생성 모달 수정 */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; align-items: flex-end; justify-content: center; z-index: 1000; }
+        .modal-content { background: #1a1d26; border-radius: 20px 20px 0 0; width: 100%; max-width: 500px; padding: 25px; border-top: 1px solid #333; }
+        .battle-selector-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 25px; }
+        
+        .selector-card { 
+            background: #232732; border: 1.5px solid transparent; border-radius: 12px; 
+            padding: 12px 5px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .selector-card.active { border-color: var(--battle-pink); background: rgba(245, 90, 106, 0.05); }
+        .selector-card i { font-size: 1.3rem; font-style: normal; margin-bottom: 6px; letter-spacing: -2px; }
+        .selector-card span { font-size: 0.75rem; font-weight: 800; color: #8899aa; }
+        .selector-card.active span { color: var(--battle-pink); }
 
-        /* [v7.0] 지갑, 사용법, 통계 복구 UI */
+        .color-selector-grid { display: flex; gap: 8px; margin-bottom: 25px; }
+        .color-btn { 
+            flex: 1; height: 45px; border-radius: 8px; border: 1.5px solid transparent; 
+            background: transparent; font-weight: 900; font-size: 0.8rem; color: #fff; cursor: pointer; 
+            display: flex; align-items: center; justify-content: center; transition: 0.2s;
+        }
+        /* [v7.0 고도화] 색상 버튼 테두리 및 선택 시 가득 채움 효과 */
+        .color-btn.c-red { border-color: var(--red); color: var(--red); }
+        .color-btn.c-red.active { background: var(--red); color: #fff; }
+        .color-btn.c-blue { border-color: var(--blue); color: var(--blue); }
+        .color-btn.c-blue.active { background: var(--blue); color: #fff; }
+        .color-btn.c-green { border-color: var(--green); color: var(--green); }
+        .color-btn.c-green.active { background: var(--green); color: #fff; }
+        .color-btn.c-yellow { border-color: var(--gold); color: var(--gold); }
+        .color-btn.c-yellow.active { background: var(--gold); color: #000; }
+
+        .btn-create-final { width: 100%; height: 55px; background: var(--battle-pink); color: #fff; border: none; border-radius: 12px; font-weight: 900; font-size: 1rem; cursor: pointer; }
+
+        /* [순정 복구] 지갑/통계/로그 */
         .wallet-card { width: 92%; background: var(--card); border: 1px solid #333; border-radius: 15px; padding: 20px; margin-top: 15px; }
         .wallet-user-info { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding-bottom: 10px; }
         .wallet-balance-big { font-size: 2.2rem; font-weight: 900; color: var(--accent); text-align: center; margin: 20px 0; }
@@ -100,17 +117,6 @@
         .stat-bar-bg { width: 100%; height: 8px; background: #111; border-radius: 4px; overflow: hidden; margin-top: 5px; }
         .stat-bar-fill { height: 100%; width: 0%; transition: width 1s ease-out; }
 
-        /* PvP Battle Modal */
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; align-items: flex-end; justify-content: center; z-index: 1000; }
-        .modal-content { background: #1a1d26; border-radius: 20px 20px 0 0; width: 100%; max-width: 500px; padding: 25px; border-top: 1px solid #333; }
-        .battle-selector-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 25px; }
-        .selector-card { background: #232732; border: 1.5px solid transparent; border-radius: 12px; padding: 15px 5px; text-align: center; cursor: pointer; }
-        .selector-card.active { border-color: var(--battle-pink); background: rgba(245, 90, 106, 0.05); }
-        .color-selector-grid { display: flex; gap: 8px; margin-bottom: 25px; }
-        .color-btn { flex: 1; height: 45px; border-radius: 8px; border: 1.5px solid transparent; background: #232732; font-weight: 800; font-size: 0.75rem; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .color-btn.active { border-color: var(--battle-pink); }
-        .btn-create-final { width: 100%; height: 55px; background: var(--battle-pink); color: #fff; border: none; border-radius: 12px; font-weight: 900; font-size: 1rem; cursor: pointer; }
-
         .log-table { width: 95%; border-collapse: collapse; font-size: 0.7rem; background: rgba(0,0,0,0.4); border-radius: 10px; overflow: hidden; margin: 20px auto; flex-shrink: 0; }
         .log-table th { background: #1a1a1a; padding: 10px; color: var(--text-muted); font-size: 0.75rem; font-weight: 900; }
         .log-table td { padding: 8px; border-bottom: 1px solid #222; text-align: center; font-weight: 700; }
@@ -119,6 +125,7 @@
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; }
         .nav-item span { font-size: 0.65rem; font-weight: 700; margin-top: 4px; }
         .nav-item.active { color: var(--accent); }
+        
         .btn-create-floating { position: fixed; bottom: 100px; right: 20px; width: 60px; height: 60px; background: var(--blue); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 0 15px var(--blue); border: 2px solid #fff; cursor: pointer; z-index: 300; }
         @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
     </style>
@@ -138,9 +145,9 @@
 <div id="createModal" class="modal" onclick="if(event.target==this)closeModal()">
     <div class="modal-content">
         <div class="battle-selector-grid">
-            <div class="selector-card active" onclick="setBattlePlayers(2)" id="bp2"><i>🛡️🛡️</i><span>2 Users</span></div>
-            <div class="selector-card" onclick="setBattlePlayers(3)" id="bp3"><i>🛡️🛡️🛡️</i><span>3 Users</span></div>
-            <div class="selector-card" onclick="setBattlePlayers(4)" id="bp4"><i>🛡️🛡️🛡️🛡️</i><span>4 Users</span></div>
+            <div class="selector-card active" onclick="setBattlePlayers(2)" id="bp2"><i>🧔👩</i><span>2 Users</span></div>
+            <div class="selector-card" onclick="setBattlePlayers(3)" id="bp3"><i>🧔👩🧒</i><span>3 Users</span></div>
+            <div class="selector-card" onclick="setBattlePlayers(4)" id="bp4"><i>🧔👩🧒👱</i><span>4 Users</span></div>
         </div>
         <label style="font-size:0.75rem; color:#8899aa; font-weight:700; margin-bottom:12px; display:block;">Choose a color:</label>
         <div class="color-selector-grid" id="battleColorArea"></div>
@@ -278,20 +285,17 @@
                 </div>
                 <div class="wallet-balance-big"><span id="w-bal">0.0</span> <small style="font-size:0.9rem;">TON</small></div>
                 <div class="wallet-actions">
-                    <button class="action-btn btn-deposit" id="btnDeposit" onclick="alert('Deposit Address Generated!')">DEPOSIT</button>
-                    <button class="action-btn btn-withdraw" id="btnWithdraw" onclick="toggleWithdraw()">WITHDRAW</button>
+                    <button class="action-btn btn-deposit" onclick="alert('Deposit Address Generated!')">DEPOSIT</button>
+                    <button class="action-btn btn-withdraw" onclick="toggleWithdraw()">WITHDRAW</button>
                 </div>
                 <div id="withdrawGroup" style="display:none;" class="withdraw-input-group">
                     <input type="text" class="wallet-input" id="witAddr" placeholder="Recipient TON Address">
                     <input type="number" class="wallet-input" id="witAmt" placeholder="Amount (TON)">
                     <button class="action-btn" id="btnSendTon" style="background:var(--accent); color:#000;">SEND TON</button>
                 </div>
-                <div style="margin-top:20px;">
-                    <div style="font-size:0.6rem; color:var(--text-muted); margin-bottom:5px;" id="lblVWallet">Virtual Wallet Address</div>
-                    <div id="myAddr" style="background:#000; padding:8px; border-radius:4px; font-size:0.45rem; color:var(--accent); border:1px solid #222; overflow:hidden;">UQAr...Golden_V7.0_TON_System</div>
-                </div>
+                <div style="margin-top:20px;"><div id="myAddr" style="background:#000; padding:8px; border-radius:4px; font-size:0.45rem; color:var(--accent); border:1px solid #222; overflow:hidden;">UQAr...Golden_V7.0_TON_System</div></div>
             </div>
-            <button onclick="handleLogout()" id="btnLogout" style="width:92%; height:50px; background:rgba(255,51,51,0.05); color:var(--red); border:1px solid rgba(255,51,51,0.2); border-radius:12px; font-weight:900; margin-top:20px;">LOGOUT</button>
+            <button onclick="handleLogout()" style="width:92%; height:50px; background:rgba(255,51,51,0.05); color:var(--red); border:1px solid rgba(255,51,51,0.2); border-radius:12px; font-weight:900; margin-top:20px;">LOGOUT</button>
         </div>
     </div>
 
@@ -304,22 +308,13 @@
     </nav>
 </div>
 
-<audio id="sndTick" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
-<audio id="sndWin" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3"></audio>
-<audio id="sndLose" src="https://assets.mixkit.co/active_storage/sfx/2004/2004-preview.mp3"></audio>
-
 <script>
     const tg = window.Telegram.WebApp; tg.expand();
-    let currentLang = 'en', currentId = "GUEST", balance = 50.0, currentPhone = ""; 
-    let isSpinning = false, myBet = null, globalHistory = [], stats = { black: 0, red: 0, blue: 0, gold: 0 };
-    let myGameStats = { total: 0, wins: 0 }, isMuted = false, audioInitialized = false, liveBoardTotals = { black:0, red:0, blue:0, gold:0 };
-    let roundBotBetTotal = 0, currentRotation = 0, currentRoundResult = null; 
-    let battlePlayers = 2, selectedBattleColor = 'Red', duelCount = 1, myBattleRoom = null;
+    let currentLang = 'en', currentId = "GUEST", balance = 50.0;
+    let isSpinning = false, myBet = null, globalHistory = [], myGameStats = { total: 0, wins: 0 }, liveBoardTotals = { black:0, red:0, blue:0, gold:0 };
+    let roundBotBetTotal = 0, currentRotation = 0, currentRoundResult = null, battlePlayers = 2, selectedBattleColor = 'Red', duelCount = 1, myBattleRoom = null;
 
-    const CYCLE_MS = 20000, SPIN_DURATION = 4500, RESULT_WAIT = 500, CLOSE_DURATION = 1000;
-    const FREEZE_PERIOD = SPIN_DURATION + RESULT_WAIT + CLOSE_DURATION;
-    const BETTING_PERIOD = CYCLE_MS - FREEZE_PERIOD;
-
+    const CYCLE_MS = 20000, SPIN_DURATION = 4500, RESULT_WAIT = 500, CLOSE_DURATION = 1000, FREEZE_PERIOD = SPIN_DURATION + RESULT_WAIT + CLOSE_DURATION, BETTING_PERIOD = CYCLE_MS - FREEZE_PERIOD;
     const sectors = [{color:'#ffcc00', name:'gold', mult:50, weight: 1},{color:'#00d9ff', name:'blue', mult:5, weight: 10},{color:'#ff3333', name:'red', mult:3, weight: 17},{color:'#444444', name:'black', mult:2, weight: 28}];
     const wheelMap = []; sectors.forEach(s => { for(let i=0; i<s.weight; i++) wheelMap.push(s); });
     function shuffleWheel() { const seed = 123; for (let i = wheelMap.length - 1; i > 0; i--) { const j = (seed * (i + 1)) % wheelMap.length; [wheelMap[i], wheelMap[j]] = [wheelMap[j], wheelMap[i]]; } }
@@ -330,16 +325,13 @@
     }
 
     const i18n = {
-        ko: { welcome: "환영합니다", buy: "💎 지갑", closed: "마감", live: "실시간 현황", home: "홈", battle: "대결", rank: "랭킹", how: "사용법", stats: "통계", pick: "선택", bet: "수량", res: "결과", win: "당첨", freeTitle: "인증 혜택", freeSub: "인증 즉시 10 TON 증정!", vWallet: "가상 지갑 주소", deposit: "충전", withdraw: "환전", sendTon: "전송하기", logout: "로그아웃",
-            howTxt: getHowHtml("증명 가능한 공정성", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON 배팅 규칙", "배팅 구간: 14초간 자유 배팅", "CLOSED: 배팅 마감 및 연산", "추첨: 4.5초간 휠 회전", "TON 코인 이용 가이드", "지갑 탭에서 [DEPOSIT] 버튼을 클릭하여 개인 입금 주소를 생성합니다. 해당 주소로 TON을 전송하면 네트워크 확인 후 즉시 게임 밸런스에 반영됩니다.", "지갑 탭의 [WITHDRAW]를 선택하고 본인의 외부 TON 지갑 주소와 수량을 입력합니다. [SEND TON] 클릭 시 실시간으로 전송 처리가 시작됩니다.") },
-        en: { welcome: "Welcome", buy: "💎 WALLET", closed: "CLOSED", live: "LIVE STATUS", home: "Home", battle: "Battle", rank: "Ranking", how: "How", stats: "Stats", pick: "Pick", bet: "Amt", res: "Result", win: "Winner", freeTitle: "Get Free 10 TON Reward", freeSub: "Claim your 10 TON now!", vWallet: "Virtual Wallet Address", deposit: "DEPOSIT", withdraw: "WITHDRAW", sendTon: "SEND TON", logout: "LOGOUT",
-            howTxt: getHowHtml("Provably Fair", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON Betting Rules", "Betting: 14s active window", "CLOSED: Finalizing results", "Spin: 4.5s animation", "TON Coin Guide", "Click [DEPOSIT] in the Wallet tab to generate your unique address. Send TON to this address, and it will be credited to your balance after network confirmation.", "Go to [WITHDRAW] in the Wallet tab, enter your external TON address and amount, then click [SEND TON] to initiate an instant transfer.") },
-        cn: { welcome: "欢迎", buy: "💎 钱包", closed: "已截止", live: "实时状态", home: "首页", battle: "对决", rank: "排行榜", how: "玩法", stats: "统计", pick: "选择", bet: "金额", res: "结果", win: "获胜者", freeTitle: "免费领取 10 TON", freeSub: "认证后立即领取 10 TON!", vWallet: "虚拟钱包地址", deposit: "充值", withdraw: "提现", sendTon: "立即转账", logout: "登出",
-            howTxt: getHowHtml("公平证明", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON 投注规则", "投注阶段：14秒自由投注", "CLOSED：投注截止并计算", "抽奖：4.5秒转盘旋转", "TON 使用指南", "在钱包选项卡中点击 [DEPOSIT] 生成您的个人充值地址。将 TON 发送到该地址，网络确认后将立即反映在游戏余额中。", "选择钱包选项卡中的 [WITHDRAW]，输入您的外部 TON 钱包地址和金额。点击 [SEND TON] 将立即开始转账处理。") },
-        jp: { welcome: "ようこそ", buy: "💎 ウォレット", closed: "締切", live: "ライブ状況", home: "홈", battle: "対決", rank: "ランキング", how: "使い方", stats: "統計", pick: "選択", bet: "数量", res: "結果", win: "当選者", freeTitle: "10 TON 無料ゲット", freeSub: "認証後、即座에 10 TON 贈呈！", vWallet: "仮想ウォレットアドレス", deposit: "入金", withdraw: "出金", sendTon: "送信する", logout: "ログアウト",
-            howTxt: getHowHtml("証明可能な公平性", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON ベッティング規則", "ベット期間：14秒間の自由ベット", "CLOSED：ベット締切および演算", "抽選：4.5秒間のホイール回転", "TON コイン利用ガイド", "ウォレットタブで [DEPOSIT] 버튼을 클릭하여 개인용 입금 주소를 생성합니다. 그 주소에 TON을 전송하면 네트워크 확인 후 즉시 게임 밸런스에 반영됩니다.", "ウォレットタブ의 [WITHDRAW]를 선택하고 자신의 외부 TON 지갑 주소와 수량을 입력합니다. [SEND TON] 클릭 시 실시간으로 전송 처리가 시작됩니다.") }
+        ko: { welcome: "환영합니다", buy: "💎 지갑", closed: "마감", live: "실시간 현황", home: "홈", battle: "대결", rank: "랭킹", how: "사용법", stats: "통계", pick: "선택", bet: "수량", res: "결과", win: "당첨", freeTitle: "인증 혜택", freeSub: "인증 즉시 10 TON 증정!", vWallet: "가상 지갑 주소", deposit: "충전", withdraw: "환전", sendTon: "전송하기", logout: "로그아웃", howTxt: getHowHtml("증명 가능한 공정성", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON 배팅 규칙", "배팅 구간: 14초간 자유 배팅", "CLOSED: 배팅 마감 및 연산", "추첨: 4.5초간 휠 회전", "TON 코인 이용 가이드", "지갑 탭에서 [DEPOSIT] 버튼을 클릭하여 개인 입금 주소를 생성합니다. 해당 주소로 TON을 전송하면 네트워크 확인 후 즉시 게임 밸런스에 반영됩니다.", "지갑 탭의 [WITHDRAW]를 선택하고 본인의 외부 TON 지갑 주소와 수량을 입력합니다. [SEND TON] 클릭 시 실시간으로 전송 처리가 시작됩니다.") },
+        en: { welcome: "Welcome", buy: "💎 WALLET", closed: "CLOSED", live: "LIVE STATUS", home: "Home", battle: "Battle", rank: "Ranking", how: "How", stats: "Stats", pick: "Pick", bet: "Amt", res: "Result", win: "Winner", freeTitle: "Get Free 10 TON Reward", freeSub: "Claim your 10 TON now!", vWallet: "Virtual Wallet Address", deposit: "DEPOSIT", withdraw: "WITHDRAW", sendTon: "SEND TON", logout: "LOGOUT", howTxt: getHowHtml("Provably Fair", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON Betting Rules", "Betting: 14s active window", "CLOSED: Finalizing results", "Spin: 4.5s animation", "TON Coin Guide", "Click [DEPOSIT] in the Wallet tab to generate your unique address. Send TON to this address, and it will be credited to your balance after network confirmation.", "Go to [WITHDRAW] in the Wallet tab, enter your external TON address and amount, then click [SEND TON] to initiate an instant transfer.") },
+        cn: { welcome: "欢迎", buy: "💎 钱包", closed: "已截止", live: "实时状态", home: "首页", battle: "对决", rank: "排行榜", how: "玩法", stats: "统计", pick: "选择", bet: "金额", res: "结果", win: "获胜者", freeTitle: "免费领取 10 TON", freeSub: "认证后立即领取 10 TON!", vWallet: "虚拟钱包地址", deposit: "充值", withdraw: "提现", sendTon: "立即转账", logout: "登出", howTxt: getHowHtml("公平证明", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON 投注规则", "投注阶段：14秒自由投注", "CLOSED：投注截止并计算", "抽奖：4.5秒转盘旋转", "TON 使用指南", "在钱包选项卡中点击 [DEPOSIT] 生成您的个人充值地址。将 TON 发送到该地址，网络确认后将立即反映在游戏余额中。", "选择钱包选项卡中的 [WITHDRAW]，输入您的外部 TON 钱包地址和金额。点击 [SEND TON] 将立即开始转账处理。") },
+        jp: { welcome: "ようこそ", buy: "💎 ウォレット", closed: "締切", live: "ライブ状況", home: "홈", battle: "対決", rank: "ランキング", how: "使い方", stats: "統計", pick: "選択", bet: "数量", res: "結果", win: "当選者", freeTitle: "10 TON 無料ゲット", freeSub: "認証後、即座에 10 TON 贈呈！", vWallet: "仮想ウォレットアドレス", deposit: "入금", withdraw: "出금", sendTon: "送信する", logout: "ログアウト", howTxt: getHowHtml("証明可能な公平性", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON ベッティング規則", "ベット期間：14秒間の自由ベット", "CLOSED：ベット締切および演算", "抽選：4.5秒間のホイール回転", "TON コ인利用ガイド", "ウォレットタブで [DEPOSIT] 버튼을 클릭하여 개인용 입금 주소를 생성합니다. 그 주소에 TON을 전송하면 네트워크 확인 후 즉시 게임 밸런스에 반영됩니다.", "ウォレットタブ의 [WITHDRAW]를 선택하고 자신의 외부 TON 지갑 주소와 수량을 입력합니다. [SEND TON] 클릭 시 실시간으로 전송 처리가 시작됩니다.") }
     };
 
+    const canvas = document.getElementById('wheelCanvas'), ctx = canvas.getContext('2d'), timerBar = document.getElementById('timerBar'), betOverlay = document.getElementById('betOverlay');
     function setLanguage(lang) { currentLang = lang; localStorage.setItem('db_wheel_lang', lang); document.getElementById('langOverlay').style.display = 'none'; applyI18n(); }
     function applyI18n() {
         const t = i18n[currentLang] || i18n.en;
@@ -348,89 +340,59 @@
         document.getElementById('navBattle').innerText = t.battle; document.getElementById('navRank').innerText = t.rank; 
         document.getElementById('navHow').innerText = t.how; document.getElementById('navStats').innerText = t.stats; 
         document.getElementById('btnBuyTop').innerText = t.buy; document.getElementById('howContent').innerHTML = t.howTxt;
-        document.getElementById('liveTitle').innerText = t.live;
-        document.getElementById('th-pick').innerText = t.pick; document.getElementById('th-bet').innerText = t.bet; 
-        document.getElementById('th-res').innerText = t.res; document.getElementById('th-win').innerText = t.win;
-        const lblFreeTitle = document.getElementById('lblFreeTitle'); if(lblFreeTitle) lblFreeTitle.innerText = t.freeTitle;
-        const lblFreeSub = document.getElementById('lblFreeSub'); if(lblFreeSub) lblFreeSub.innerText = t.freeSub;
+        document.getElementById('liveTitle').innerText = t.live; document.getElementById('th-pick').innerText = t.pick; 
+        document.getElementById('th-bet').innerText = t.bet; document.getElementById('th-res').innerText = t.res; document.getElementById('th-win').innerText = t.win;
+        const lbFree = document.getElementById('lblFreeTitle'); if(lbFree) lbFree.innerText = t.freeTitle;
+        const lbFreeSub = document.getElementById('lblFreeSub'); if(lbFreeSub) lbFreeSub.innerText = t.freeSub;
         const lbVWallet = document.getElementById('lblVWallet'); if(lbVWallet) lbVWallet.innerText = t.vWallet;
-        const btnDep = document.getElementById('btnDeposit'); if(btnDep) btnDep.innerText = t.deposit;
-        const btnWit = document.getElementById('btnWithdraw'); if(btnWit) btnWit.innerText = t.withdraw;
-        const btnSnd = document.getElementById('btnSendTon'); if(btnSnd) btnSnd.innerText = t.sendTon;
-        const btnLout = document.getElementById('btnLogout'); if(btnLout) btnLout.innerText = t.logout;
     }
 
-    // [v7.0] PvP Logic (카드형 UI 유지)
+    // PvP 고도화 Logic
     function openCreateModal() { document.getElementById('createModal').style.display = 'flex'; document.getElementById('modalBalanceText').innerText = Number(balance).toFixed(1) + " TON"; setBattlePlayers(2); }
     function closeModal() { document.getElementById('createModal').style.display = 'none'; }
-    function setBattlePlayers(n) { battlePlayers = n; [2,3,4].forEach(v => { const card = document.getElementById('bp'+v); if(v === n) card.classList.add('active'); else card.classList.remove('active'); }); renderColorButtons(n); }
-    function renderColorButtons(n) { const area = document.getElementById('battleColorArea'); const colors = n === 2 ? ['Red', 'Blue'] : (n === 3 ? ['Red', 'Blue', 'Green'] : ['Red', 'Blue', 'Green', 'Yellow']); area.innerHTML = ''; colors.forEach((c, idx) => { const btn = document.createElement('div'); btn.className = 'color-btn' + (idx === 0 ? ' active' : ''); btn.innerText = c; btn.onclick = () => { document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); selectedBattleColor = c; }; area.appendChild(btn); }); selectedBattleColor = colors[0]; }
-    function adjDuelCount(v) { duelCount = Math.max(1, Math.min(10, duelCount + v)); document.getElementById('duelCountText').innerText = duelCount; document.getElementById('btnCreateFinal').innerText = `Create ${duelCount} Duel`; }
-    function confirmCreateBattle() { const betValue = parseFloat(document.getElementById('battleBetInput').value); const totalCost = betValue * duelCount; if(totalCost > balance || betValue < 0.1) return; balance -= totalCost; updateBalUI(); myBattleRoom = { bet: betValue, maxPlayers: battlePlayers, players: ["ME"], color: selectedBattleColor, count: duelCount }; renderBattleWaiting(); closeModal(); }
-    function renderBattleWaiting() { document.getElementById('battleLobby').style.display = 'none'; document.getElementById('battleWaiting').style.display = 'block'; const slots = document.getElementById('userSlots'); slots.innerHTML = ''; for(let i=0; i<myBattleRoom.maxPlayers; i++) { const filled = myBattleRoom.players[i]; slots.innerHTML += `<div class="slot ${filled ? 'filled' : ''}">${filled ? '👤' : '?'}</div>`; } }
-    function leaveBattle() { if(!myBattleRoom) return; balance += (myBattleRoom.bet * myBattleRoom.count); updateBalUI(); myBattleRoom = null; document.getElementById('battleLobby').style.display = 'block'; document.getElementById('battleWaiting').style.display = 'none'; }
-    function resolveBattle(winName) { if(!myBattleRoom) return; const myWin = (winName === myBattleRoom.color.toLowerCase()); if(myWin) { const prize = myBattleRoom.bet * myBattleRoom.maxPlayers; balance += prize; alert(`⚔️ BATTLE WIN! +${prize.toFixed(1)} TON`); } else alert(`⚔️ BATTLE LOST...`); myBattleRoom = null; document.getElementById('battleLobby').style.display = 'block'; document.getElementById('battleWaiting').style.display = 'none'; updateBalUI(); }
-
-    // [v7.0] Core RNG & Bot Engine (완전 복구)
-    const canvas = document.getElementById('wheelCanvas'), ctx = canvas.getContext('2d'), timerBar = document.getElementById('timerBar'), betOverlay = document.getElementById('betOverlay');
-    function drawWheel() { const arc = (Math.PI * 2) / 56, radius = 260, gap = 0.025; ctx.clearRect(0,0,560,560); ctx.lineWidth = 14; for (let i = 0; i < 56; i++) { ctx.beginPath(); ctx.strokeStyle = wheelMap[i].color; const sA = i * arc + Math.PI/2 - arc/2 + gap; const eA = (i + 1) * arc + Math.PI/2 - arc/2 - gap; ctx.arc(280, 280, radius, sA, eA); ctx.stroke(); } }
-    function syncHistory() { const ms = Math.floor(Date.now() / CYCLE_MS); globalHistory = []; for(let i=1; i<=35; i++) { globalHistory.push(wheelMap[getWinIndex(ms - i).index].color); } updateHistoryUI(); }
-    function updateHistoryUI() { const s = document.getElementById('historyStrip'); s.innerHTML = ''; const r = [...globalHistory].slice(-35).reverse(); r.forEach((c) => { const b = document.createElement('div'); let h = 'h-black'; if(c === '#ffcc00') h = 'h-gold'; else if(c === '#00d9ff') h = 'h-blue'; else if(c === '#ff3333') h = 'h-red'; b.className = `hist-bar ${h}`; b.style.backgroundColor = c; s.appendChild(b); }); }
-    
-    function tick() { 
-        const n = Date.now(), el = n % CYCLE_MS, p = document.getElementById('wheelPointer'); 
-        if (el < FREEZE_PERIOD) { 
-            timerBar.style.width = "0%"; betOverlay.style.display = "flex"; 
-            if (el >= CLOSE_DURATION && el < CLOSE_DURATION + 200 && !isSpinning) { startSpin(); roundBotBetTotal = 0; } 
-            if(isSpinning) { const rot = getCurrentRotation(), arc = 360/56, nR = (360 - (rot % 360)) % 360, vI = Math.floor((nR + arc/2) % 360 / arc) % 56; p.style.backgroundColor = wheelMap[vI].color; } 
-        } else { 
-            isSpinning = false; const rem = CYCLE_MS - el; timerBar.style.width = (rem / BETTING_PERIOD) * 100 + "%"; timerBar.style.backgroundColor = `hsl(${(rem / BETTING_PERIOD) * 60}, 100%, 50%)`; betOverlay.style.display = (rem < 100) ? "flex" : "none"; p.style.backgroundColor = "#fff"; deterministicGlobalSpawn(el); 
-        } 
+    function setBattlePlayers(n) { battlePlayers = n; [2,3,4].forEach(v => { const card = document.getElementById('bp'+v); v === n ? card.classList.add('active') : card.classList.remove('active'); }); renderColorButtons(n); }
+    function renderColorButtons(n) {
+        const area = document.getElementById('battleColorArea'); area.innerHTML = '';
+        const config = { 2: ['Red', 'Blue'], 3: ['Red', 'Blue', 'Green'], 4: ['Red', 'Blue', 'Green', 'Yellow'] };
+        config[n].forEach((c, idx) => {
+            const btn = document.createElement('div');
+            btn.className = `color-btn c-${c.toLowerCase()}${idx===0 ? ' active' : ''}`;
+            btn.innerText = c;
+            btn.onclick = () => { document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); selectedBattleColor = c; };
+            area.appendChild(btn);
+        });
+        selectedBattleColor = config[n][0];
     }
+    function adjDuelCount(v) { duelCount = Math.max(1, Math.min(10, duelCount + v)); document.getElementById('duelCountText').innerText = duelCount; document.getElementById('btnCreateFinal').innerText = `Create ${duelCount} Duel`; }
+    function confirmCreateBattle() { const bv = parseFloat(document.getElementById('battleBetInput').value); const tc = bv * duelCount; if(tc > balance || bv < 0.1) return; balance -= tc; updateBalUI(); myBattleRoom = { bet: bv, maxPlayers: battlePlayers, color: selectedBattleColor, count: duelCount }; renderBattleWaiting(); closeModal(); }
+    function renderBattleWaiting() { document.getElementById('battleLobby').style.display = 'none'; document.getElementById('battleWaiting').style.display = 'block'; const slots = document.getElementById('userSlots'); slots.innerHTML = ''; for(let i=0; i<myBattleRoom.maxPlayers; i++) slots.innerHTML += `<div class="slot ${i===0?'filled':''}">👤</div>`; }
+    function leaveBattle() { if(!myBattleRoom) return; balance += (myBattleRoom.bet * myBattleRoom.count); updateBalUI(); myBattleRoom = null; document.getElementById('battleLobby').style.display = 'block'; document.getElementById('battleWaiting').style.display = 'none'; }
+    function resolveBattle(winName) { if(!myBattleRoom) return; if(winName === myBattleRoom.color.toLowerCase()) { const prize = myBattleRoom.bet * myBattleRoom.maxPlayers; balance += prize; alert(`⚔️ BATTLE WIN! +${prize.toFixed(1)} TON`); } else alert(`⚔️ BATTLE LOST...`); myBattleRoom = null; document.getElementById('battleLobby').style.display = 'block'; document.getElementById('battleWaiting').style.display = 'none'; updateBalUI(); }
 
+    // Core RNG Engine
+    function drawWheel() { const arc = (Math.PI * 2) / 56, radius = 260, gap = 0.025; ctx.clearRect(0,0,560,560); ctx.lineWidth = 14; for (let i = 0; i < 56; i++) { ctx.beginPath(); ctx.strokeStyle = wheelMap[i].color; const sA = i * arc + Math.PI/2 - arc/2 + gap; const eA = (i + 1) * arc + Math.PI/2 - arc/2 - gap; ctx.arc(280, 280, radius, sA, eA); ctx.stroke(); } }
+    function syncHistory() { const ms = Math.floor(Date.now() / CYCLE_MS); globalHistory = []; for(let i=1; i<=35; i++) globalHistory.push(wheelMap[getWinIndex(ms - i).index].color); updateHistoryUI(); }
+    function updateHistoryUI() { const s = document.getElementById('historyStrip'); s.innerHTML = ''; const r = [...globalHistory].slice(-35).reverse(); r.forEach((c) => { const b = document.createElement('div'); let h = 'h-black'; if(c === '#ffcc00') h = 'h-gold'; else if(c === '#00d9ff') h = 'h-blue'; else if(c === '#ff3333') h = 'h-red'; b.className = `hist-bar ${h}`; b.style.backgroundColor = c; s.appendChild(b); }); }
+    function tick() { const n = Date.now(), el = n % CYCLE_MS, p = document.getElementById('wheelPointer'); if (el < FREEZE_PERIOD) { timerBar.style.width = "0%"; betOverlay.style.display = "flex"; if (el >= CLOSE_DURATION && el < CLOSE_DURATION + 200 && !isSpinning) { startSpin(); roundBotBetTotal = 0; } if(isSpinning) { const rot = getCurrentRotation(), arc = 360/56, nR = (360 - (rot % 360)) % 360, vI = Math.floor((nR + arc/2) % 360 / arc) % 56; p.style.backgroundColor = wheelMap[vI].color; } } else { isSpinning = false; const rem = CYCLE_MS - el; timerBar.style.width = (rem / BETTING_PERIOD) * 100 + "%"; timerBar.style.backgroundColor = `hsl(${(rem / BETTING_PERIOD) * 60}, 100%, 50%)`; betOverlay.style.display = (rem < 100) ? "flex" : "none"; p.style.backgroundColor = "#fff"; deterministicGlobalSpawn(el); } }
     function getCurrentRotation() { const st = window.getComputedStyle(canvas, null), tr = st.getPropertyValue("transform"); if(tr === "none") return 0; const v = tr.split('(')[1].split(')')[0].split(','); const a = Math.round(Math.atan2(parseFloat(v[1]), parseFloat(v[0])) * (180/Math.PI)); return (a + 360) % 360; }
     function startSpin() { isSpinning = true; const s = Math.floor(Date.now() / CYCLE_MS); currentRoundResult = getWinIndex(s); const arc = 360/56, tar = (360 - (currentRoundResult.index * arc)) % 360, cM = currentRotation % 360, d = (tar - cM + 360) % 360; currentRotation += (360 * 10) + d; canvas.style.transition = `transform ${SPIN_DURATION}ms cubic-bezier(0.1, 0, 0, 1)`; canvas.style.transform = `rotate(${currentRotation}deg)`; setTimeout(() => resolve(wheelMap[currentRoundResult.index]), SPIN_DURATION); }
-    
-    function resolve(win) { 
-        document.getElementById('wheelPointer').style.backgroundColor = win.color; globalHistory.push(win.color); updateHistoryUI(); 
-        if(myBattleRoom) resolveBattle(win.name); 
-        if(myBet) { 
-            myGameStats.total++; const wS = myBet.type === win.name; 
-            if(wS) { balance = Number(balance) + (myBet.amount * win.mult); myGameStats.wins++; playSound('sndWin'); } else playSound('sndLose'); 
-            const row = `<tr><td>${myBet.type.toUpperCase()}</td><td>${myBet.amount.toFixed(1)}T</td><td>${wS ? 'Win' : 'Lost'}</td><td><span class="winner-dot" style="background:${win.color}"></span></td></tr>`; 
-            document.getElementById('myLogBody').insertAdjacentHTML('afterbegin', row); 
-        } 
-        if(currentId !== "GUEST") { let u = JSON.parse(localStorage.getItem('db_users')); if(u[currentId]) { u[currentId].balance = Number(balance).toFixed(1); u[currentId].myGameStats = myGameStats; localStorage.setItem('db_users', JSON.stringify(u)); } } 
-        setTimeout(() => { myBet = null; document.querySelectorAll('.btn').forEach(b => b.classList.remove('selected')); liveBoardTotals = { black:0, red:0, blue:0, gold:0 }; document.querySelectorAll('.bet-list').forEach(l => l.innerHTML = ''); document.querySelectorAll('.col-total').forEach(t => t.innerText = '0.0'); canvas.style.transition = 'none'; canvas.style.transform = `rotate(${currentRotation % 360}deg)`; updateBalUI(); currentRoundResult = null; }, RESULT_WAIT); 
-    }
-
+    function resolve(win) { document.getElementById('wheelPointer').style.backgroundColor = win.color; globalHistory.push(win.color); updateHistoryUI(); if(myBattleRoom) resolveBattle(win.name); if(myBet) { myGameStats.total++; const wS = myBet.type === win.name; if(wS) { balance = Number(balance) + (myBet.amount * win.mult); myGameStats.wins++; playSound('sndWin'); } else playSound('sndLose'); const row = `<tr><td>${myBet.type.toUpperCase()}</td><td>${myBet.amount.toFixed(1)}T</td><td>${wS ? 'Win' : 'Lost'}</td><td><span class="winner-dot" style="background:${win.color}"></span></td></tr>`; document.getElementById('myLogBody').insertAdjacentHTML('afterbegin', row); } if(currentId !== "GUEST") { let u = JSON.parse(localStorage.getItem('db_users')); if(u[currentId]) { u[currentId].balance = Number(balance).toFixed(1); u[currentId].myGameStats = myGameStats; localStorage.setItem('db_users', JSON.stringify(u)); } } setTimeout(() => { myBet = null; document.querySelectorAll('.btn').forEach(b => b.classList.remove('selected')); liveBoardTotals = { black:0, red:0, blue:0, gold:0 }; document.querySelectorAll('.bet-list').forEach(l => l.innerHTML = ''); document.querySelectorAll('.col-total').forEach(t => t.innerText = '0.0'); canvas.style.transition = 'none'; canvas.style.transform = `rotate(${currentRotation % 360}deg)`; updateBalUI(); currentRoundResult = null; }, RESULT_WAIT); }
     function getWinIndex(seed) { const rv = (seed * 9301 + 49297) % 233280; return { index: (rv % 56) }; }
     function handleUserBet(type) { const el = Date.now() % CYCLE_MS; if(el < FREEZE_PERIOD || myBet) return; const amt = parseFloat(document.getElementById('betInput').value); if(isNaN(amt) || amt > balance || amt < 0.1) return; balance -= amt; updateBalUI(); myBet = { type, amount: amt }; document.getElementById('btn' + type.charAt(0).toUpperCase() + type.slice(1)).classList.add('selected'); addLiveUI(type, "ME", amt); }
     function updateBalUI() { document.getElementById('balance').innerText = Number(balance).toFixed(1); const wb = document.getElementById('w-bal'); if(wb) wb.innerText = Number(balance).toFixed(1); }
     function adjBet(v) { let i = document.getElementById('betInput'), n = parseFloat(i.value) + v; if(n >= 0.1) i.value = n.toFixed(1); }
     function switchTab(id, el) { document.querySelectorAll('.content-view').forEach(v => v.classList.remove('active')); document.getElementById('view-' + id).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); if(el) el.classList.add('active'); if(id === 'wallet') autoFillTelegramId(); if(id === 'ranking') renderRanking(); if(id === 'recommend') renderStats(); applyI18n(); }
-    
     function renderStats() { const counts = { black: 49.5, red: 30.2, blue: 18.7, gold: 1.6 }; ['black', 'red', 'blue', 'gold'].forEach(c => { const val = counts[c].toFixed(1); document.getElementById(`val-${c}`).innerText = `${val}%`; document.getElementById(`bar-${c}`).style.width = `${val}%`; }); document.getElementById('st-total').innerText = myGameStats.total; document.getElementById('st-winrate').innerText = (myGameStats.total > 0 ? (myGameStats.wins/myGameStats.total*100).toFixed(1) : 0) + "%"; }
-    function renderRanking() { const tbody = document.getElementById('rankingBody'); tbody.innerHTML = ''; for(let i=1; i<=20; i++) { tbody.innerHTML += `<tr><td>${i}</td><td style="color:var(--accent);">Player***</td><td>${(1000-i*10)}T</td><td>${(500-i*5)}T</td><td>55%</td></tr>`; } }
-    
+    function renderRanking() { const tbody = document.getElementById('rankingBody'); tbody.innerHTML = ''; for(let i=1; i<=20; i++) tbody.innerHTML += `<tr><td>${i}</td><td style="color:var(--accent);">Player***</td><td>${(1000-i*10)}T</td><td>${(500-i*5)}T</td><td>55%</td></tr>`; }
     function autoFillTelegramId() { if (currentId === "GUEST") { const user = tg.initDataUnsafe?.user; if (user && user.username) document.getElementById('loginId').value = `@${user.username}`; } }
-    function requestTelegramContact() { tg.requestContact((shared) => { if (shared && tg.initDataUnsafe.user) { const u = tg.initDataUnsafe.user; let users = JSON.parse(localStorage.getItem('db_users') || '{}'); const name = u.username || `u${u.id}`; users[name] = { pw: "auth", balance: 10.0, myGameStats: { total:0, wins:0 }, is_rewarded: true }; localStorage.setItem('db_users', JSON.stringify(users)); currentId = name; balance = 10.0; updateLoginState(true); alert("🎁 10 TON Credited!"); } }); }
+    function requestTelegramContact() { tg.requestContact((shared) => { if (shared && tg.initDataUnsafe.user) { const name = tg.initDataUnsafe.user.username || `u${tg.initDataUnsafe.user.id}`; let users = JSON.parse(localStorage.getItem('db_users') || '{}'); users[name] = { pw: "auth", balance: 10.0, myGameStats: { total:0, wins:0 }, is_rewarded: true }; localStorage.setItem('db_users', JSON.stringify(users)); currentId = name; balance = 10.0; updateLoginState(true); alert("🎁 10 TON Credited!"); } }); }
     function handleLoginSubmit() { const id = document.getElementById('loginId').value, pw = document.getElementById('loginPw').value; let users = JSON.parse(localStorage.getItem('db_users') || '{}'); if(users[id] && users[id].pw === pw) { currentId = id; balance = Number(users[id].balance); myGameStats = users[id].myGameStats; updateLoginState(true); } else { users[id] = { pw, balance: 0.0, myGameStats:{total:0, wins:0} }; localStorage.setItem('db_users', JSON.stringify(users)); currentId = id; balance = 0.0; updateLoginState(true); } }
     function handleLogout() { currentId = "GUEST"; balance = 50.0; updateLoginState(false); switchTab('home', document.querySelector('.nav-item')); }
-    function updateLoginState(isLoggedIn) { document.getElementById('loginForm').style.display = isLoggedIn ? 'none' : 'flex'; document.getElementById('logoutForm').style.display = isLoggedIn ? 'flex' : 'none'; if(isLoggedIn) { document.getElementById('w-userId').innerText = currentId; const wb = document.getElementById('w-bal'); if(wb) wb.innerText = Number(balance).toFixed(1); } applyI18n(); }
-    
+    function updateLoginState(isLoggedIn) { document.getElementById('loginForm').style.display = isLoggedIn ? 'none' : 'flex'; document.getElementById('logoutForm').style.display = isLoggedIn ? 'flex' : 'none'; if(isLoggedIn) document.getElementById('w-userId').innerText = currentId; applyI18n(); updateBalUI(); }
     function initAudio() { audioInitialized = true; }
     function toggleMute() { isMuted = !isMuted; document.getElementById('soundToggle').innerText = isMuted ? "🔇" : "🔊"; }
     function playSound(id) { if(!isMuted && audioInitialized) { const s = document.getElementById(id); s.currentTime = 0; s.play().catch(()=>{}); } }
-    
-    function deterministicGlobalSpawn(el) { 
-        if (el < FREEZE_PERIOD || roundBotBetTotal >= 7.4) return; 
-        const ts = Math.floor(Date.now() / 100), r = (ts * 9301 + 49297) % 233280;
-        if ((r % 100) < 5) { 
-            const types = ['black', 'red', 'blue', 'gold'], type = types[r % 4]; 
-            addLiveUI(type, "Bot_" + (r % 99), 0.5); roundBotBetTotal += 0.5; 
-        } 
-    }
+    function deterministicGlobalSpawn(el) { if (el < FREEZE_PERIOD || roundBotBetTotal >= 7.4) return; const ts = Math.floor(Date.now() / 100), r = (ts * 9301 + 49297) % 233280; if ((r % 100) < 5) { const types = ['black', 'red', 'blue', 'gold'], type = types[r % 4]; addLiveUI(type, "Bot_" + (r % 99), 0.5); roundBotBetTotal += 0.5; } }
     function addLiveUI(type, user, amt) { const list = document.getElementById(`l-${type}`); if(!list) return; liveBoardTotals[type] += amt; document.getElementById(`t-${type}`).innerText = liveBoardTotals[type].toFixed(1); const item = document.createElement('div'); item.className = 'bet-item'; item.innerHTML = `<span>${user}</span><b>${amt.toFixed(1)}T</b>`; list.prepend(item); if(list.children.length > 5) list.lastChild.remove(); }
     function toggleWithdraw() { const g = document.getElementById('withdrawGroup'); g.style.display = g.style.display === 'none' ? 'flex' : 'none'; }
 
