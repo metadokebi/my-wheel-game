@@ -29,8 +29,9 @@
         .balance-box { background: rgba(0, 217, 255, 0.1); padding: 5px 8px; border-radius: 6px; border: 1px solid var(--point-color); color: var(--point-color); font-weight: 800; font-size: 0.75rem; height: 32px; display: flex; align-items: center; justify-content: center; min-width: 95px; }
         #btnBuyTop { background: rgba(255, 242, 0, 0.1); padding: 5px 8px; border-radius: 6px; border: 1px solid var(--buy-color); color: var(--buy-color); font-weight: 900; font-size: 0.75rem; cursor: pointer; height: 32px; display: flex; align-items: center; justify-content: center; gap: 4px; text-shadow: 0 0 5px rgba(255, 242, 0, 0.5); min-width: 95px; }
 
+        /* [골든마스터] 상단 결과바 높이 시스템 복구 */
         .rolls-wrapper { width: 100%; padding: 8px 15px; background: rgba(0,0,0,0.15); border-bottom: 1px solid #333; flex-shrink: 0; display: flex; justify-content: center; align-items: flex-start; min-height: 55px; }
-        .history-strip { display: flex; gap: 5px; height: 40px; width: auto; align-items: flex-start; justify-content: center; overflow: hidden; }
+        .history-strip { display: flex; gap: 5px; height: 40px; width: auto; align-items: flex-end; justify-content: center; overflow: hidden; }
         .hist-bar { width: 3px; border-radius: 1.5px; flex-shrink: 0; transition: all 0.3s; }
         .hist-bar.h-black { height: 16px; opacity: 0.6; }
         .hist-bar.h-red { height: 24px; opacity: 0.9; }
@@ -47,7 +48,7 @@
         .wheel-section { position: relative; margin: 25px 0; width: 230px; height: 230px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; }
         .wheel-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-weight: 900; font-size: 1.8rem; color: var(--accent); text-shadow: 0 0 10px var(--accent); opacity: 0.8; pointer-events: none; }
-        .pointer { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); width: 14px; height: 20px; background: #fff; clip-path: polygon(50% 100%, 0% 0%, 100% 0%); z-index: 25; }
+        .pointer { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); width: 14px; height: 20px; background: #fff; clip-path: polygon(50% 100%, 0% 0%, 100% 0%); z-index: 25; transition: background-color 0.1s linear; }
 
         .overlay-container { width: 100%; padding: 0 15px; position: relative; flex-shrink: 0; }
         .controls { position: relative; width: 100%; background: var(--card); padding: 15px; border-radius: 12px; border: 1px solid #333; overflow: hidden; }
@@ -73,37 +74,42 @@
         .bet-list { padding: 3px; flex: 1; display: flex; flex-direction: column; gap: 3px; overflow: hidden; }
         .bet-item { display: flex; justify-content: space-between; font-size: 0.48rem; font-weight: 700; background: rgba(255,255,255,0.05); padding: 2px; border-radius: 3px; }
 
-        /* [신규 PvP 배틀 아레나 로비] */
+        /* [신규 PvP 배틀 아레나 로비] 보라색 원형 로직 */
         .battle-lobby-grid { width: 100%; display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 15px; }
-        .room-card { background: var(--card); border: 1px solid #333; border-radius: 18px; padding: 15px; display: flex; flex-direction: column; align-items: center; gap: 10px; position: relative; cursor: pointer; }
-        .room-wheel-preview { width: 80px; height: 80px; border-radius: 50%; border: 3px solid #4d3a7d; position: relative; overflow: hidden; background: #000; }
+        .room-card { background: var(--card); border: 1px solid #333; border-radius: 18px; padding: 15px; display: flex; flex-direction: column; align-items: center; gap: 10px; position: relative; cursor: pointer; transition: 0.3s; }
+        .room-wheel-preview { width: 80px; height: 80px; border-radius: 50%; border: 3px solid #4d3a7d; position: relative; overflow: hidden; background: #000; box-shadow: 0 0 10px rgba(77, 58, 125, 0.5); }
         .sector-line { position: absolute; background: #4d3a7d; width: 100%; height: 2px; top: 50%; left: 0; transform-origin: center; }
-        .room-info { text-align: center; }
-        .room-amt { font-size: 0.9rem; font-weight: 900; color: var(--gold); }
-        .room-slots { font-size: 0.6rem; color: #8899aa; font-weight: 700; }
         .btn-join { width: 100%; height: 32px; background: var(--blue); color: #000; border: none; border-radius: 6px; font-weight: 900; font-size: 0.75rem; margin-top: 5px; }
 
-        /* [PvP 인게임 휠] */
         .pvp-game-container { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 20px; padding-top: 20px; }
-        .pvp-wheel-wrapper { position: relative; width: 280px; height: 280px; }
-        #pvpCanvas { width: 100%; height: 100%; border-radius: 50%; border: 8px solid #222; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        .pvp-wheel-wrapper { position: relative; width: 260px; height: 260px; }
+        #pvpCanvas { width: 100%; height: 100%; border-radius: 50%; border: 8px solid #222; }
         .pvp-pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 20px; height: 30px; background: #fff; clip-path: polygon(50% 100%, 0% 0%, 100% 0%); z-index: 100; }
 
-        /* [v7.0 골든마스터] 모달 및 기타 */
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; align-items: flex-end; justify-content: center; z-index: 1000; }
-        .modal-content { background: #1a1d26; border-radius: 20px 20px 0 0; width: 100%; max-width: 500px; padding: 25px; border-top: 1px solid #333; }
-        .btn-create-final { width: 100%; height: 55px; background: var(--battle-pink); color: #fff; border: none; border-radius: 12px; font-weight: 900; font-size: 1rem; cursor: pointer; }
-        
-        .log-table { width: 95%; border-collapse: collapse; font-size: 0.7rem; background: rgba(0,0,0,0.4); border-radius: 10px; overflow: hidden; margin: 20px auto; }
-        .log-table th { background: #1a1a1a; padding: 10px; color: var(--text-muted); font-weight: 900; }
-        .log-table td { padding: 8px; border-bottom: 1px solid #222; text-align: center; }
+        /* [골든마스터] 지갑 & 인증 로직 */
+        .wallet-card { width: 92%; background: var(--card); border: 1px solid #333; border-radius: 15px; padding: 20px; margin-top: 15px; }
+        .btn-quick-connect { width: 100%; height: 60px; background: linear-gradient(135deg, #00d9ff, #00f2ff); color: #000; border: 2px solid var(--gold); border-radius: 12px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; position: relative; margin-top: 15px; }
+        .event-badge { position: absolute; top: -10px; right: 10px; background: var(--gold); color: #000; font-size: 0.6rem; font-weight: 900; padding: 2px 8px; border-radius: 20px; box-shadow: 0 0 10px var(--gold); animation: bounce 1s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+        /* [골든마스터] 통계 로직 */
+        .digital-stats { width: 92%; background: #000; border: 1px solid #333; padding: 15px; border-radius: 12px; margin-top: 10px; }
+        .stat-bar-bg { width: 100%; height: 8px; background: #111; border-radius: 4px; overflow: hidden; margin-top: 5px; }
+        .stat-bar-fill { height: 100%; width: 0%; transition: width 1s ease-out; }
+
+        /* [골든마스터] 사용법 로직 */
+        .manual-container { width: 94%; margin-top: 10px; display: flex; flex-direction: column; gap: 15px; }
+        .manual-card { background: var(--card); border: 1px solid #333; border-radius: 15px; padding: 20px; }
+        .manual-title { font-size: 0.95rem; font-weight: 900; color: var(--accent); margin-bottom: 12px; border-bottom: 1px solid #222; padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .manual-text { font-size: 0.78rem; color: #bbb; line-height: 1.65; }
+        .manual-formula { background: #000; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 0.7rem; color: var(--accent); margin: 10px 0; text-align: center; border: 1px solid #222; }
+        .manual-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 800; margin-right: 5px; background: #333; color: var(--gold); }
 
         nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; height: 75px; background: var(--nav-bg); display: flex; border-top: 1px solid #222; z-index: 200; padding-bottom: env(safe-area-inset-bottom); }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; }
         .nav-item span { font-size: 0.65rem; font-weight: 700; margin-top: 4px; }
         .nav-item.active { color: var(--accent); }
-        .btn-create-floating { position: fixed; bottom: 100px; right: 20px; width: 60px; height: 60px; background: var(--blue); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 0 15px var(--blue); border: 2px solid #fff; z-index: 300; }
-        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+        .btn-create-floating { position: fixed; bottom: 100px; right: 20px; width: 60px; height: 60px; background: var(--blue); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 0 15px var(--blue); border: 2px solid #fff; z-index: 300; cursor: pointer; }
     </style>
 </head>
 <body onclick="initAudio()">
@@ -125,7 +131,7 @@
             <div class="lang-btn" onclick="setPvPPlayers(3)" id="pvp3">3 Users</div>
             <div class="lang-btn" onclick="setPvPPlayers(4)" id="pvp4">4 Users</div>
         </div>
-        <input type="number" id="pvpBetInput" value="1.0" step="0.5" style="width:100%; background:#000; border:1px solid #333; color:var(--gold); padding:15px; border-radius:12px; font-weight:900; font-size:1.2rem; margin-bottom:20px; text-align:center;">
+        <input type="number" id="pvpBetInput" value="1.0" step="0.5" style="width:100%; background:#000; border:1px solid #333; color:var(--gold); padding:15px; border-radius:12px; font-weight:900; font-size:1.2rem; margin-bottom:20px; text-align:center; outline:none;">
         <button class="btn-create-final" onclick="confirmCreatePvPRoom()">CREATE BATTLE ROOM</button>
     </div>
 </div>
@@ -181,13 +187,12 @@
     <div id="view-battle" class="content-view">
         <div id="pvpLobby" style="width:100%;">
             <h3 style="padding:15px; margin:0; color:var(--accent); font-weight:900;" id="btLobby">⚔️ BATTLE ARENA</h3>
-            <div class="battle-lobby-grid" id="pvpRoomList">
-                </div>
+            <div class="battle-lobby-grid" id="pvpRoomList"></div>
             <button class="btn-create-floating" onclick="openCreateModal()">+</button>
         </div>
         <div id="pvpRoomView" style="display:none; width:100%; text-align:center;">
             <div class="pvp-game-container">
-                <div id="pvpStatus" style="font-size:1.2rem; font-weight:900; color:var(--gold);">WAITING FOR PLAYERS...</div>
+                <div id="pvpStatus" style="font-size:1.2rem; font-weight:900; color:var(--gold);">WAITING...</div>
                 <div class="pvp-wheel-wrapper">
                     <div class="pvp-pointer"></div>
                     <canvas id="pvpCanvas" width="500" height="500"></canvas>
@@ -209,7 +214,7 @@
     <div id="view-how" class="content-view"><div id="howContent" class="manual-container"></div></div>
 
     <div id="view-recommend" class="content-view">
-        <div style="padding:30px 20px 10px; text-align:center;"><div style="font-size:0.85rem; font-weight:900; color:var(--accent);">24H DIGITAL ANALYSIS</div></div>
+        <div style="padding:30px 20px 10px; text-align:center;"><div style="font-size:0.85rem; font-weight:900; color:var(--accent);" id="lblLast100">24H DIGITAL ANALYSIS</div></div>
         <div class="digital-stats">
             <div class="stat-row"><div style="display:flex; justify-content:space-between; font-size:0.7rem;"><span>BLACK</span><span id="val-black">0%</span></div><div class="stat-bar-bg"><div id="bar-black" class="stat-bar-fill" style="background:var(--black)"></div></div></div>
             <div class="stat-row"><div style="display:flex; justify-content:space-between; font-size:0.7rem;"><span>RED</span><span id="val-red">0%</span></div><div class="stat-bar-bg"><div id="bar-red" class="stat-bar-fill" style="background:var(--red)"></div></div></div>
@@ -217,8 +222,8 @@
             <div class="stat-row"><div style="display:flex; justify-content:space-between; font-size:0.7rem;"><span>GOLD</span><span id="val-gold">0%</span></div><div class="stat-bar-bg"><div id="bar-gold" class="stat-bar-fill" style="background:var(--gold); box-shadow:0 0 8px var(--gold)"></div></div></div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; width:92%; margin-top:15px;">
-            <div style="background:var(--card); padding:15px; border-radius:10px; text-align:center; border:1px solid #333;"><div id="st-total" style="font-size:1.2rem; font-weight:900; color:var(--accent);">0</div><div style="font-size:0.6rem; color:#666;">TOTAL SPINS</div></div>
-            <div style="background:var(--card); padding:15px; border-radius:10px; text-align:center; border:1px solid #333;"><div id="st-winrate" style="font-size:1.2rem; font-weight:900; color:var(--accent);">0%</div><div style="font-size:0.6rem; color:#666;">WIN RATE</div></div>
+            <div style="background:var(--card); padding:15px; border-radius:10px; text-align:center; border:1px solid #333;"><div id="st-total" style="font-size:1.2rem; font-weight:900; color:var(--accent);">0</div><div style="font-size:0.6rem; color:#666;" id="lblTotalSpins">TOTAL SPINS</div></div>
+            <div style="background:var(--card); padding:15px; border-radius:10px; text-align:center; border:1px solid #333;"><div id="st-winrate" style="font-size:1.2rem; font-weight:900; color:var(--accent);">0%</div><div style="font-size:0.6rem; color:#666;" id="lblWinRate">WIN RATE</div></div>
         </div>
         <div style="margin-top:25px; color:#444; font-size:0.6rem; font-weight:bold; text-align:center;">v7.0 TON Golden Master</div>
     </div>
@@ -227,29 +232,33 @@
         <div id="loginForm" class="wallet-card">
             <h3 style="color:var(--accent); text-align:center; margin-bottom:20px;">TON Gateway</h3>
             <input type="text" id="loginId" class="wallet-input" placeholder="Telegram ID" readonly>
-            <input type="password" id="loginPw" class="wallet-input" placeholder="Password">
-            <button onclick="handleLoginSubmit()" style="width:100%; height:50px; background:#333; color:#fff; border:none; border-radius:8px; font-weight:900;">CONNECT</button>
+            <input type="password" id="loginPw" class="wallet-input" placeholder="Set Secure Password">
+            <button id="btnLoginBtn" onclick="handleLoginSubmit()" style="width:100%; height:50px; background:#333; color:#fff; border:none; border-radius:8px; font-weight:900; margin-bottom:20px;">CONNECT ACCOUNT</button>
+            <button class="btn-quick-connect" onclick="requestTelegramContact()">
+                <div class="event-badge">+10 TON FREE</div>
+                📱 <div style="display:flex; flex-direction:column; align-items:flex-start;"><span id="lblFreeTitle" style="font-size:0.85rem;">Get Free 10 TON Reward</span><span style="font-size:0.55rem; opacity:0.8;">인증 즉시 10 TON을 드립니다!</span></div>
+            </button>
         </div>
         <div id="logoutForm" style="display:none; width:100%; align-items:center; flex-direction:column;">
             <div class="wallet-card">
-                <div class="wallet-user-info"><div><span id="w-userId" style="font-size:0.8rem; font-weight:800; color:var(--accent);">@Guest</span></div></div>
+                <div class="wallet-user-info"><span id="w-userId" style="font-size:0.8rem; font-weight:800; color:var(--accent);">@Guest</span></div>
                 <div class="wallet-balance-big"><span id="w-bal">0.0</span> <small>TON</small></div>
                 <div class="wallet-actions">
                     <button class="action-btn btn-deposit">DEPOSIT</button>
                     <button class="action-btn btn-withdraw" onclick="toggleWithdraw()">WITHDRAW</button>
                 </div>
-                <div id="withdrawGroup" style="display:none; margin-top:15px;"><input type="number" class="wallet-input" placeholder="Amount"></div>
+                <div style="margin-top:20px;"><div style="background:#000; padding:8px; border-radius:4px; font-size:0.45rem; color:var(--accent); border:1px solid #222;">UQAr...Golden_V7.0_TON_System</div></div>
             </div>
             <button onclick="handleLogout()" style="width:92%; height:50px; background:rgba(255,51,51,0.1); color:var(--red); border:none; border-radius:12px; font-weight:900; margin-top:20px;">LOGOUT</button>
         </div>
     </div>
 
     <nav>
-        <div class="nav-item active" onclick="switchTab('home', this)">🏠<span id="navHome">Home</span></div>
-        <div class="nav-item" onclick="switchTab('battle', this)">⚔️<span id="navBattle">Battle</span></div>
-        <div class="nav-item" onclick="switchTab('ranking', this)">🏆<span id="navRank">Ranking</span></div>
-        <div class="nav-item" onclick="switchTab('how', this)">❓<span id="navHow">How</span></div>
-        <div class="nav-item" onclick="switchTab('recommend', this)">📈<span id="navStats">Stats</span></div>
+        <div class="nav-item active" onclick="switchTab('home', this)">🏠<span id="navHome">홈</span></div>
+        <div class="nav-item" onclick="switchTab('battle', this)">⚔️<span id="navBattle">대결</span></div>
+        <div class="nav-item" onclick="switchTab('ranking', this)">🏆<span id="navRank">랭킹</span></div>
+        <div class="nav-item" onclick="switchTab('how', this)">❓<span id="navHow">사용법</span></div>
+        <div class="nav-item" onclick="switchTab('recommend', this)">📈<span id="navStats">통계</span></div>
     </nav>
 </div>
 
@@ -273,13 +282,19 @@
     let activePvPRoom = null, pvpTargetPlayers = 2, pvpRotation = 0;
 
     const CYCLE_MS = 20000, SPIN_DURATION = 4500, RESULT_WAIT = 500, CLOSE_DURATION = 1000;
-    const sectors = [{color:'#ffcc00', name:'gold', mult:50, weight: 1},{color:'#00d9ff', name:'blue', mult:5, weight: 10},{color:'#ff3333', name:'red', mult:3, weight: 17},{color:'#444444', name:'black', mult:2, weight: 28}];
+    const sectors = [{color:'#ffcc00', name:'gold', mult:50, weight: 1, h:'h-gold'},{color:'#00d9ff', name:'blue', mult:5, weight: 10, h:'h-blue'},{color:'#ff3333', name:'red', mult:3, weight: 17, h:'h-red'},{color:'#444444', name:'black', mult:2, weight: 28, h:'h-black'}];
     const wheelMap = []; sectors.forEach(s => { for(let i=0; i<s.weight; i++) wheelMap.push(s); });
 
-    function getHowHtml() { return `<div class="manual-card"><div class="manual-title">💎 Provably Fair</div><div class="manual-text">Result = (UTC_Timestamp * 9301 + 49297) % 233280</div></div>`; }
+    // [골든마스터] 사용법 HTML 복구
+    function getHowHtml(fairTitle, formula, rulesTitle, r1, r2, r3, tonTitle, depStep, witStep) {
+        return `<div class="manual-card"><div class="manual-section"><div class="manual-title">💎 ${fairTitle}</div><div class="manual-text">Spin4 uses deterministic algorithms.<div class="manual-formula">${formula}</div><span class="manual-badge">LCG Algorithm</span> Seed: UTC Milliseconds.</div></div><div class="manual-section" style="margin-top:20px;"><div class="manual-title">🎮 ${rulesTitle}</div><div class="manual-text">1. <span class="manual-badge">14.0s</span> <b>${r1}</b><br>2. <span class="manual-badge">1.0s</span> <b>${r2}</b><br>3. <span class="manual-badge">4.5s</span> <b>${r3}</b></div></div><div class="manual-section" style="margin-top:20px;"><div class="manual-title">💰 ${tonTitle}</div><div class="manual-text"><b>1. DEPOSIT:</b> ${depStep}<br><br><b>2. WITHDRAW:</b> ${witStep}</div></div></div>`;
+    }
+
     const i18n = {
-        ko: { welcome: "환영합니다", home: "홈", battle: "대결", rank: "랭킹", how: "사용법", stats: "통계", closed: "마감", btLobby: "⚔️ 배틀 아레나", wait: "유저 대기 중...", win: "승리!" },
-        en: { welcome: "Welcome", home: "Home", battle: "Battle", rank: "Ranking", how: "How", stats: "Stats", closed: "CLOSED", btLobby: "⚔️ BATTLE ARENA", wait: "WAITING FOR PLAYERS...", win: "WINNER!" }
+        ko: { welcome: "환영합니다", home: "홈", battle: "대결", rank: "랭킹", how: "사용법", stats: "통계", closed: "마감", btLobby: "⚔️ 배틀 아레나", freeTitle: "인증 혜택", last100: "24H 디지털 분석", totalSpins: "누적 스핀", winRate: "나의 승률",
+            howTxt: getHowHtml("증명 가능한 공정성", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "배팅 규칙", "배팅 구간", "배팅 마감", "휠 회전", "TON 이용 가이드", "입금 주소로 전송", "외부 지갑으로 전송") },
+        en: { welcome: "Welcome", home: "Home", battle: "Battle", rank: "Ranking", how: "How", stats: "Stats", closed: "CLOSED", btLobby: "⚔️ BATTLE ARENA", freeTitle: "Get Free 10 TON Reward", last100: "24H DIGITAL ANALYSIS", totalSpins: "TOTAL SPINS", winRate: "WIN RATE",
+            howTxt: getHowHtml("Provably Fair", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "Betting Rules", "Betting Phase", "Closed Phase", "Spin Phase", "TON Guide", "Send to Deposit Addr", "Withdraw to Wallet") }
     };
 
     function setLanguage(lang) { currentLang = lang; document.getElementById('langOverlay').style.display = 'none'; applyI18n(); }
@@ -290,19 +305,23 @@
         document.getElementById('navHome').innerText = t.home; document.getElementById('navBattle').innerText = t.battle;
         document.getElementById('navRank').innerText = t.rank; document.getElementById('navHow').innerText = t.how;
         document.getElementById('navStats').innerText = t.stats; document.getElementById('btLobby').innerText = t.btLobby;
-        document.getElementById('howContent').innerHTML = getHowHtml();
+        document.getElementById('howContent').innerHTML = t.howTxt;
+        document.getElementById('lblFreeTitle').innerText = t.freeTitle;
+        document.getElementById('lblLast100').innerText = t.last100;
+        document.getElementById('lblTotalSpins').innerText = t.totalSpins;
+        document.getElementById('lblWinRate').innerText = t.winRate;
     }
 
-    // [PvP Logic]
+    // [PvP Logic] 보라색 원형 로비 & 분할 휠
     function renderPvPLobby() {
         const list = document.getElementById('pvpRoomList'); list.innerHTML = '';
         pvpRooms.forEach(room => {
             const card = document.createElement('div'); card.className = 'room-card';
             card.innerHTML = `
                 <div class="room-wheel-preview">${drawPreviewLines(room.players)}</div>
-                <div class="room-info">
-                    <div class="room-amt">${room.bet.toFixed(1)} TON</div>
-                    <div class="room-slots">${room.participants.length} / ${room.players} Users</div>
+                <div style="text-align:center;">
+                    <div style="font-size:0.9rem; font-weight:900; color:var(--gold);">${room.bet.toFixed(1)} TON</div>
+                    <div style="font-size:0.6rem; color:#8899aa;">${room.participants.length} / ${room.players} Users</div>
                 </div>
                 <button class="btn-join" onclick="joinPvPRoom(${room.id})">JOIN BATTLE</button>
             `;
@@ -316,75 +335,57 @@
     function openCreateModal() { document.getElementById('createModal').style.display = 'flex'; setPvPPlayers(2); }
     function setPvPPlayers(n) { pvpTargetPlayers = n; [2,3,4].forEach(v => document.getElementById('pvp'+v).style.background = v==n?'var(--blue)':'rgba(255,255,255,0.1)'); }
     function confirmCreatePvPRoom() {
-        const amt = parseFloat(document.getElementById('pvpBetInput').value);
-        if(amt > balance) return alert("Insufficient TON");
+        const amt = parseFloat(document.getElementById('pvpBetInput').value); if(amt > balance) return;
         const newRoom = { id: Date.now(), players: pvpTargetPlayers, participants: [currentId], bet: amt, status: 'waiting' };
         pvpRooms.push(newRoom); balance -= amt; updateBalUI(); enterPvPRoom(newRoom); closeModal();
     }
     function joinPvPRoom(id) {
-        const room = pvpRooms.find(r => r.id === id);
-        if(room.participants.length >= room.players) return;
-        if(balance < room.bet) return alert("Insufficient TON");
+        const room = pvpRooms.find(r => r.id === id); if(room.participants.length >= room.players || balance < room.bet) return;
         balance -= room.bet; updateBalUI(); room.participants.push(currentId); enterPvPRoom(room);
     }
     function enterPvPRoom(room) {
-        activePvPRoom = room;
-        document.getElementById('pvpLobby').style.display = 'none';
-        document.getElementById('pvpRoomView').style.display = 'block';
-        document.getElementById('pvpTotalPrize').innerText = (room.bet * room.players).toFixed(1) + " TON";
-        drawPvPWheel();
+        activePvPRoom = room; document.getElementById('pvpLobby').style.display = 'none'; document.getElementById('pvpRoomView').style.display = 'block';
+        document.getElementById('pvpTotalPrize').innerText = (room.bet * room.players).toFixed(1) + " TON"; drawPvPWheel();
     }
     function leavePvPRoom() {
-        if(!activePvPRoom) return;
-        balance += activePvPRoom.bet; updateBalUI();
+        if(!activePvPRoom) return; balance += activePvPRoom.bet; updateBalUI();
         activePvPRoom.participants = activePvPRoom.participants.filter(p => p !== currentId);
-        activePvPRoom = null;
-        document.getElementById('pvpLobby').style.display = 'block';
-        document.getElementById('pvpRoomView').style.display = 'none';
+        activePvPRoom = null; document.getElementById('pvpLobby').style.display = 'block'; document.getElementById('pvpRoomView').style.display = 'none';
         renderPvPLobby();
     }
     function drawPvPWheel() {
-        if(!activePvPRoom) return;
-        const canvas = document.getElementById('pvpCanvas'), ctx = canvas.getContext('2d');
-        const n = activePvPRoom.players, arc = (Math.PI*2)/n;
-        const colors = ['#ff3333', '#00d9ff', '#00ff66', '#ffcc00'];
-        ctx.clearRect(0,0,500,500);
+        if(!activePvPRoom) return; const canvas = document.getElementById('pvpCanvas'), ctx = canvas.getContext('2d'), n = activePvPRoom.players, arc = (Math.PI*2)/n;
+        const colors = ['#ff3333', '#00d9ff', '#00ff66', '#ffcc00']; ctx.clearRect(0,0,500,500);
         for(let i=0; i<n; i++) {
-            ctx.beginPath(); ctx.fillStyle = colors[i];
-            ctx.moveTo(250,250); ctx.arc(250,250,240, i*arc, (i+1)*arc); ctx.fill();
-            // 프로필 아이콘 영역 (이미지 시뮬레이션)
-            ctx.beginPath(); ctx.fillStyle = 'rgba(255,255,255,0.2)';
+            ctx.beginPath(); ctx.fillStyle = colors[i]; ctx.moveTo(250,250); ctx.arc(250,250,240, i*arc, (i+1)*arc); ctx.fill();
             const ang = i*arc + arc/2, lx = 250 + Math.cos(ang)*150, ly = 250 + Math.sin(ang)*150;
-            ctx.arc(lx, ly, 35, 0, Math.PI*2); ctx.fill();
-            ctx.fillStyle = "#fff"; ctx.font = "bold 14px Pretendard"; ctx.textAlign = "center";
-            ctx.fillText(activePvPRoom.participants[i] || "WAIT...", lx, ly+50);
+            ctx.beginPath(); ctx.fillStyle = 'rgba(255,255,255,0.15)'; ctx.arc(lx, ly, 38, 0, Math.PI*2); ctx.fill();
+            ctx.fillStyle = "#fff"; ctx.font = "bold 15px Pretendard"; ctx.textAlign = "center";
+            ctx.fillText(activePvPRoom.participants[i] || "WAITING...", lx, ly+5);
         }
     }
 
-    // [Main Loop]
-    function syncHistory() { const ms = Math.floor(Date.now()/CYCLE_MS); globalHistory=[]; for(let i=1; i<=35; i++) globalHistory.push(wheelMap[getWinIndex(ms-i)].color); updateHistoryUI(); }
+    // [Core Engine] 상단 결과바 높이 복구 적용
+    function getWinIndex(seed) { return (seed * 9301 + 49297) % 233280 % 56; }
+    function syncHistory() { const ms = Math.floor(Date.now()/CYCLE_MS); globalHistory=[]; for(let i=1; i<=35; i++) globalHistory.push(wheelMap[getWinIndex(ms-i)]); updateHistoryUI(); }
     function updateHistoryUI() {
         const s = document.getElementById('historyStrip'); s.innerHTML = '';
-        [...globalHistory].slice(-35).reverse().forEach(c => {
-            const b = document.createElement('div'); b.className = 'hist-bar'; b.style.backgroundColor = c;
-            if(c==='#ffcc00') b.classList.add('h-gold'); else if(c==='#00d9ff') b.classList.add('h-blue');
+        [...globalHistory].slice(-35).reverse().forEach(winObj => {
+            const b = document.createElement('div'); b.className = `hist-bar ${winObj.h}`; b.style.backgroundColor = winObj.color;
             s.appendChild(b);
         });
     }
-    function getWinIndex(seed) { return (seed * 9301 + 49297) % 233280 % 56; }
     function tick() {
-        const n = Date.now(), el = n % CYCLE_MS, canvasMain = document.getElementById('wheelCanvas');
+        const n = Date.now(), el = n % CYCLE_MS;
         if (el < FREEZE_PERIOD) {
-            document.getElementById('timerBar').style.width = "0%";
-            document.getElementById('betOverlay').style.display = "flex";
+            document.getElementById('timerBar').style.width = "0%"; document.getElementById('betOverlay').style.display = "flex";
             if (el >= CLOSE_DURATION && el < CLOSE_DURATION + 200 && !isSpinning) startSpin();
         } else {
             isSpinning = false; const rem = CYCLE_MS - el;
-            document.getElementById('timerBar').style.width = (rem / BETTING_PERIOD) * 100 + "%";
+            document.getElementById('timerBar').style.width = (rem / (CYCLE_MS - FREEZE_PERIOD)) * 100 + "%";
             document.getElementById('betOverlay').style.display = (rem < 100) ? "flex" : "none";
             deterministicBotSpawn(el);
         }
-        // PvP 동기화 체크
         if(activePvPRoom && activePvPRoom.participants.length === activePvPRoom.players && el >= CLOSE_DURATION && el < CLOSE_DURATION + 200 && !activePvPRoom.spinning) startPvPSpin();
     }
     function startSpin() {
@@ -396,8 +397,7 @@
         setTimeout(() => resolve(wheelMap[winIdx]), SPIN_DURATION);
     }
     function startPvPSpin() {
-        activePvPRoom.spinning = true;
-        const s = Math.floor(Date.now()/CYCLE_MS), n = activePvPRoom.players, winIdx = (s * 7) % n;
+        activePvPRoom.spinning = true; const s = Math.floor(Date.now()/CYCLE_MS), n = activePvPRoom.players, winIdx = (s * 7) % n;
         const arc = 360/n, tar = (360 - (winIdx * arc + arc/2)) % 360;
         pvpRotation += (360*15) + (tar - (pvpRotation%360) + 360)%360;
         const c = document.getElementById('pvpCanvas'); c.style.transition = `transform ${SPIN_DURATION}ms cubic-bezier(0.1, 0, 0, 1)`;
@@ -411,13 +411,13 @@
         }, SPIN_DURATION);
     }
     function resolve(win) {
-        document.getElementById('wheelPointer').style.backgroundColor = win.color; globalHistory.push(win.color); updateHistoryUI();
+        document.getElementById('wheelPointer').style.backgroundColor = win.color; globalHistory.push(win); updateHistoryUI();
         if(myBet) {
             myGameStats.total++; if(myBet.type === win.name) { balance += (myBet.amount * win.mult); myGameStats.wins++; playSound('sndWin'); } else playSound('sndLose');
             const row = `<tr><td><div style="width:20px;height:10px;background:var(--${myBet.type})"></div></td><td>${myBet.amount}T</td><td>${myBet.type===win.name?'W':'L'}</td><td><div style="width:20px;height:10px;background:${win.color}"></div></td></tr>`;
             document.getElementById('myLogBody').insertAdjacentHTML('afterbegin', row);
         }
-        setTimeout(() => { myBet = null; updateBalUI(); renderStats(); }, RESULT_WAIT);
+        setTimeout(() => { myBet = null; updateBalUI(); renderStats(); document.querySelectorAll('.btn').forEach(b => b.classList.remove('selected')); liveBoardTotals = {black:0, red:0, blue:0, gold:0}; document.querySelectorAll('.bet-list').forEach(l => l.innerHTML=''); }, RESULT_WAIT);
     }
     function deterministicBotSpawn(el) {
         if(el < FREEZE_PERIOD || roundBotBetTotal > 5.0) return;
@@ -432,20 +432,15 @@
         list.prepend(item); if(list.children.length > 5) list.lastChild.remove();
     }
     function handleUserBet(type) {
-        if(isSpinning || myBet) return;
-        const amt = parseFloat(document.getElementById('betInput').value);
+        if(isSpinning || myBet) return; const amt = parseFloat(document.getElementById('betInput').value);
         if(amt > balance) return; balance -= amt; updateBalUI(); myBet = {type, amount: amt};
         document.getElementById('btn'+type.charAt(0).toUpperCase()+type.slice(1)).classList.add('selected');
     }
     function updateBalUI() { document.getElementById('balance').innerText = balance.toFixed(1); document.getElementById('w-bal').innerText = balance.toFixed(1); }
     function switchTab(id, el) {
-        document.querySelectorAll('.content-view').forEach(v => v.classList.remove('active'));
-        document.getElementById('view-' + id).classList.add('active');
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        if(el) el.classList.add('active');
-        if(id === 'battle') renderPvPLobby();
-        if(id === 'ranking') renderRanking();
-        if(id === 'recommend') renderStats();
+        document.querySelectorAll('.content-view').forEach(v => v.classList.remove('active')); document.getElementById('view-' + id).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); if(el) el.classList.add('active');
+        if(id === 'battle') renderPvPLobby(); if(id === 'ranking') renderRanking(); if(id === 'recommend') renderStats();
     }
     function renderRanking() {
         const tbody = document.getElementById('rankingBody'); tbody.innerHTML = '';
@@ -456,21 +451,21 @@
     }
     function renderStats() {
         ['black', 'red', 'blue', 'gold'].forEach(k => {
-            document.getElementById(`val-${k}`).innerText = stats[k]+"%";
-            document.getElementById(`bar-${k}`).style.width = stats[k]+"%";
+            const val = stats[k]; document.getElementById(`val-${k}`).innerText = val+"%";
+            document.getElementById(`bar-${k}`).style.width = val+"%";
         });
         document.getElementById('st-total').innerText = myGameStats.total;
         document.getElementById('st-winrate').innerText = (myGameStats.total>0?Math.round(myGameStats.wins/myGameStats.total*100):0) + "%";
     }
     function handleLoginSubmit() { currentId = document.getElementById('loginId').value || "@User"; document.getElementById('loginForm').style.display='none'; document.getElementById('logoutForm').style.display='flex'; document.getElementById('w-userId').innerText = currentId; applyI18n(); }
     function handleLogout() { currentId="GUEST"; document.getElementById('loginForm').style.display='flex'; document.getElementById('logoutForm').style.display='none'; applyI18n(); }
+    function requestTelegramContact() { balance += 10.0; updateBalUI(); alert("🎁 10 TON FREE Credited!"); }
     function toggleWithdraw() { document.getElementById('withdrawGroup').style.display = document.getElementById('withdrawGroup').style.display==='none'?'block':'none'; }
     function closeModal() { document.getElementById('createModal').style.display = 'none'; }
     function initAudio() { audioInitialized = true; }
     function toggleMute() { isMuted = !isMuted; document.getElementById('soundToggle').innerText = isMuted ? "🔇" : "🔊"; }
     function playSound(id) { if(!isMuted && audioInitialized) document.getElementById(id).play().catch(()=>{}); }
 
-    const BETTING_PERIOD = CYCLE_MS - FREEZE_PERIOD;
     const canvasMain = document.getElementById('wheelCanvas'), ctxMain = canvasMain.getContext('2d');
     function drawMainWheel() {
         const arc = (Math.PI*2)/56, rad = 260;
@@ -479,7 +474,7 @@
             ctxMain.arc(280, 280, rad, i*arc, (i+1)*arc); ctxMain.stroke();
         }
     }
-    
+    const BETTING_PERIOD = CYCLE_MS - FREEZE_PERIOD;
     drawMainWheel(); syncHistory(); updateBalUI(); applyI18n(); setInterval(tick, 100);
 </script>
 <div style="position:fixed; bottom:80px; width:100%; text-align:center; color:#333; font-size:0.5rem; pointer-events:none;">v7.0 TON Golden Master</div>
