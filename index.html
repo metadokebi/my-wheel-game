@@ -14,7 +14,6 @@
             --text-muted: #8899aa; --nav-bg: #16191e;
             --point-color: #00d9ff; --buy-color: #fff200;
             --battle-pink: #f55a6a;
-            --battle-purple: #a333ff;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html, body { margin: 0; padding: 0; width: 100%; height: 100dvh; overflow: hidden; touch-action: manipulation; background: #1e2128; color: white; font-family: 'Pretendard', sans-serif; }
@@ -44,14 +43,28 @@
         .content-view { flex: 1; overflow-y: auto; display: none; padding-bottom: 90px; width: 100%; align-items: center; }
         .content-view.active { display: flex; flex-direction: column; }
 
-        /* [메인 게임] 디자인 */
+        /* [메인 게임] */
         .wheel-section { position: relative; margin: 25px 0; width: 230px; height: 230px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; }
         .wheel-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-weight: 900; font-size: 1.8rem; color: var(--accent); text-shadow: 0 0 10px var(--accent); opacity: 0.8; pointer-events: none; }
-        .pointer { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); width: 14px; height: 20px; background: #fff; clip-path: polygon(50% 100%, 0% 0%, 100% 0%); z-index: 25; transition: background-color 0.1s linear; }
+        .pointer { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); width: 14px; height: 20px; background: #fff; clip-path: polygon(50% 100%, 0% 0%, 100% 0%); z-index: 25; }
 
-        /* [라이브 배팅] 봇 디자인 */
-        .live-betting-area { width: 92%; margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid #333; }
+        .overlay-container { width: 100%; padding: 0 15px; position: relative; flex-shrink: 0; }
+        .controls { position: relative; width: 100%; background: var(--card); padding: 15px; border-radius: 12px; border: 1px solid #333; overflow: hidden; }
+        #betOverlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); z-index: 100; display: none; align-items: center; justify-content: center; border-radius: 12px; }
+        .closed-text { color: #ddd; font-weight: 900; font-size: 1.6rem; letter-spacing: 4px; animation: pulse 0.8s infinite; }
+
+        #betInput { flex: 1; background: #000; border: 1px solid #333; color: var(--accent); padding: 12px; border-radius: 8px; text-align: center; font-weight: 900; outline: none; }
+        .bet-buttons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 12px; }
+        .btn { height: 60px; background: transparent; border: 1.5px solid transparent; border-radius: 4px; font-weight: 900; font-size: 1.1rem; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
+        .btn-black { border-color: #555; color: #777; } .btn-red { border-color: var(--red); color: var(--red); }
+        .btn-blue { border-color: var(--blue); color: var(--blue); } .btn-gold { border-color: var(--gold); color: var(--gold); }
+        .btn.selected.btn-black { background: #222; color: #fff; }
+        .btn.selected.btn-red { background: var(--red); border-color: var(--red); color: #fff; box-shadow: 0 0 15px rgba(255,51,51,0.4); }
+        .btn.selected.btn-blue { background: var(--blue); border-color: var(--blue); color: #fff; box-shadow: 0 0 15px rgba(0,217,255,0.4); }
+        .btn.selected.btn-gold { background: var(--gold); border-color: var(--gold); color: #000; box-shadow: 0 0 15px rgba(255,204,0,0.4); }
+
+        .live-betting-area { width: 100%; margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid #333; }
         .live-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
         .live-col { background: rgba(0,0,0,0.4); border-radius: 8px; min-height: 105px; border-top: 3px solid #444; overflow: hidden; display: flex; flex-direction: column; }
         .col-head { padding: 4px; text-align: center; }
@@ -60,40 +73,43 @@
         .bet-list { padding: 3px; flex: 1; display: flex; flex-direction: column; gap: 3px; overflow: hidden; }
         .bet-item { display: flex; justify-content: space-between; font-size: 0.48rem; font-weight: 700; background: rgba(255,255,255,0.05); padding: 2px; border-radius: 3px; }
 
-        /* [배틀 아레나 고도화] 로비 룸 스타일 */
-        .battle-lobby-grid { width: 100%; padding: 20px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-        .battle-room-card { aspect-ratio: 1/1; border-radius: 50%; border: 3px solid var(--battle-purple); background: #16191e; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; cursor: pointer; box-shadow: 0 0 15px rgba(163, 51, 255, 0.2); transition: transform 0.2s; }
-        .battle-room-card:active { transform: scale(0.95); }
-        .room-info { text-align: center; z-index: 2; }
-        .room-amt { font-size: 1rem; font-weight: 900; color: var(--gold); }
-        .room-players { font-size: 0.6rem; color: #fff; opacity: 0.7; margin-top: 4px; }
-        .room-status-mini { position: absolute; bottom: 15px; background: var(--battle-purple); padding: 2px 8px; border-radius: 10px; font-size: 0.5rem; font-weight: 900; }
+        /* [신규 PvP 배틀 아레나 로비] */
+        .battle-lobby-grid { width: 100%; display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 15px; }
+        .room-card { background: var(--card); border: 1px solid #333; border-radius: 18px; padding: 15px; display: flex; flex-direction: column; align-items: center; gap: 10px; position: relative; cursor: pointer; }
+        .room-wheel-preview { width: 80px; height: 80px; border-radius: 50%; border: 3px solid #4d3a7d; position: relative; overflow: hidden; background: #000; }
+        .sector-line { position: absolute; background: #4d3a7d; width: 100%; height: 2px; top: 50%; left: 0; transform-origin: center; }
+        .room-info { text-align: center; }
+        .room-amt { font-size: 0.9rem; font-weight: 900; color: var(--gold); }
+        .room-slots { font-size: 0.6rem; color: #8899aa; font-weight: 700; }
+        .btn-join { width: 100%; height: 32px; background: var(--blue); color: #000; border: none; border-radius: 6px; font-weight: 900; font-size: 0.75rem; margin-top: 5px; }
 
-        /* [배틀 전용] 휠 디자인 */
-        .battle-view-container { display: flex; flex-direction: column; align-items: center; width: 100%; }
-        #battleWheelCanvas { width: 280px; height: 280px; border-radius: 50%; border: 6px solid #222; margin: 30px 0; }
-        .battle-control-footer { width: 92%; background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid #333; margin-top: 10px; text-align: center; }
+        /* [PvP 인게임 휠] */
+        .pvp-game-container { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 20px; padding-top: 20px; }
+        .pvp-wheel-wrapper { position: relative; width: 280px; height: 280px; }
+        #pvpCanvas { width: 100%; height: 100%; border-radius: 50%; border: 8px solid #222; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        .pvp-pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 20px; height: 30px; background: #fff; clip-path: polygon(50% 100%, 0% 0%, 100% 0%); z-index: 100; }
 
-        /* [v7.0 공통] 모달 스타일 */
+        /* [v7.0 골든마스터] 모달 및 기타 */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; align-items: flex-end; justify-content: center; z-index: 1000; }
         .modal-content { background: #1a1d26; border-radius: 20px 20px 0 0; width: 100%; max-width: 500px; padding: 25px; border-top: 1px solid #333; }
-        .selector-card { background: #232732; border: 1.5px solid transparent; border-radius: 12px; padding: 12px 5px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-        .selector-card.active { border-color: var(--battle-pink); background: rgba(245, 90, 106, 0.05); }
-        .btn-create-final { width: 100%; height: 55px; background: var(--battle-pink); color: #fff; border: none; border-radius: 12px; font-weight: 900; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 15px rgba(245, 90, 106, 0.3); }
+        .btn-create-final { width: 100%; height: 55px; background: var(--battle-pink); color: #fff; border: none; border-radius: 12px; font-weight: 900; font-size: 1rem; cursor: pointer; }
+        
+        .log-table { width: 95%; border-collapse: collapse; font-size: 0.7rem; background: rgba(0,0,0,0.4); border-radius: 10px; overflow: hidden; margin: 20px auto; }
+        .log-table th { background: #1a1a1a; padding: 10px; color: var(--text-muted); font-weight: 900; }
+        .log-table td { padding: 8px; border-bottom: 1px solid #222; text-align: center; }
 
-        /* 하단 네비게이션 */
         nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; height: 75px; background: var(--nav-bg); display: flex; border-top: 1px solid #222; z-index: 200; padding-bottom: env(safe-area-inset-bottom); }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; }
+        .nav-item span { font-size: 0.65rem; font-weight: 700; margin-top: 4px; }
         .nav-item.active { color: var(--accent); }
-        .btn-create-floating { position: fixed; bottom: 100px; right: 20px; width: 60px; height: 60px; background: var(--battle-purple); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 0 15px var(--battle-purple); border: 2px solid #fff; cursor: pointer; z-index: 300; }
-
+        .btn-create-floating { position: fixed; bottom: 100px; right: 20px; width: 60px; height: 60px; background: var(--blue); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 0 15px var(--blue); border: 2px solid #fff; z-index: 300; }
         @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
     </style>
 </head>
 <body onclick="initAudio()">
 
 <div id="langOverlay">
-    <h3 id="langSelTitle" style="color:var(--accent); font-weight:900; margin-bottom:25px;">SELECT LANGUAGE</h3>
+    <h3 style="color:var(--accent); font-weight:900; margin-bottom:25px;">SELECT LANGUAGE</h3>
     <div class="lang-list">
         <div class="lang-btn" onclick="setLanguage('en')">🇺🇸 English</div>
         <div class="lang-btn" onclick="setLanguage('cn')">🇨🇳 简体中文</div>
@@ -104,14 +120,13 @@
 
 <div id="createModal" class="modal" onclick="if(event.target==this)closeModal()">
     <div class="modal-content">
-        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin-bottom: 25px;">
-            <div class="selector-card active" onclick="setBattlePlayers(2)" id="bp2"><span style="font-size:1.2rem;">👤👤</span><span id="lb-2u">2 Users</span></div>
-            <div class="selector-card" onclick="setBattlePlayers(3)" id="bp3"><span style="font-size:1.2rem;">👤👤👤</span><span id="lb-3u">3 Users</span></div>
-            <div class="selector-card" onclick="setBattlePlayers(4)" id="bp4"><span style="font-size:1.2rem;">👤👤👤👤</span><span id="lb-4u">4 Users</span></div>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:20px;">
+            <div class="lang-btn" onclick="setPvPPlayers(2)" id="pvp2">2 Users</div>
+            <div class="lang-btn" onclick="setPvPPlayers(3)" id="pvp3">3 Users</div>
+            <div class="lang-btn" onclick="setPvPPlayers(4)" id="pvp4">4 Users</div>
         </div>
-        <label style="font-size:0.75rem; color:#8899aa; font-weight:700; margin-bottom:12px; display:block;" id="lb-duelVal">Duel Value (TON):</label>
-        <input type="number" id="battleBetInput" value="1.0" step="0.5" style="background:#000; border:1px solid #333; color:#fff; width:100%; padding:12px; border-radius:10px; margin-bottom:25px; outline:none; font-weight:900;">
-        <button class="btn-create-final" id="btnCreateFinal" onclick="confirmCreateBattle()">CREATE ROOM</button>
+        <input type="number" id="pvpBetInput" value="1.0" step="0.5" style="width:100%; background:#000; border:1px solid #333; color:var(--gold); padding:15px; border-radius:12px; font-weight:900; font-size:1.2rem; margin-bottom:20px; text-align:center;">
+        <button class="btn-create-final" onclick="confirmCreatePvPRoom()">CREATE BATTLE ROOM</button>
     </div>
 </div>
 
@@ -134,64 +149,57 @@
             <div class="wheel-logo">Spin4</div>
             <canvas id="wheelCanvas" width="560" height="560"></canvas>
         </div>
-        <div id="mainStandardUI" style="width:100%; display:flex; flex-direction:column; align-items:center;">
-            <div class="overlay-container">
-                <div class="controls">
-                    <div id="betOverlay"><div id="closedTxt" class="closed-text">CLOSED</div></div>
-                    <div style="display:flex; gap:8px; align-items:center;">
-                        <input type="number" id="betInput" value="1.0" step="0.1">
-                        <div style="display:flex; flex-direction:column; gap:2px;">
-                            <button onclick="adjBet(1.0)" style="width:40px; height:24px; background:#333; border:none; color:#fff; border-radius:4px; font-weight:bold;">+1</button>
-                            <button onclick="adjBet(-1.0)" style="width:40px; height:24px; background:#333; border:none; color:#fff; border-radius:4px; font-weight:bold;">-1</button>
-                        </div>
-                    </div>
-                    <div class="bet-buttons">
-                        <button class="btn btn-black" onclick="handleUserBet('black')" id="btnBlack">2×</button>
-                        <button class="btn btn-red" onclick="handleUserBet('red')" id="btnRed">3×</button>
-                        <button class="btn btn-blue" onclick="handleUserBet('blue')" id="btnBlue">5×</button>
-                        <button class="btn btn-gold" onclick="handleUserBet('gold')" id="btnGold">50×</button>
-                    </div>
+        <div class="overlay-container">
+            <div class="controls">
+                <div id="betOverlay"><div class="closed-text" id="closedTxt">CLOSED</div></div>
+                <div style="display:flex; gap:8px; align-items:center;">
+                    <input type="number" id="betInput" value="1.0" step="0.1">
                 </div>
-                <div class="live-betting-area">
-                    <div id="liveTitle" style="font-size:0.7rem; color:#8899aa; margin-bottom:8px; font-weight:900; text-align:center;">LIVE STATUS</div>
-                    <div class="live-grid">
-                        <div class="live-col" style="border-top-color:var(--black);"><div class="col-head"><span class="col-label" id="cl1">BLACK</span><span id="t-black" class="col-total">0.0</span></div><div id="l-black" class="bet-list"></div></div>
-                        <div class="live-col" style="border-top-color:var(--red);"><div class="col-head"><span class="col-label" id="cl2">RED</span><span id="t-red" class="col-total">0.0</span></div><div id="l-red" class="bet-list"></div></div>
-                        <div class="live-col" style="border-top-color:var(--blue);"><div class="col-head"><span class="col-label" id="cl3">BLUE</span><span id="t-blue" class="col-total">0.0</span></div><div id="l-blue" class="bet-list"></div></div>
-                        <div class="live-col" style="border-top-color:var(--gold);"><div class="col-head"><span class="col-label" id="cl4">GOLD</span><span id="t-gold" class="col-total">0.0</span></div><div id="l-gold" class="bet-list"></div></div>
-                    </div>
+                <div class="bet-buttons">
+                    <button class="btn btn-black" onclick="handleUserBet('black')" id="btnBlack">2×</button>
+                    <button class="btn btn-red" onclick="handleUserBet('red')" id="btnRed">3×</button>
+                    <button class="btn btn-blue" onclick="handleUserBet('blue')" id="btnBlue">5×</button>
+                    <button class="btn btn-gold" onclick="handleUserBet('gold')" id="btnGold">50×</button>
                 </div>
             </div>
-            <table class="log-table">
-                <tbody id="myLogBody"></tbody>
-            </table>
+            <div class="live-betting-area">
+                <div id="liveTitle" style="font-size:0.7rem; color:#8899aa; margin-bottom:8px; font-weight:900; text-align:center;">LIVE STATUS</div>
+                <div class="live-grid">
+                    <div class="live-col" style="border-top-color:var(--black);"><div class="col-head"><span class="col-label">BLACK</span><span id="t-black" class="col-total">0.0</span></div><div id="l-black" class="bet-list"></div></div>
+                    <div class="live-col" style="border-top-color:var(--red);"><div class="col-head"><span class="col-label">RED</span><span id="t-red" class="col-total">0.0</span></div><div id="l-red" class="bet-list"></div></div>
+                    <div class="live-col" style="border-top-color:var(--blue);"><div class="col-head"><span class="col-label">BLUE</span><span id="t-blue" class="col-total">0.0</span></div><div id="l-blue" class="bet-list"></div></div>
+                    <div class="live-col" style="border-top-color:var(--gold);"><div class="col-head"><span class="col-label">GOLD</span><span id="t-gold" class="col-total">0.0</span></div><div id="l-gold" class="bet-list"></div></div>
+                </div>
+            </div>
         </div>
+        <table class="log-table">
+            <thead><tr><th id="th-pick">Pick</th><th id="th-bet">Amt</th><th id="th-res">Result</th><th id="th-win">Winner</th></tr></thead>
+            <tbody id="myLogBody"></tbody>
+        </table>
     </div>
 
     <div id="view-battle" class="content-view">
-        <div id="battleLobby" style="width:100%;">
-            <div style="padding:20px; text-align:center;"><h3 style="color:var(--battle-purple); margin:0;">⚔️ BATTLE ARENA</h3></div>
-            <div class="battle-lobby-grid" id="battleRoomList">
+        <div id="pvpLobby" style="width:100%;">
+            <h3 style="padding:15px; margin:0; color:var(--accent); font-weight:900;" id="btLobby">⚔️ BATTLE ARENA</h3>
+            <div class="battle-lobby-grid" id="pvpRoomList">
                 </div>
             <button class="btn-create-floating" onclick="openCreateModal()">+</button>
         </div>
-        <div id="battleRoom" class="battle-view-container" style="display:none;">
-            <div style="margin-top:20px; font-weight:900; color:var(--battle-purple);" id="btRoomTitle">PvP DUEL ROOM</div>
-            <div style="position:relative;">
-                <div class="pointer" style="bottom:auto; top:-12px; clip-path: polygon(50% 0%, 0% 100%, 100% 100%);"></div>
-                <canvas id="battleWheelCanvas" width="560" height="560"></canvas>
-            </div>
-            <div class="battle-control-footer">
-                <div id="btRoomStatus" style="font-size:0.8rem; margin-bottom:15px;">WAITING FOR PLAYERS...</div>
-                <div style="display:flex; justify-content:center; gap:20px; margin-bottom:20px;" id="btPlayers">
-                    </div>
-                <button class="action-btn btn-withdraw" style="width:100%; height:50px; background:#444;" onclick="leaveBattle()">LEAVE ROOM</button>
+        <div id="pvpRoomView" style="display:none; width:100%; text-align:center;">
+            <div class="pvp-game-container">
+                <div id="pvpStatus" style="font-size:1.2rem; font-weight:900; color:var(--gold);">WAITING FOR PLAYERS...</div>
+                <div class="pvp-wheel-wrapper">
+                    <div class="pvp-pointer"></div>
+                    <canvas id="pvpCanvas" width="500" height="500"></canvas>
+                </div>
+                <div id="pvpTotalPrize" style="font-size:1.5rem; font-weight:900; color:var(--accent);">0.0 TON</div>
+                <button class="lang-btn" style="width:200px; margin:0 auto; background:#333;" onclick="leavePvPRoom()">LEAVE BATTLE</button>
             </div>
         </div>
     </div>
 
     <div id="view-ranking" class="content-view">
-        <div style="padding:20px 0; text-align:center;"><h3 id="rankMainTitle" style="color:var(--gold); margin:0;">WEEKLY TOP 50</h3></div>
+        <div style="padding:20px 0; text-align:center;"><h3 id="rankMainTitle" style="color:var(--gold); margin:0;">WEEKLY TOP 100</h3></div>
         <table class="log-table" style="width:98%;">
             <thead><tr><th style="width:12%">#</th><th>User ID</th><th>Bet</th><th>Win</th><th>Rate</th></tr></thead>
             <tbody id="rankingBody"></tbody>
@@ -201,41 +209,47 @@
     <div id="view-how" class="content-view"><div id="howContent" class="manual-container"></div></div>
 
     <div id="view-recommend" class="content-view">
-        <div style="padding:30px 20px 10px; text-align:center;"><div style="font-size:0.85rem; font-weight:900; color:var(--accent);" id="lblLast100Stats">24H DIGITAL ANALYSIS</div></div>
+        <div style="padding:30px 20px 10px; text-align:center;"><div style="font-size:0.85rem; font-weight:900; color:var(--accent);">24H DIGITAL ANALYSIS</div></div>
         <div class="digital-stats">
-            <div class="stat-row"><div style="display:flex; justify-content:space-between; font-size:0.7rem;"><span id="sl1">BLACK</span><span id="val-black">0%</span></div><div class="stat-bar-bg"><div id="bar-black" class="stat-bar-fill" style="background:var(--black)"></div></div></div>
-            <div class="stat-row"><div style="display:flex; justify-content:space-between; font-size:0.7rem;"><span id="sl2">RED</span><span id="val-red">0%</span></div><div class="stat-bar-bg"><div id="bar-red" class="stat-bar-fill" style="background:var(--red)"></div></div></div>
-            <div class="stat-row"><div style="display:flex; justify-content:space-between; font-size:0.7rem;"><span id="sl3">BLUE</span><span id="val-blue">0%</span></div><div class="stat-bar-bg"><div id="bar-blue" class="stat-bar-fill" style="background:var(--blue)"></div></div></div>
-            <div class="stat-row"><div style="display:flex; justify-content:space-between; font-size:0.7rem;"><span id="sl4">GOLD</span><span id="val-gold">0%</span></div><div class="stat-bar-bg"><div id="bar-gold" class="stat-bar-fill" style="background:var(--gold); box-shadow:0 0 8px var(--gold)"></div></div></div>
+            <div class="stat-row"><div style="display:flex; justify-content:space-between; font-size:0.7rem;"><span>BLACK</span><span id="val-black">0%</span></div><div class="stat-bar-bg"><div id="bar-black" class="stat-bar-fill" style="background:var(--black)"></div></div></div>
+            <div class="stat-row"><div style="display:flex; justify-content:space-between; font-size:0.7rem;"><span>RED</span><span id="val-red">0%</span></div><div class="stat-bar-bg"><div id="bar-red" class="stat-bar-fill" style="background:var(--red)"></div></div></div>
+            <div class="stat-row"><div style="display:flex; justify-content:space-between; font-size:0.7rem;"><span>BLUE</span><span id="val-blue">0%</span></div><div class="stat-bar-bg"><div id="bar-blue" class="stat-bar-fill" style="background:var(--blue)"></div></div></div>
+            <div class="stat-row"><div style="display:flex; justify-content:space-between; font-size:0.7rem;"><span>GOLD</span><span id="val-gold">0%</span></div><div class="stat-bar-bg"><div id="bar-gold" class="stat-bar-fill" style="background:var(--gold); box-shadow:0 0 8px var(--gold)"></div></div></div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; width:92%; margin-top:15px;">
+            <div style="background:var(--card); padding:15px; border-radius:10px; text-align:center; border:1px solid #333;"><div id="st-total" style="font-size:1.2rem; font-weight:900; color:var(--accent);">0</div><div style="font-size:0.6rem; color:#666;">TOTAL SPINS</div></div>
+            <div style="background:var(--card); padding:15px; border-radius:10px; text-align:center; border:1px solid #333;"><div id="st-winrate" style="font-size:1.2rem; font-weight:900; color:var(--accent);">0%</div><div style="font-size:0.6rem; color:#666;">WIN RATE</div></div>
         </div>
         <div style="margin-top:25px; color:#444; font-size:0.6rem; font-weight:bold; text-align:center;">v7.0 TON Golden Master</div>
     </div>
 
     <div id="view-wallet" class="content-view">
         <div id="loginForm" class="wallet-card">
-            <h3 style="color:var(--accent); text-align:center;">TON Gateway</h3>
+            <h3 style="color:var(--accent); text-align:center; margin-bottom:20px;">TON Gateway</h3>
             <input type="text" id="loginId" class="wallet-input" placeholder="Telegram ID" readonly>
-            <input type="password" id="loginPw" class="wallet-input" placeholder="Set Secure Password">
-            <button id="btnLoginBtn" onclick="handleLoginSubmit()" style="width:100%; height:50px; background:#333; color:#fff; border:none; border-radius:8px; font-weight:900;">CONNECT ACCOUNT</button>
+            <input type="password" id="loginPw" class="wallet-input" placeholder="Password">
+            <button onclick="handleLoginSubmit()" style="width:100%; height:50px; background:#333; color:#fff; border:none; border-radius:8px; font-weight:900;">CONNECT</button>
         </div>
         <div id="logoutForm" style="display:none; width:100%; align-items:center; flex-direction:column;">
             <div class="wallet-card">
+                <div class="wallet-user-info"><div><span id="w-userId" style="font-size:0.8rem; font-weight:800; color:var(--accent);">@Guest</span></div></div>
                 <div class="wallet-balance-big"><span id="w-bal">0.0</span> <small>TON</small></div>
                 <div class="wallet-actions">
                     <button class="action-btn btn-deposit">DEPOSIT</button>
-                    <button class="action-btn btn-withdraw">WITHDRAW</button>
+                    <button class="action-btn btn-withdraw" onclick="toggleWithdraw()">WITHDRAW</button>
                 </div>
+                <div id="withdrawGroup" style="display:none; margin-top:15px;"><input type="number" class="wallet-input" placeholder="Amount"></div>
             </div>
-            <button onclick="handleLogout()" id="btnLogout" style="width:92%; height:50px; background:rgba(255,51,51,0.05); color:var(--red); border:1px solid rgba(255,51,51,0.2); border-radius:12px; font-weight:900; margin-top:20px;">LOGOUT</button>
+            <button onclick="handleLogout()" style="width:92%; height:50px; background:rgba(255,51,51,0.1); color:var(--red); border:none; border-radius:12px; font-weight:900; margin-top:20px;">LOGOUT</button>
         </div>
     </div>
 
     <nav>
-        <div class="nav-item active" onclick="switchTab('home', this)">🏠<span id="navHome">홈</span></div>
-        <div class="nav-item" onclick="switchTab('battle', this)">⚔️<span id="navBattle">대결</span></div>
-        <div class="nav-item" onclick="switchTab('ranking', this)">🏆<span id="navRank">랭킹</span></div>
-        <div class="nav-item" onclick="switchTab('how', this)">❓<span id="navHow">사용법</span></div>
-        <div class="nav-item" onclick="switchTab('recommend', this)">📈<span id="navStats">통계</span></div>
+        <div class="nav-item active" onclick="switchTab('home', this)">🏠<span id="navHome">Home</span></div>
+        <div class="nav-item" onclick="switchTab('battle', this)">⚔️<span id="navBattle">Battle</span></div>
+        <div class="nav-item" onclick="switchTab('ranking', this)">🏆<span id="navRank">Ranking</span></div>
+        <div class="nav-item" onclick="switchTab('how', this)">❓<span id="navHow">How</span></div>
+        <div class="nav-item" onclick="switchTab('recommend', this)">📈<span id="navStats">Stats</span></div>
     </nav>
 </div>
 
@@ -246,27 +260,26 @@
 <script>
     const tg = window.Telegram.WebApp; tg.expand();
     let currentLang = 'en', currentId = "GUEST", balance = 50.0;
-    let isSpinning = false, myBet = null, globalHistory = [];
+    let isSpinning = false, myBet = null, globalHistory = [], stats = { black: 49.5, red: 30.2, blue: 18.7, gold: 1.6 };
     let myGameStats = { total: 0, wins: 0 }, isMuted = false, audioInitialized = false;
-    let roundBotBetTotal = 0, currentRotation = 0;
-    
-    /* PvP 관련 상태 */
-    let battleRooms = [
-        { id: 101, max: 2, players: ["User12"], amt: 2.0, colors: ['#ff3333', '#00d9ff'] },
-        { id: 102, max: 4, players: ["BotA", "BotB"], amt: 5.0, colors: ['#ff3333', '#00d9ff', '#00ff66', '#ffcc00'] }
+    let roundBotBetTotal = 0, currentRotation = 0, liveBoardTotals = {black:0, red:0, blue:0, gold:0};
+
+    // [PvP State]
+    let pvpRooms = [
+        {id: 1, players: 3, participants: ["User1", "User2"], bet: 5.0, status: 'waiting'},
+        {id: 2, players: 2, participants: ["LuckyMe"], bet: 10.0, status: 'waiting'},
+        {id: 3, players: 4, participants: ["King", "Ace", "Queen"], bet: 2.0, status: 'waiting'}
     ];
-    let currentBattleRoom = null, battlePlayersCount = 2;
-    let battleRotation = 0, isBattleSpinning = false;
+    let activePvPRoom = null, pvpTargetPlayers = 2, pvpRotation = 0;
 
     const CYCLE_MS = 20000, SPIN_DURATION = 4500, RESULT_WAIT = 500, CLOSE_DURATION = 1000;
-    const FREEZE_PERIOD = SPIN_DURATION + RESULT_WAIT + CLOSE_DURATION;
     const sectors = [{color:'#ffcc00', name:'gold', mult:50, weight: 1},{color:'#00d9ff', name:'blue', mult:5, weight: 10},{color:'#ff3333', name:'red', mult:3, weight: 17},{color:'#444444', name:'black', mult:2, weight: 28}];
     const wheelMap = []; sectors.forEach(s => { for(let i=0; i<s.weight; i++) wheelMap.push(s); });
 
-    /* 다국어 데이터 */
+    function getHowHtml() { return `<div class="manual-card"><div class="manual-title">💎 Provably Fair</div><div class="manual-text">Result = (UTC_Timestamp * 9301 + 49297) % 233280</div></div>`; }
     const i18n = {
-        ko: { welcome: "환영합니다", home: "홈", battle: "대결", rank: "랭킹", how: "사용법", stats: "통계", closed: "마감", pick: "선택", bet: "수량", res: "결과", win: "당첨" },
-        en: { welcome: "Welcome", home: "Home", battle: "Battle", rank: "Ranking", how: "How", stats: "Stats", closed: "CLOSED", pick: "Pick", bet: "Amt", res: "Result", win: "Winner" }
+        ko: { welcome: "환영합니다", home: "홈", battle: "대결", rank: "랭킹", how: "사용법", stats: "통계", closed: "마감", btLobby: "⚔️ 배틀 아레나", wait: "유저 대기 중...", win: "승리!" },
+        en: { welcome: "Welcome", home: "Home", battle: "Battle", rank: "Ranking", how: "How", stats: "Stats", closed: "CLOSED", btLobby: "⚔️ BATTLE ARENA", wait: "WAITING FOR PLAYERS...", win: "WINNER!" }
     };
 
     function setLanguage(lang) { currentLang = lang; document.getElementById('langOverlay').style.display = 'none'; applyI18n(); }
@@ -275,206 +288,200 @@
         document.getElementById('displayId').innerText = `${t.welcome} ${currentId}`;
         document.getElementById('closedTxt').innerText = t.closed;
         document.getElementById('navHome').innerText = t.home; document.getElementById('navBattle').innerText = t.battle;
-        document.getElementById('navRank').innerText = t.rank; document.getElementById('navHow').innerText = t.how; document.getElementById('navStats').innerText = t.stats;
+        document.getElementById('navRank').innerText = t.rank; document.getElementById('navHow').innerText = t.how;
+        document.getElementById('navStats').innerText = t.stats; document.getElementById('btLobby').innerText = t.btLobby;
+        document.getElementById('howContent').innerHTML = getHowHtml();
     }
 
-    /* 배틀 아레나 로직 */
-    function renderBattleRooms() {
-        const list = document.getElementById('battleRoomList');
-        list.innerHTML = '';
-        battleRooms.forEach(room => {
-            const card = document.createElement('div');
-            card.className = 'battle-room-card';
+    // [PvP Logic]
+    function renderPvPLobby() {
+        const list = document.getElementById('pvpRoomList'); list.innerHTML = '';
+        pvpRooms.forEach(room => {
+            const card = document.createElement('div'); card.className = 'room-card';
             card.innerHTML = `
+                <div class="room-wheel-preview">${drawPreviewLines(room.players)}</div>
                 <div class="room-info">
-                    <div class="room-amt">${room.amt}T</div>
-                    <div class="room-players">${room.players.length} / ${room.max}</div>
+                    <div class="room-amt">${room.bet.toFixed(1)} TON</div>
+                    <div class="room-slots">${room.participants.length} / ${room.players} Users</div>
                 </div>
-                <div class="room-status-mini">ENTRY</div>
+                <button class="btn-join" onclick="joinPvPRoom(${room.id})">JOIN BATTLE</button>
             `;
-            card.onclick = () => joinBattle(room.id);
             list.appendChild(card);
         });
     }
-
-    function openCreateModal() { document.getElementById('createModal').style.display = 'flex'; }
-    function closeModal() { document.getElementById('createModal').style.display = 'none'; }
-    function setBattlePlayers(n) { 
-        battlePlayersCount = n; 
-        [2,3,4].forEach(v => document.getElementById('bp'+v).classList.toggle('active', v===n)); 
+    function drawPreviewLines(n) {
+        let lines = ''; for(let i=0; i<n; i++) lines += `<div class="sector-line" style="transform: rotate(${i*(360/n)}deg)"></div>`;
+        return lines;
     }
-
-    function confirmCreateBattle() {
-        const amt = parseFloat(document.getElementById('battleBetInput').value);
-        if(amt > balance) return alert("Insufficient Balance");
-        const newRoom = {
-            id: Date.now(), max: battlePlayersCount, players: [currentId], amt: amt,
-            colors: ['#ff3333', '#00d9ff', '#00ff66', '#ffcc00'].slice(0, battlePlayersCount)
-        };
-        battleRooms.push(newRoom);
-        balance -= amt; updateBalUI();
-        enterRoom(newRoom);
-        closeModal();
+    function openCreateModal() { document.getElementById('createModal').style.display = 'flex'; setPvPPlayers(2); }
+    function setPvPPlayers(n) { pvpTargetPlayers = n; [2,3,4].forEach(v => document.getElementById('pvp'+v).style.background = v==n?'var(--blue)':'rgba(255,255,255,0.1)'); }
+    function confirmCreatePvPRoom() {
+        const amt = parseFloat(document.getElementById('pvpBetInput').value);
+        if(amt > balance) return alert("Insufficient TON");
+        const newRoom = { id: Date.now(), players: pvpTargetPlayers, participants: [currentId], bet: amt, status: 'waiting' };
+        pvpRooms.push(newRoom); balance -= amt; updateBalUI(); enterPvPRoom(newRoom); closeModal();
     }
-
-    function joinBattle(id) {
-        const room = battleRooms.find(r => r.id === id);
-        if(room.players.length >= room.max) return alert("Room Full");
-        if(room.amt > balance) return alert("Insufficient Balance");
-        balance -= room.amt; updateBalUI();
-        room.players.push(currentId);
-        enterRoom(room);
+    function joinPvPRoom(id) {
+        const room = pvpRooms.find(r => r.id === id);
+        if(room.participants.length >= room.players) return;
+        if(balance < room.bet) return alert("Insufficient TON");
+        balance -= room.bet; updateBalUI(); room.participants.push(currentId); enterPvPRoom(room);
     }
-
-    function enterRoom(room) {
-        currentBattleRoom = room;
-        document.getElementById('battleLobby').style.display = 'none';
-        document.getElementById('battleRoom').style.display = 'flex';
-        drawBattleWheel();
-        updateRoomUI();
+    function enterPvPRoom(room) {
+        activePvPRoom = room;
+        document.getElementById('pvpLobby').style.display = 'none';
+        document.getElementById('pvpRoomView').style.display = 'block';
+        document.getElementById('pvpTotalPrize').innerText = (room.bet * room.players).toFixed(1) + " TON";
+        drawPvPWheel();
     }
-
-    function updateRoomUI() {
-        if(!currentBattleRoom) return;
-        const status = document.getElementById('btRoomStatus');
-        const pArea = document.getElementById('btPlayers');
-        pArea.innerHTML = '';
-        currentBattleRoom.players.forEach((p, i) => {
-            pArea.innerHTML += `<div style="text-align:center;"><div style="width:40px; height:40px; border-radius:50%; background:${currentBattleRoom.colors[i]}; border:2px solid #fff; margin-bottom:5px; display:flex; align-items:center; justify-content:center; font-size:0.5rem;">USER</div><div style="font-size:0.5rem;">${p}</div></div>`;
-        });
-        if(currentBattleRoom.players.length === currentBattleRoom.max) status.innerText = "ALL READY! SPINNING SOON...";
-        else status.innerText = `WAITING... (${currentBattleRoom.players.length}/${currentBattleRoom.max})`;
+    function leavePvPRoom() {
+        if(!activePvPRoom) return;
+        balance += activePvPRoom.bet; updateBalUI();
+        activePvPRoom.participants = activePvPRoom.participants.filter(p => p !== currentId);
+        activePvPRoom = null;
+        document.getElementById('pvpLobby').style.display = 'block';
+        document.getElementById('pvpRoomView').style.display = 'none';
+        renderPvPLobby();
     }
-
-    function leaveBattle() {
-        if(!currentBattleRoom) return;
-        balance += currentBattleRoom.amt; updateBalUI();
-        currentBattleRoom.players = currentBattleRoom.players.filter(p => p !== currentId);
-        currentBattleRoom = null;
-        document.getElementById('battleLobby').style.display = 'block';
-        document.getElementById('battleRoom').style.display = 'none';
-        renderBattleRooms();
-    }
-
-    function drawBattleWheel() {
-        const canvas = document.getElementById('battleWheelCanvas');
-        const ctx = canvas.getContext('2d');
-        const n = currentBattleRoom ? currentBattleRoom.max : 2;
-        const arc = (Math.PI * 2) / n;
-        ctx.clearRect(0,0,560,560);
+    function drawPvPWheel() {
+        if(!activePvPRoom) return;
+        const canvas = document.getElementById('pvpCanvas'), ctx = canvas.getContext('2d');
+        const n = activePvPRoom.players, arc = (Math.PI*2)/n;
+        const colors = ['#ff3333', '#00d9ff', '#00ff66', '#ffcc00'];
+        ctx.clearRect(0,0,500,500);
         for(let i=0; i<n; i++) {
-            ctx.beginPath();
-            ctx.fillStyle = currentBattleRoom ? currentBattleRoom.colors[i] : '#444';
-            ctx.moveTo(280, 280);
-            ctx.arc(280, 280, 260, i * arc, (i + 1) * arc);
-            ctx.fill();
-            // 프로필 이미지 위치 (원 중앙)
-            const ang = i * arc + arc/2;
-            const x = 280 + Math.cos(ang) * 150;
-            const y = 280 + Math.sin(ang) * 150;
-            ctx.beginPath();
-            ctx.fillStyle = "rgba(255,255,255,0.2)";
-            ctx.arc(x, y, 40, 0, Math.PI*2);
-            ctx.fill();
-            ctx.fillStyle = "#fff"; ctx.font = "900 24px Arial"; ctx.textAlign = "center";
-            ctx.fillText(currentBattleRoom?.players[i] ? "👤" : "?", x, y + 10);
+            ctx.beginPath(); ctx.fillStyle = colors[i];
+            ctx.moveTo(250,250); ctx.arc(250,250,240, i*arc, (i+1)*arc); ctx.fill();
+            // 프로필 아이콘 영역 (이미지 시뮬레이션)
+            ctx.beginPath(); ctx.fillStyle = 'rgba(255,255,255,0.2)';
+            const ang = i*arc + arc/2, lx = 250 + Math.cos(ang)*150, ly = 250 + Math.sin(ang)*150;
+            ctx.arc(lx, ly, 35, 0, Math.PI*2); ctx.fill();
+            ctx.fillStyle = "#fff"; ctx.font = "bold 14px Pretendard"; ctx.textAlign = "center";
+            ctx.fillText(activePvPRoom.participants[i] || "WAIT...", lx, ly+50);
         }
     }
 
-    /* 메인 게임 로직 (v7.0 골든마스터 고정) */
-    const canvas = document.getElementById('wheelCanvas'), ctx = canvas.getContext('2d'), timerBar = document.getElementById('timerBar'), betOverlay = document.getElementById('betOverlay');
-    function drawWheel() { 
-        const arc = (Math.PI * 2) / 56, rad = 260; ctx.clearRect(0,0,560,560); 
-        for (let i = 0; i < 56; i++) { ctx.beginPath(); ctx.strokeStyle = wheelMap[i].color; ctx.lineWidth = 14; const sA = i * arc + Math.PI/2 - arc/2; const eA = (i + 1) * arc + Math.PI/2 - arc/2; ctx.arc(280, 280, rad, sA, eA); ctx.stroke(); } 
+    // [Main Loop]
+    function syncHistory() { const ms = Math.floor(Date.now()/CYCLE_MS); globalHistory=[]; for(let i=1; i<=35; i++) globalHistory.push(wheelMap[getWinIndex(ms-i)].color); updateHistoryUI(); }
+    function updateHistoryUI() {
+        const s = document.getElementById('historyStrip'); s.innerHTML = '';
+        [...globalHistory].slice(-35).reverse().forEach(c => {
+            const b = document.createElement('div'); b.className = 'hist-bar'; b.style.backgroundColor = c;
+            if(c==='#ffcc00') b.classList.add('h-gold'); else if(c==='#00d9ff') b.classList.add('h-blue');
+            s.appendChild(b);
+        });
     }
-
+    function getWinIndex(seed) { return (seed * 9301 + 49297) % 233280 % 56; }
     function tick() {
-        const el = Date.now() % CYCLE_MS;
+        const n = Date.now(), el = n % CYCLE_MS, canvasMain = document.getElementById('wheelCanvas');
         if (el < FREEZE_PERIOD) {
-            timerBar.style.width = "0%"; betOverlay.style.display = "flex";
+            document.getElementById('timerBar').style.width = "0%";
+            document.getElementById('betOverlay').style.display = "flex";
             if (el >= CLOSE_DURATION && el < CLOSE_DURATION + 200 && !isSpinning) startSpin();
-            if (currentBattleRoom && currentBattleRoom.players.length === currentBattleRoom.max && !isBattleSpinning && el >= CLOSE_DURATION) startBattleSpin();
         } else {
-            isSpinning = false; isBattleSpinning = false;
-            const rem = CYCLE_MS - el;
-            timerBar.style.width = (rem / (CYCLE_MS - FREEZE_PERIOD)) * 100 + "%";
-            betOverlay.style.display = "none";
-            deterministicGlobalSpawn(el);
+            isSpinning = false; const rem = CYCLE_MS - el;
+            document.getElementById('timerBar').style.width = (rem / BETTING_PERIOD) * 100 + "%";
+            document.getElementById('betOverlay').style.display = (rem < 100) ? "flex" : "none";
+            deterministicBotSpawn(el);
         }
+        // PvP 동기화 체크
+        if(activePvPRoom && activePvPRoom.participants.length === activePvPRoom.players && el >= CLOSE_DURATION && el < CLOSE_DURATION + 200 && !activePvPRoom.spinning) startPvPSpin();
     }
-
     function startSpin() {
-        isSpinning = true;
-        const seed = Math.floor(Date.now() / CYCLE_MS);
-        const winIdx = (seed * 9301 + 49297) % 233280 % 56;
+        isSpinning = true; const s = Math.floor(Date.now()/CYCLE_MS), winIdx = getWinIndex(s);
         const arc = 360/56, tar = (360 - (winIdx * arc)) % 360;
-        currentRotation += (360 * 5) + tar;
-        canvas.style.transition = `transform ${SPIN_DURATION}ms cubic-bezier(0.1, 0, 0, 1)`;
-        canvas.style.transform = `rotate(${currentRotation}deg)`;
+        currentRotation += (360*10) + (tar - (currentRotation%360) + 360)%360;
+        const c = document.getElementById('wheelCanvas'); c.style.transition = `transform ${SPIN_DURATION}ms cubic-bezier(0.1, 0, 0, 1)`;
+        c.style.transform = `rotate(${currentRotation}deg)`;
         setTimeout(() => resolve(wheelMap[winIdx]), SPIN_DURATION);
     }
-
-    function startBattleSpin() {
-        isBattleSpinning = true;
-        const bCanvas = document.getElementById('battleWheelCanvas');
-        const seed = Math.floor(Date.now() / CYCLE_MS);
-        const n = currentBattleRoom.max;
-        const winIdx = (seed * 777 + 123) % n;
-        const arc = 360/n, tar = 360 - (winIdx * arc + arc/2);
-        battleRotation += (360 * 8) + tar;
-        bCanvas.style.transition = `transform ${SPIN_DURATION}ms cubic-bezier(0.1, 0, 0, 1)`;
-        bCanvas.style.transform = `rotate(${battleRotation}deg)`;
+    function startPvPSpin() {
+        activePvPRoom.spinning = true;
+        const s = Math.floor(Date.now()/CYCLE_MS), n = activePvPRoom.players, winIdx = (s * 7) % n;
+        const arc = 360/n, tar = (360 - (winIdx * arc + arc/2)) % 360;
+        pvpRotation += (360*15) + (tar - (pvpRotation%360) + 360)%360;
+        const c = document.getElementById('pvpCanvas'); c.style.transition = `transform ${SPIN_DURATION}ms cubic-bezier(0.1, 0, 0, 1)`;
+        c.style.transform = `rotate(${pvpRotation}deg)`;
+        document.getElementById('pvpStatus').innerText = "SPINNING...";
         setTimeout(() => {
-            const winner = currentBattleRoom.players[winIdx];
-            if(winner === currentId) {
-                const total = currentBattleRoom.amt * currentBattleRoom.max;
-                balance += total; updateBalUI();
-                alert(`🏆 VICTORY! You won ${total.toFixed(1)} TON`);
-            } else { alert(`💀 DEFEAT! ${winner} won the pot.`); }
-            leaveBattle();
+            const winner = activePvPRoom.participants[winIdx];
+            document.getElementById('pvpStatus').innerText = (winner === currentId ? "YOU WIN!" : winner + " WON!");
+            if(winner === currentId) { balance += (activePvPRoom.bet * activePvPRoom.players); updateBalUI(); playSound('sndWin'); }
+            setTimeout(leavePvPRoom, 3000);
         }, SPIN_DURATION);
     }
-
     function resolve(win) {
+        document.getElementById('wheelPointer').style.backgroundColor = win.color; globalHistory.push(win.color); updateHistoryUI();
         if(myBet) {
-            myGameStats.total++;
-            if(myBet.type === win.name) {
-                balance += (myBet.amount * win.mult); myGameStats.wins++; playSound('sndWin');
-            } else playSound('sndLose');
-            updateLog(win);
+            myGameStats.total++; if(myBet.type === win.name) { balance += (myBet.amount * win.mult); myGameStats.wins++; playSound('sndWin'); } else playSound('sndLose');
+            const row = `<tr><td><div style="width:20px;height:10px;background:var(--${myBet.type})"></div></td><td>${myBet.amount}T</td><td>${myBet.type===win.name?'W':'L'}</td><td><div style="width:20px;height:10px;background:${win.color}"></div></td></tr>`;
+            document.getElementById('myLogBody').insertAdjacentHTML('afterbegin', row);
         }
-        myBet = null; updateBalUI();
-        canvas.style.transition = 'none'; canvas.style.transform = `rotate(${currentRotation % 360}deg)`;
+        setTimeout(() => { myBet = null; updateBalUI(); renderStats(); }, RESULT_WAIT);
     }
-
-    /* 유틸리티 */
-    function updateLog(win) {
-        const row = `<tr><td><div class="ui-pill" style="background:var(--${myBet.type})"></div></td><td>${myBet.amount}T</td><td>${myBet.type===win.name?'WIN':'LOSE'}</td></tr>`;
-        document.getElementById('myLogBody').insertAdjacentHTML('afterbegin', row);
+    function deterministicBotSpawn(el) {
+        if(el < FREEZE_PERIOD || roundBotBetTotal > 5.0) return;
+        if(Math.random() < 0.05) {
+            const types = ['black', 'red', 'blue', 'gold'], type = types[Math.floor(Math.random()*4)], amt = 0.5;
+            roundBotBetTotal += amt; addLiveUI(type, "Bot"+Math.floor(Math.random()*99), amt);
+        }
     }
-    function updateBalUI() { document.getElementById('balance').innerText = balance.toFixed(1); const wb = document.getElementById('w-bal'); if(wb) wb.innerText = balance.toFixed(1); }
-    function adjBet(v) { let i = document.getElementById('betInput'), n = parseFloat(i.value) + v; if(n >= 0.1) i.value = n.toFixed(1); }
-    function handleUserBet(type) { if(myBet || (Date.now()%CYCLE_MS < FREEZE_PERIOD)) return; const amt = parseFloat(document.getElementById('betInput').value); if(amt > balance) return; balance -= amt; myBet = {type, amount: amt}; updateBalUI(); }
-    function switchTab(id, el) { 
+    function addLiveUI(type, user, amt) {
+        const list = document.getElementById(`l-${type}`); liveBoardTotals[type]+=amt; document.getElementById(`t-${type}`).innerText = liveBoardTotals[type].toFixed(1);
+        const item = document.createElement('div'); item.className = 'bet-item'; item.innerHTML = `<span>${user}</span><b>${amt}T</b>`;
+        list.prepend(item); if(list.children.length > 5) list.lastChild.remove();
+    }
+    function handleUserBet(type) {
+        if(isSpinning || myBet) return;
+        const amt = parseFloat(document.getElementById('betInput').value);
+        if(amt > balance) return; balance -= amt; updateBalUI(); myBet = {type, amount: amt};
+        document.getElementById('btn'+type.charAt(0).toUpperCase()+type.slice(1)).classList.add('selected');
+    }
+    function updateBalUI() { document.getElementById('balance').innerText = balance.toFixed(1); document.getElementById('w-bal').innerText = balance.toFixed(1); }
+    function switchTab(id, el) {
         document.querySelectorAll('.content-view').forEach(v => v.classList.remove('active'));
         document.getElementById('view-' + id).classList.add('active');
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         if(el) el.classList.add('active');
-        if(id === 'battle') renderBattleRooms();
+        if(id === 'battle') renderPvPLobby();
         if(id === 'ranking') renderRanking();
+        if(id === 'recommend') renderStats();
     }
     function renderRanking() {
         const tbody = document.getElementById('rankingBody'); tbody.innerHTML = '';
         for(let i=1; i<=50; i++) {
-            tbody.innerHTML += `<tr><td>${i}</td><td>User${i}**</td><td>${100-i}T</td><td>${200-i*2}T</td><td>${60-i}%</td></tr>`;
+            let id = "User"+(i*123).toString().slice(0,4);
+            tbody.innerHTML += `<tr><td>${i}</td><td>${id.slice(0,-2)}**</td><td>${(100-i)}T</td><td>${(50-i)}T</td><td>55%</td></tr>`;
         }
     }
-    function deterministicGlobalSpawn(el) { /* 기존 봇 배팅 로직 유지 */ }
+    function renderStats() {
+        ['black', 'red', 'blue', 'gold'].forEach(k => {
+            document.getElementById(`val-${k}`).innerText = stats[k]+"%";
+            document.getElementById(`bar-${k}`).style.width = stats[k]+"%";
+        });
+        document.getElementById('st-total').innerText = myGameStats.total;
+        document.getElementById('st-winrate').innerText = (myGameStats.total>0?Math.round(myGameStats.wins/myGameStats.total*100):0) + "%";
+    }
+    function handleLoginSubmit() { currentId = document.getElementById('loginId').value || "@User"; document.getElementById('loginForm').style.display='none'; document.getElementById('logoutForm').style.display='flex'; document.getElementById('w-userId').innerText = currentId; applyI18n(); }
+    function handleLogout() { currentId="GUEST"; document.getElementById('loginForm').style.display='flex'; document.getElementById('logoutForm').style.display='none'; applyI18n(); }
+    function toggleWithdraw() { document.getElementById('withdrawGroup').style.display = document.getElementById('withdrawGroup').style.display==='none'?'block':'none'; }
+    function closeModal() { document.getElementById('createModal').style.display = 'none'; }
     function initAudio() { audioInitialized = true; }
     function toggleMute() { isMuted = !isMuted; document.getElementById('soundToggle').innerText = isMuted ? "🔇" : "🔊"; }
     function playSound(id) { if(!isMuted && audioInitialized) document.getElementById(id).play().catch(()=>{}); }
 
-    setInterval(tick, 100); drawWheel(); updateBalUI(); applyI18n();
+    const BETTING_PERIOD = CYCLE_MS - FREEZE_PERIOD;
+    const canvasMain = document.getElementById('wheelCanvas'), ctxMain = canvasMain.getContext('2d');
+    function drawMainWheel() {
+        const arc = (Math.PI*2)/56, rad = 260;
+        for(let i=0; i<56; i++) {
+            ctxMain.beginPath(); ctxMain.strokeStyle = wheelMap[i].color; ctxMain.lineWidth = 14;
+            ctxMain.arc(280, 280, rad, i*arc, (i+1)*arc); ctxMain.stroke();
+        }
+    }
+    
+    drawMainWheel(); syncHistory(); updateBalUI(); applyI18n(); setInterval(tick, 100);
 </script>
+<div style="position:fixed; bottom:80px; width:100%; text-align:center; color:#333; font-size:0.5rem; pointer-events:none;">v7.0 TON Golden Master</div>
 </body>
 </html>
