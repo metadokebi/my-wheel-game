@@ -20,7 +20,7 @@
         .main-container { width: 100%; max-width: 500px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
 
         /* [골든마스터] 언어 선택 */
-        #langOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2); z-index: 5000; display: flex; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
+        #langOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); z-index: 5000; display: flex; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
         .lang-list { display: flex; flex-direction: column; gap: 12px; width: 240px; }
         .lang-btn { background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.25); color: #fff; padding: 18px 20px; border-radius: 12px; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: background 0.2s; }
 
@@ -46,7 +46,10 @@
         .wheel-section { position: relative; margin: 25px 0; width: 230px; height: 230px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; }
         .wheel-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; font-weight: 900; font-size: 1.8rem; color: var(--accent); text-shadow: 0 0 10px var(--accent); opacity: 0.8; pointer-events: none; }
+        
+        /* [메인 게임 포인터] - 안쪽에서 아래쪽 휠을 가르킴 */
         .pointer { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); width: 14px; height: 20px; background: #fff; clip-path: polygon(50% 100%, 0% 0%, 100% 0%); z-index: 25; transition: background-color 0.1s linear; }
+        
         .battle-center-ton { position: absolute; top: 60%; left: 50%; transform: translate(-50%, -50%); z-index: 30; text-align: center; display: none; pointer-events: none; }
         .battle-center-ton b { font-size: 1.1rem; color: var(--gold); text-shadow: 0 0 8px var(--gold); display: block; }
 
@@ -57,12 +60,14 @@
         .room-info { text-align: center; }
         .room-title { font-size: 0.85rem; font-weight: 900; color: #fff; }
         .room-status { font-size: 0.6rem; color: var(--accent); font-weight: 800; margin-top: 4px; }
-        .btn-enter-room { width: 100%; height: 35px; background: var(--blue); color: #000; border: none; border-radius: 8px; font-weight: 900; font-size: 0.7rem; margin-top: 5px; cursor: pointer; }
         
         #pvpBattleView { width: 100%; display: none; flex-direction: column; align-items: center; padding-top: 20px; }
-        .pvp-wheel-area { width: 280px; height: 280px; position: relative; margin-bottom: 30px; }
+        .pvp-wheel-area { width: 280px; height: 280px; position: relative; margin-bottom: 30px; display: flex; align-items: center; justify-content: center; }
         #pvpWheelCanvas { width: 100%; height: 100%; border-radius: 50%; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
-        .pvp-user-avatar { position: absolute; width: 48px; height: 48px; border-radius: 50%; border: 2.5px solid #fff; background: #222; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; font-weight: 900; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 10; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        
+        /* 휠과 같이 돌아가는 아바타 레이어 */
+        #pvpAvatarLayer { position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; transition: transform 4.5s cubic-bezier(0.1, 0, 0, 1); }
+        .pvp-user-avatar { position: absolute; width: 44px; height: 44px; border-radius: 50%; border: 2px solid #fff; background: #222; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; font-weight: 900; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
 
         .overlay-container { width: 100%; padding: 0 15px; position: relative; flex-shrink: 0; }
         .controls { position: relative; width: 100%; background: var(--card); padding: 15px; border-radius: 12px; border: 1px solid #333; overflow: hidden; }
@@ -116,7 +121,6 @@
         .manual-card { background: var(--card); border: 1px solid #333; border-radius: 15px; padding: 20px; }
         .manual-title { font-size: 0.95rem; font-weight: 900; color: var(--accent); margin-bottom: 12px; border-bottom: 1px solid #222; padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }
         .manual-text { font-size: 0.78rem; color: #bbb; line-height: 1.65; }
-        .manual-formula { background: #000; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 0.7rem; color: var(--accent); margin: 10px 0; text-align: center; border: 1px solid #222; }
 
         .digital-stats { width: 92%; background: #000; border: 1px solid #333; padding: 15px; border-radius: 12px; margin-top: 10px; }
         .stat-bar-bg { width: 100%; height: 8px; background: #111; border-radius: 4px; overflow: hidden; margin-top: 5px; }
@@ -237,17 +241,16 @@
                 <h3 style="color:var(--blue); font-weight:900; margin:0;" id="lb-lobbyTitle">⚔️ BATTLE ARENA</h3>
                 <p style="font-size:0.65rem; color:#666; margin-top:5px;" id="lb-lobbySub">Challenge others in real-time!</p>
             </div>
-            <div class="battle-lobby-list" id="roomListArea">
-                </div>
+            <div class="battle-lobby-list" id="roomListArea"></div>
             <button class="btn-create-floating" onclick="openCreateModal()">+</button>
         </div>
 
         <div id="pvpBattleView">
-            <h4 id="pvpStatusTxt" style="color:var(--accent); font-weight:900; margin-bottom:20px;">WAITING...</h4>
+            <h4 id="pvpStatusTxt" style="color:var(--accent); font-weight:900; margin-bottom:20px;">READY?</h4>
             <div class="pvp-wheel-area">
-                <div class="pointer" style="top:-10px; bottom:auto; clip-path: polygon(50% 0%, 0% 100%, 100% 100%);"></div>
+                <div class="pointer" style="bottom: 12px; z-index: 50;"></div>
                 <canvas id="pvpWheelCanvas" width="560" height="560"></canvas>
-                <div id="pvpAvatars"></div>
+                <div id="pvpAvatarLayer"></div>
             </div>
             <div style="background:rgba(0,0,0,0.4); padding:15px; border-radius:12px; border:1px solid #333; width:85%; text-align:center;">
                 <div style="font-size:0.6rem; color:#889; margin-bottom:5px;" id="lb-totalBetPvp">TOTAL POT</div>
@@ -331,12 +334,13 @@
 
 <script>
     const tg = window.Telegram.WebApp; tg.expand();
-    let currentLang = 'en', currentId = "GUEST", balance = 50.0, currentPhone = ""; 
+    let currentLang = localStorage.getItem('db_wheel_lang') || null; 
+    let currentId = "GUEST", balance = 50.0;
     let isSpinning = false, myBet = null, globalHistory = [], stats = { black: 0, red: 0, blue: 0, gold: 0 };
     let myGameStats = { total: 0, wins: 0 }, isMuted = false, audioInitialized = false, liveBoardTotals = { black:0, red:0, blue:0, gold:0 };
     let roundBotBetTotal = 0, currentRotation = 0, currentRoundResult = null; 
     
-    // 배틀 고도화 변수
+    // 배틀 로직 관련
     let battlePlayers = 2, selectedBattleColor = 'black', duelCount = 1, myBattleRoom = null;
     let pvpRooms = [];
     const masterColors = { black: '#444444', red: '#ff3333', blue: '#00d9ff', gold: '#ffcc00' };
@@ -350,19 +354,13 @@
     function shuffleWheel() { const seed = 123; for (let i = wheelMap.length - 1; i > 0; i--) { const j = (seed * (i + 1)) % wheelMap.length; [wheelMap[i], wheelMap[j]] = [wheelMap[j], wheelMap[i]]; } }
     shuffleWheel();
 
-    function getHowHtml(fairTitle, formula, rulesTitle, r1, r2, r3, tonTitle, depStep, witStep) {
-        return `<div class="manual-card"><div class="manual-section"><div class="manual-title">💎 ${fairTitle}</div><div class="manual-text">Spin4 uses deterministic algorithms based on UTC timestamps.<div class="manual-formula">${formula}</div><span class="manual-badge">LCG Algorithm</span> Every round is generated using <b>UTC Millisecond Timestamp</b> as seed.</div></div><div class="manual-section" style="margin-top:20px;"><div class="manual-title">🎮 ${rulesTitle}</div><div class="manual-text">Real-time TON multiplayer environment.<br><br>1. <span class="manual-badge">14.0s</span> <b>${r1}</b><br>2. <span class="manual-badge">1.0s</span> <b>${r2}</b><br>3. <span class="manual-badge">4.5s</span> <b>${r3}</b></div></div><div class="manual-section" style="margin-top:20px;"><div class="manual-title">💰 ${tonTitle}</div><div class="manual-text"><b class="manual-highlight">1. DEPOSIT</b><br>${depStep}<br><br><b class="manual-highlight">2. WITHDRAW</b><br>${witStep}</div></div></div>`;
-    }
-
     const i18n = {
         ko: { welcome: "환영합니다", buy: "💎 지갑", closed: "마감", live: "실시간 현황", home: "홈", battle: "대결", rank: "랭킹", how: "사용법", stats: "통계", pick: "선택", bet: "수량", res: "결과", win: "당첨", freeTitle: "인증 혜택", freeSub: "인증 즉시 10 TON 증정!", deposit: "충전", withdraw: "환전", logout: "로그아웃",
             btLobby: "⚔️ 배틀 아레나", btSub: "실시간 대결에 참여하세요!", bt2u: "2인", bt3u: "3인", bt4u: "4인", btChoose: "색상을 선택하세요:", btBal: "보유 자산", btVal: "배틀 금액 (TON):", btCnt: "배틀 횟수:", btCreate: "대결 생성", btWaiting: "유저 대기 중...", btLeave: "대결 나가기", btTotal: "총 상금",
-            cBlack: "블랙", cRed: "레드", cBlue: "블루", cGold: "골드",
-            howTxt: getHowHtml("증명 가능한 공정성", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON 배팅 규칙", "배팅 구간: 14초간 자유 배팅", "CLOSED: 배팅 마감 및 연산", "추첨: 4.5초간 휠 회전", "TON 코인 이용 가이드", "지갑 탭에서 [DEPOSIT] 버튼을 클릭하여 개인 입금 주소를 생성합니다. 해당 주소로 TON을 전송하면 네트워크 확인 후 즉시 게임 밸런스에 반영됩니다.", "지갑 탭의 [WITHDRAW]를 선택하고 본인의 외부 TON 지갑 주소와 수량을 입력합니다. [SEND TON] 클릭 시 실시간으로 전송 처리가 시작됩니다.") },
+            cBlack: "블랙", cRed: "레드", cBlue: "블루", cGold: "골드" },
         en: { welcome: "Welcome", buy: "💎 WALLET", closed: "CLOSED", live: "LIVE STATUS", home: "Home", battle: "Battle", rank: "Ranking", how: "How", stats: "Stats", pick: "Pick", bet: "Amt", res: "Result", win: "Winner", freeTitle: "Get Free 10 TON Reward", freeSub: "Claim your 10 TON now!", deposit: "DEPOSIT", withdraw: "WITHDRAW", logout: "LOGOUT",
             btLobby: "⚔️ BATTLE ARENA", btSub: "Challenge others in real-time!", bt2u: "2 Users", bt3u: "3 Users", bt4u: "4 Users", btChoose: "Choose a color:", btBal: "Balance", btVal: "Duel Value (TON):", btCnt: "Duel Count:", btCreate: "Create Duel", btWaiting: "WAITING FOR PLAYERS...", btLeave: "LEAVE BATTLE", btTotal: "TOTAL POT",
-            cBlack: "Black", cRed: "Red", cBlue: "Blue", cGold: "Gold",
-            howTxt: getHowHtml("Provably Fair", "Result = (UTC_Timestamp * 9301 + 49297) % 233280", "TON Betting Rules", "Betting: 14s active window", "CLOSED: Finalizing results", "Spin: 4.5s animation", "TON Coin Guide", "Click [DEPOSIT] in the Wallet tab to generate your unique address. Send TON to this address, and it will be credited to your balance after network confirmation.", "Go to [WITHDRAW] in the Wallet tab, enter your external TON address and amount, then click [SEND TON] to initiate an instant transfer.") }
+            cBlack: "Black", cRed: "Red", cBlue: "Blue", cGold: "Gold" }
     };
 
     function setLanguage(lang) { currentLang = lang; localStorage.setItem('db_wheel_lang', lang); document.getElementById('langOverlay').style.display = 'none'; applyI18n(); }
@@ -372,7 +370,7 @@
         document.getElementById('closedTxt').innerText = t.closed; document.getElementById('navHome').innerText = t.home; 
         document.getElementById('navBattle').innerText = t.battle; document.getElementById('navRank').innerText = t.rank; 
         document.getElementById('navHow').innerText = t.how; document.getElementById('navStats').innerText = t.stats; 
-        document.getElementById('btnBuyTop').innerText = t.buy; document.getElementById('howContent').innerHTML = t.howTxt;
+        document.getElementById('btnBuyTop').innerText = t.buy; 
         document.getElementById('liveTitle').innerText = t.live;
         document.getElementById('th-pick').innerText = t.pick; document.getElementById('th-bet').innerText = t.bet; 
         document.getElementById('th-res').innerText = t.res; document.getElementById('th-win').innerText = t.win;
@@ -384,85 +382,58 @@
         renderColorButtons(battlePlayers);
     }
 
-    /* --- [배틀 아레나 마스터 업데이트 로직] --- */
+    /* --- [배틀 아레나 고도화: 내부 로고 & 화살표 동기화] --- */
     function renderBattleLobby() {
-        const area = document.getElementById('roomListArea');
-        area.innerHTML = '';
-        
-        // 시간별 2~6개 랜덤 방 생성
+        const area = document.getElementById('roomListArea'); area.innerHTML = '';
         const roomCount = Math.floor(Math.random() * 5) + 2; 
-        pvpRooms = [];
-        const colorKeys = ['black', 'red', 'blue', 'gold'];
-
+        pvpRooms = []; const colorKeys = ['black', 'red', 'blue', 'gold'];
         for(let i=0; i<roomCount; i++) {
             const players = [2, 3, 4][Math.floor(Math.random()*3)];
-            const bet = [0.1, 0.5, 1, 5, 10][Math.floor(Math.random()*5)];
-            const current = Math.floor(Math.random() * players); // 대기 인원
-            
-            // 미니 휠 배경 (인원별 분할 색상)
+            const bet = [0.1, 0.5, 1, 5][Math.floor(Math.random()*4)];
+            const current = Math.floor(Math.random() * players);
             let grad = `conic-gradient(`;
-            for(let j=0; j<players; j++) {
-                grad += `${masterColors[colorKeys[j]]} ${j*(360/players)}deg ${(j+1)*(360/players)}deg,`;
-            }
+            for(let j=0; j<players; j++) grad += `${masterColors[colorKeys[j]]} ${j*(360/players)}deg ${(j+1)*(360/players)}deg,`;
             grad = grad.slice(0,-1) + `)`;
-
-            pvpRooms.push({ id: 'R_'+Math.floor(Math.random()*1000), players, current, bet });
-
-            const card = document.createElement('div');
-            card.className = 'room-card';
-            card.innerHTML = `
-                <div class="room-mini-wheel" style="background:${grad}">${players}P</div>
-                <div class="room-info">
-                    <div class="room-title">${bet} TON</div>
-                    <div class="room-status">${current}/${players} Waiting</div>
-                </div>
-                <button class="btn-enter-room" onclick="joinBattle('${pvpRooms[i].id}')">ENTER</button>
-            `;
+            pvpRooms.push({ id: 'R_'+Math.floor(Math.random()*999), players, current, bet });
+            const card = document.createElement('div'); card.className = 'room-card';
+            card.innerHTML = `<div class="room-mini-wheel" style="background:${grad}">${players}P</div><div class="room-info"><div class="room-title">${bet} TON</div><div class="room-status">${current}/${players} Waiting</div></div><button class="btn-enter-room" onclick="joinBattle('${pvpRooms[i].id}')">ENTER</button>`;
             area.appendChild(card);
         }
     }
 
-    function openCreateModal() { document.getElementById('createModal').style.display = 'flex'; document.getElementById('modalBalanceText').innerText = Number(balance).toFixed(1) + " TON"; setBattlePlayers(2); }
+    function openCreateModal() { document.getElementById('createModal').style.display = 'flex'; document.getElementById('modalBalanceText').innerText = balance.toFixed(1) + " TON"; setBattlePlayers(2); }
     function closeModal() { document.getElementById('createModal').style.display = 'none'; }
     function setBattlePlayers(n) { battlePlayers = n; [2,3,4].forEach(v => { const card = document.getElementById('bp'+v); if(v === n) card.classList.add('active'); else card.classList.remove('active'); }); renderColorButtons(n); }
-    
     function renderColorButtons(n) { 
         const t = i18n[currentLang] || i18n.en;
-        const area = document.getElementById('battleColorArea'); 
+        const area = document.getElementById('battleColorArea'); area.innerHTML = '';
         const config = [{name: t.cBlack, raw: 'black'}, {name: t.cRed, raw: 'red'}, {name: t.cBlue, raw: 'blue'}, {name: t.cGold, raw: 'gold'}];
-        area.innerHTML = ''; config.slice(0, n).forEach((c) => { 
+        config.slice(0, n).forEach((c) => { 
             const btn = document.createElement('div'); btn.className = `color-btn ${selectedBattleColor === c.raw ? 'active' : ''} btn-${c.raw}`; 
-            btn.style.border = `1.5px solid ${masterColors[c.raw]}`; btn.style.color = masterColors[c.raw];
-            btn.innerText = c.name; btn.onclick = () => { selectedBattleColor = c.raw; renderColorButtons(battlePlayers); }; area.appendChild(btn); 
+            btn.style.border = `1.5px solid ${masterColors[c.raw]}`; btn.style.color = masterColors[c.raw]; btn.innerText = c.name; 
+            btn.onclick = () => { selectedBattleColor = c.raw; renderColorButtons(battlePlayers); }; area.appendChild(btn); 
         }); 
     }
 
-    function adjDuelCount(v) { duelCount = Math.max(1, Math.min(10, duelCount + v)); document.getElementById('duelCountText').innerText = duelCount; }
-
     function joinBattle(roomId) {
         const room = pvpRooms.find(r => r.id === roomId);
-        if(!room) return;
-        if(balance < room.bet) { alert("Insufficient TON Balance!"); return; }
+        if(!room || balance < room.bet) return;
         balance -= room.bet; updateBalUI();
-        
         myBattleRoom = { id: roomId, participants: [], total: room.bet * room.players, bet: room.bet, players: room.players, currentRound: 1 };
         const colors = ['black', 'red', 'blue', 'gold'];
-        myBattleRoom.participants.push({id: 'me', color: colors[0], isMe: true}); // 참여 시 'me'로 표시
-        for(let i=1; i<room.players; i++) { myBattleRoom.participants.push({id: generateRealBotId(i+77), color: colors[i], isMe: false}); }
+        myBattleRoom.participants.push({id: 'me', color: colors[0], isMe: true});
+        for(let i=1; i<room.players; i++) myBattleRoom.participants.push({id: generateRealBotId(i+99), color: colors[i], isMe: false});
         showPvPView();
     }
 
     function confirmCreateBattle() { 
-        const val = parseFloat(document.getElementById('battleBetInput').value); 
-        if(val > balance || val < 0.1) return;
+        const val = parseFloat(document.getElementById('battleBetInput').value); if(val > balance) return;
         balance -= val; updateBalUI();
         myBattleRoom = { id: 'CUSTOM', participants: [], total: val * battlePlayers, bet: val, players: battlePlayers, currentRound: 1 };
         const colors = ['black', 'red', 'blue', 'gold'];
         myBattleRoom.participants.push({id: 'me', color: selectedBattleColor, isMe: true});
-        let cIdx = 0;
-        while(myBattleRoom.participants.length < battlePlayers) {
-            let targetColor = colors[cIdx++];
-            if(targetColor !== selectedBattleColor) myBattleRoom.participants.push({id: generateRealBotId(Math.random()*999), color: targetColor, isMe: false});
+        let cIdx = 0; while(myBattleRoom.participants.length < battlePlayers) {
+            let tc = colors[cIdx++]; if(tc !== selectedBattleColor) myBattleRoom.participants.push({id: generateRealBotId(Math.random()*500), color: tc, isMe: false});
         }
         closeModal(); showPvPView();
     }
@@ -472,92 +443,82 @@
         document.getElementById('pvpBattleView').style.display = 'flex';
         document.getElementById('pvpTotalPot').innerText = myBattleRoom.total.toFixed(1) + " TON";
         drawPvPWheel(); renderPvPAvatars();
-        
-        // 인원 충전 연출 후 3초 뒤 시작
         document.getElementById('pvpStatusTxt').innerText = "ALL PLAYERS READY!";
-        setTimeout(startPvPSpin, 3000); // 3초 뒤 휠 동작
+        setTimeout(startPvPSpin, 3000); // 인원이 다 차면 3초 뒤 시작
     }
 
     function drawPvPWheel() {
-        const canvas = document.getElementById('pvpWheelCanvas');
-        const ctx = canvas.getContext('2d');
-        const n = myBattleRoom.players;
-        const arc = (Math.PI * 2) / n;
+        const canvas = document.getElementById('pvpWheelCanvas'); const ctx = canvas.getContext('2d');
+        const n = myBattleRoom.players; const arc = (Math.PI * 2) / n;
         const colors = ['black', 'red', 'blue', 'gold'];
-
         ctx.clearRect(0,0,560,560);
         for(let i=0; i<n; i++) {
-            ctx.beginPath();
-            ctx.fillStyle = masterColors[colors[i]];
-            ctx.moveTo(280, 280);
-            ctx.arc(280, 280, 260, i*arc - Math.PI/2, (i+1)*arc - Math.PI/2);
-            ctx.fill();
+            ctx.beginPath(); ctx.fillStyle = masterColors[colors[i]]; ctx.moveTo(280, 280);
+            ctx.arc(280, 280, 260, i*arc - Math.PI/2, (i+1)*arc - Math.PI/2); ctx.fill();
             ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.lineWidth = 2; ctx.stroke();
         }
         ctx.beginPath(); ctx.fillStyle = '#1e2128'; ctx.arc(280, 280, 60, 0, Math.PI*2); ctx.fill();
     }
 
+    /* --- [핵심 수정: 아바타가 휠 내부에 위치하고 같이 돌아감] --- */
     function renderPvPAvatars() {
-        const container = document.getElementById('pvpAvatars'); container.innerHTML = '';
+        const layer = document.getElementById('pvpAvatarLayer'); layer.innerHTML = '';
+        layer.style.transform = 'rotate(0deg)'; layer.style.transition = 'none';
         const n = myBattleRoom.players; const arc = 360 / n;
         myBattleRoom.participants.forEach((p, i) => {
             const avatar = document.createElement('div'); avatar.className = 'pvp-user-avatar';
             avatar.innerText = p.id === 'me' ? 'ME' : p.id.slice(0,2).toUpperCase();
+            // 휠 내부 섹터 중앙 위치 계산 (r=160 정도가 적당함)
             const angle = (i * arc + arc/2 - 90) * (Math.PI / 180);
             const r = 160;
-            const x = 140 + Math.cos(angle) * r - 24; const y = 140 + Math.sin(angle) * r - 24;
+            const x = 140 + Math.cos(angle) * r - 22; const y = 140 + Math.sin(angle) * r - 22;
             avatar.style.left = x + 'px'; avatar.style.top = y + 'px';
             avatar.style.animation = 'popIn 0.5s forwards';
-            container.appendChild(avatar);
+            layer.appendChild(avatar);
         });
     }
 
     function startPvPSpin() {
         const canvas = document.getElementById('pvpWheelCanvas');
-        const n = myBattleRoom.players;
-        const winnerIdx = Math.floor(Math.random() * n);
+        const layer = document.getElementById('pvpAvatarLayer');
+        const n = myBattleRoom.players; const winnerIdx = Math.floor(Math.random() * n);
         const arc = 360 / n;
         const targetRotation = 360 * 10 + (360 - (winnerIdx * arc + arc/2));
         
         document.getElementById('pvpStatusTxt').innerText = "SPINNING...";
+        // 캔버스와 아바타 레이어를 동시에 회전시킴
         canvas.style.transition = 'transform 4.5s cubic-bezier(0.1, 0, 0, 1)';
         canvas.style.transform = `rotate(${targetRotation}deg)`;
+        layer.style.transition = 'transform 4.5s cubic-bezier(0.1, 0, 0, 1)';
+        layer.style.transform = `rotate(${targetRotation}deg)`;
         
         setTimeout(() => {
             const winner = myBattleRoom.participants[winnerIdx];
-            if(winner.isMe) {
-                balance += myBattleRoom.total; updateBalUI(); playSound('sndWin');
-                document.getElementById('pvpStatusTxt').innerText = "🏆 WINNER: ME!";
-            } else {
-                playSound('sndLose');
-                document.getElementById('pvpStatusTxt').innerText = `LOSE (Winner: ${winner.id})`;
-            }
+            if(winner.isMe) { balance += myBattleRoom.total; updateBalUI(); playSound('sndWin'); document.getElementById('pvpStatusTxt').innerText = "🏆 WINNER: ME!"; }
+            else { playSound('sndLose'); document.getElementById('pvpStatusTxt').innerText = `LOSE (Winner: ${winner.id})`; }
             setTimeout(() => {
                 if(duelCount > 1 && myBattleRoom.currentRound < duelCount) {
                     myBattleRoom.currentRound++; canvas.style.transition = 'none'; canvas.style.transform = 'rotate(0deg)';
+                    layer.style.transition = 'none'; layer.style.transform = 'rotate(0deg)';
                     setTimeout(startPvPSpin, 2000);
-                } else { leaveBattle(); }
+                } else leaveBattle();
             }, 2500);
         }, 4500);
     }
 
     function leaveBattle() {
-        myBattleRoom = null; duelCount = 1;
-        document.getElementById('pvpBattleView').style.display = 'none';
+        myBattleRoom = null; document.getElementById('pvpBattleView').style.display = 'none';
         document.getElementById('battleLobby').style.display = 'flex';
         document.getElementById('pvpWheelCanvas').style.transform = 'rotate(0deg)';
+        document.getElementById('pvpAvatarLayer').style.transform = 'rotate(0deg)';
         renderBattleLobby();
     }
 
-    /* --- [기존 v7.0 골든 마스터 로직 유지] --- */
+    /* --- [v7.0 골든 마스터 코어 로직 보존] --- */
     function generateRealBotId(seed) { 
-        const types = ['random', 'initials', 'masked', 'pro']; const type = types[Math.floor(seed) % 4]; 
-        if(type === 'random') { let id = ""; const chars = "abcdefghijklmnopqrstuvwxyz"; for(let i=0; i<6; i++) id += chars.charAt((seed >> i) % 26); return id; } 
-        else if(type === 'initials') { const inits = ["kmh", "lsy", "pjs", "hjh", "kty"]; return inits[Math.floor(seed) % inits.length] + (Math.floor(seed) % 999); } 
-        else if(type === 'masked') { const names = ["Kim", "Lee", "Park", "Choi", "Jung"]; return names[Math.floor(seed) % names.length] + "***"; } 
-        else { const adjs = ["Top", "Lucky", "Ace", "Big"]; const nouns = ["Star", "Boss", "Player", "King"]; return adjs[Math.floor(seed) % 4] + nouns[Math.floor(seed/7) % 4] + (Math.floor(seed) % 99); } 
+        const names = ["Kim", "Lee", "Park", "Choi", "Top", "Ace", "Lucky"];
+        return names[Math.floor(seed) % names.length] + (Math.floor(seed) % 99);
     }
-
     function deterministicGlobalSpawn(elapsed) { 
         if (elapsed < FREEZE_PERIOD || elapsed > CYCLE_MS - 100 || roundBotBetTotal >= 7.4) return; 
         const ts = Math.floor(Date.now() / 100), r = (ts * 9301 + 49297) % 233280;
@@ -566,12 +527,8 @@
             let amt = (r % 20 + 1) * 0.1; roundBotBetTotal += amt; addLiveUI(type, botId, amt); 
         } 
     }
-
-    const canvas = document.getElementById('wheelCanvas'), ctx = canvas.getContext('2d'), timerBar = document.getElementById('timerBar'), betOverlay = document.getElementById('betOverlay');
-    function drawWheel() { const arc = (Math.PI * 2) / 56, rad = 260; ctx.clearRect(0,0,560,560); ctx.lineWidth = 14; for (let i = 0; i < 56; i++) { ctx.beginPath(); ctx.strokeStyle = wheelMap[i].color; ctx.arc(280, 280, rad, i * arc + Math.PI/2 - arc/2 + 0.02, (i + 1) * arc + Math.PI/2 - arc/2 - 0.02); ctx.stroke(); } }
-    function syncHistory() { const ms = Math.floor(Date.now() / CYCLE_MS); globalHistory = []; for(let i=1; i<=35; i++) { globalHistory.push(wheelMap[getWinIndex(ms - i).index].color); } updateHistoryUI(); }
-    function updateHistoryUI() { const s = document.getElementById('historyStrip'); s.innerHTML = ''; const r = [...globalHistory].slice(-35).reverse(); r.forEach((c) => { const b = document.createElement('div'); b.className = `hist-bar ${c === '#ffcc00' ? 'h-gold' : c === '#00d9ff' ? 'h-blue' : c === '#ff3333' ? 'h-red' : 'h-black'}`; b.style.backgroundColor = c; s.appendChild(b); }); }
-    
+    const mainCanvas = document.getElementById('wheelCanvas'), mainCtx = mainCanvas.getContext('2d'), timerBar = document.getElementById('timerBar'), betOverlay = document.getElementById('betOverlay');
+    function drawWheel() { const arc = (Math.PI * 2) / 56, rad = 260; mainCtx.clearRect(0,0,560,560); mainCtx.lineWidth = 14; for (let i = 0; i < 56; i++) { mainCtx.beginPath(); mainCtx.strokeStyle = wheelMap[i].color; mainCtx.arc(280, 280, rad, i * arc + Math.PI/2 - arc/2 + 0.02, (i + 1) * arc + Math.PI/2 - arc/2 - 0.02); mainCtx.stroke(); } }
     function tick() { 
         const n = Date.now(), el = n % CYCLE_MS, p = document.getElementById('wheelPointer'); 
         if (el < FREEZE_PERIOD) { 
@@ -580,58 +537,27 @@
             if(isSpinning) { const rot = getCurrentRotation(), arc = 360/56, nR = (360 - (rot % 360)) % 360, vI = Math.floor((nR + arc/2) % 360 / arc) % 56; p.style.backgroundColor = wheelMap[vI].color; } 
         } else { isSpinning = false; const rem = CYCLE_MS - el; timerBar.style.width = (rem / BETTING_PERIOD) * 100 + "%"; timerBar.style.backgroundColor = `hsl(${(rem / BETTING_PERIOD) * 60}, 100%, 50%)`; betOverlay.style.display = (rem < 100) ? "flex" : "none"; p.style.backgroundColor = "#fff"; deterministicGlobalSpawn(el); } 
     }
-
-    function getCurrentRotation() { const st = window.getComputedStyle(canvas, null), tr = st.getPropertyValue("transform"); if(tr === "none") return 0; const v = tr.split('(')[1].split(')')[0].split(','); const a = Math.round(Math.atan2(parseFloat(v[1]), parseFloat(v[0])) * (180/Math.PI)); return (a + 360) % 360; }
-    function startSpin() { isSpinning = true; const s = Math.floor(Date.now() / CYCLE_MS); currentRoundResult = getWinIndex(s); const arc = 360/56, tar = (360 - (currentRoundResult.index * arc)) % 360, curM = currentRotation % 360, d = (tar - curM + 360) % 360; currentRotation += (360 * 10) + d; canvas.style.transition = `transform ${SPIN_DURATION}ms cubic-bezier(0.1, 0, 0, 1)`; canvas.style.transform = `rotate(${currentRotation}deg)`; setTimeout(() => resolve(wheelMap[currentRoundResult.index]), SPIN_DURATION); }
-    
+    function getCurrentRotation() { const st = window.getComputedStyle(mainCanvas, null), tr = st.getPropertyValue("transform"); if(tr === "none") return 0; const v = tr.split('(')[1].split(')')[0].split(','); const a = Math.round(Math.atan2(parseFloat(v[1]), parseFloat(v[0])) * (180/Math.PI)); return (a + 360) % 360; }
+    function startSpin() { isSpinning = true; const s = Math.floor(Date.now() / CYCLE_MS); currentRoundResult = getWinIndex(s); const arc = 360/56, tar = (360 - (currentRoundResult.index * arc)) % 360, curM = currentRotation % 360, d = (tar - curM + 360) % 360; currentRotation += (360 * 10) + d; mainCanvas.style.transition = `transform ${SPIN_DURATION}ms cubic-bezier(0.1, 0, 0, 1)`; mainCanvas.style.transform = `rotate(${currentRotation}deg)`; setTimeout(() => resolve(wheelMap[currentRoundResult.index]), SPIN_DURATION); }
     function resolve(win) { 
         document.getElementById('wheelPointer').style.backgroundColor = win.color; globalHistory.push(win.color); updateHistoryUI(); 
-        if(myBet) { 
-            myGameStats.total++; const winS = myBet.type === win.name; if(winS) { balance = Number(balance) + (myBet.amount * win.mult); myGameStats.wins++; playSound('sndWin'); } else playSound('sndLose'); 
-            const row = `<tr><td><div class="ui-pill" style="background:var(--${myBet.type})"></div></td><td>${myBet.amount.toFixed(1)}T</td><td>${winS ? 'Win' : 'Lost'}</td><td><div class="ui-pill" style="background:${win.color}"></div></td></tr>`; 
-            document.getElementById('myLogBody').insertAdjacentHTML('afterbegin', row); 
-        } 
-        updateBalUI();
-        setTimeout(() => { myBet = null; document.querySelectorAll('.btn').forEach(b => b.classList.remove('selected')); liveBoardTotals = { black:0, red:0, blue:0, gold:0 }; document.querySelectorAll('.bet-list').forEach(l => l.innerHTML = ''); document.querySelectorAll('.col-total').forEach(t => t.innerText = '0.0'); canvas.style.transition = 'none'; canvas.style.transform = `rotate(${currentRotation % 360}deg)`; currentRoundResult = null; }, RESULT_WAIT); 
+        if(myBet) { myGameStats.total++; const winS = myBet.type === win.name; if(winS) { balance += (myBet.amount * win.mult); myGameStats.wins++; playSound('sndWin'); } else playSound('sndLose'); }
+        updateBalUI(); setTimeout(() => { myBet = null; liveBoardTotals = { black:0, red:0, blue:0, gold:0 }; document.querySelectorAll('.bet-list').forEach(l => l.innerHTML = ''); mainCanvas.style.transition = 'none'; mainCanvas.style.transform = `rotate(${currentRotation % 360}deg)`; }, RESULT_WAIT); 
     }
-
-    function getWinIndex(seed) { const rv = (seed * 9301 + 49297) % 233280; return { index: (rv % 56) }; }
-    function handleUserBet(type) { const el = Date.now() % CYCLE_MS; if(el < FREEZE_PERIOD || myBet) return; const amt = parseFloat(document.getElementById('betInput').value); if(isNaN(amt) || amt > balance || amt < 0.1) return; balance -= amt; updateBalUI(); myBet = { type, amount: amt }; document.getElementById('btn' + type.charAt(0).toUpperCase() + type.slice(1)).classList.add('selected'); addLiveUI(type, "ME", amt); }
-    function updateBalUI() { document.getElementById('balance').innerText = Number(balance).toFixed(1); const wb = document.getElementById('w-bal'); if(wb) wb.innerText = Number(balance).toFixed(1); }
+    function getWinIndex(seed) { return { index: ((seed * 9301 + 49297) % 233280 % 56) }; }
+    function handleUserBet(type) { if(Date.now()%CYCLE_MS < FREEZE_PERIOD || myBet || balance < parseFloat(document.getElementById('betInput').value)) return; const amt = parseFloat(document.getElementById('betInput').value); balance -= amt; updateBalUI(); myBet = { type, amount: amt }; addLiveUI(type, "ME", amt); }
+    function updateBalUI() { document.getElementById('balance').innerText = balance.toFixed(1); }
     function adjBet(v) { let i = document.getElementById('betInput'), n = parseFloat(i.value) + v; if(n >= 0.1) i.value = n.toFixed(1); }
-    
-    function switchTab(id, el) { 
-        document.querySelectorAll('.content-view').forEach(v => v.classList.remove('active')); document.getElementById('view-' + id).classList.add('active'); 
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); if(el) el.classList.add('active'); 
-        if(id === 'battle') renderBattleLobby(); if(id === 'ranking') renderRanking(); if(id === 'recommend') renderStats(); applyI18n(); 
-    }
-    
-    function renderStats() { 
-        const c = { black: 49.5, red: 30.2, blue: 18.7, gold: 1.6 }; 
-        ['black', 'red', 'blue', 'gold'].forEach(k => { document.getElementById(`val-${k}`).innerText = `${c[k].toFixed(1)}%`; document.getElementById(`bar-${k}`).style.width = `${c[k]}%`; }); 
-        document.getElementById('st-total').innerText = myGameStats.total; document.getElementById('st-winrate').innerText = (myGameStats.total > 0 ? (myGameStats.wins/myGameStats.total*100).toFixed(1) : 0) + "%"; 
-    }
-    
-    function renderRanking() { 
-        const tbody = document.getElementById('rankingBody'); tbody.innerHTML = ''; 
-        for(let i=1; i<=50; i++) { 
-            let botId = generateRealBotId(i * 777); const maskedId = botId.slice(0, -2) + "**";
-            tbody.innerHTML += `<tr><td>${i}</td><td style="color:var(--accent);">${maskedId}</td><td>${(1000-i*10).toFixed(1)}T</td><td>${(500-i*5).toFixed(1)}T</td><td>${(60-i*0.5).toFixed(0)}%</td></tr>`; 
-        } 
-    }
-    
-    function autoFillTelegramId() { if (currentId === "GUEST") { const user = tg.initDataUnsafe?.user; if (user && user.username) document.getElementById('loginId').value = `@${user.username}`; } }
-    function requestTelegramContact() { tg.requestContact((shared) => { if (shared && tg.initDataUnsafe.user) { const u = tg.initDataUnsafe.user; currentId = u.username || `u${u.id}`; balance = 10.0; updateLoginState(true); alert("🎁 10 TON Credited!"); } }); }
-    function handleLoginSubmit() { const id = document.getElementById('loginId').value, pw = document.getElementById('loginPw').value; currentId = id; updateLoginState(true); }
-    function handleLogout() { currentId = "GUEST"; balance = 50.0; updateLoginState(false); switchTab('home', document.querySelector('.nav-item')); }
-    function updateLoginState(isLoggedIn) { document.getElementById('loginForm').style.display = isLoggedIn ? 'none' : 'flex'; document.getElementById('logoutForm').style.display = isLoggedIn ? 'flex' : 'none'; if(isLoggedIn) { document.getElementById('w-userId').innerText = currentId; } applyI18n(); }
+    function switchTab(id, el) { document.querySelectorAll('.content-view').forEach(v => v.classList.remove('active')); document.getElementById('view-' + id).classList.add('active'); if(id === 'battle') renderBattleLobby(); applyI18n(); }
+    function updateHistoryUI() { const s = document.getElementById('historyStrip'); s.innerHTML = ''; globalHistory.slice(-35).reverse().forEach(c => { const b = document.createElement('div'); b.className = `hist-bar`; b.style.backgroundColor = c; s.appendChild(b); }); }
     function initAudio() { audioInitialized = true; }
     function toggleMute() { isMuted = !isMuted; document.getElementById('soundToggle').innerText = isMuted ? "🔇" : "🔊"; }
-    function playSound(id) { if(!isMuted && audioInitialized) { const s = document.getElementById(id); s.currentTime = 0; s.play().catch(()=>{}); } }
-    function addLiveUI(type, user, amt) { const list = document.getElementById(`l-${type}`); if(!list) return; liveBoardTotals[type] += amt; document.getElementById(`t-${type}`).innerText = liveBoardTotals[type].toFixed(1); const item = document.createElement('div'); item.className = 'bet-item'; item.innerHTML = `<span>${user}</span><b>${amt.toFixed(1)}T</b>`; list.prepend(item); if(list.children.length > 5) list.lastChild.remove(); }
-    function toggleWithdraw() { const g = document.getElementById('withdrawGroup'); g.style.display = g.style.display === 'none' ? 'flex' : 'none'; }
+    function playSound(id) { if(!isMuted && audioInitialized) document.getElementById(id).play().catch(()=>{}); }
+    function addLiveUI(type, user, amt) { const list = document.getElementById(`l-${type}`); liveBoardTotals[type] += amt; document.getElementById(`t-${type}`).innerText = liveBoardTotals[type].toFixed(1); const item = document.createElement('div'); item.className = 'bet-item'; item.innerHTML = `<span>${user}</span><b>${amt.toFixed(1)}T</b>`; list.prepend(item); }
 
-    syncHistory(); drawWheel(); updateBalUI(); applyI18n(); setInterval(tick, 100);
+    // 초기화
+    if(!currentLang) document.getElementById('langOverlay').style.display = 'flex'; else applyI18n();
+    drawWheel(); setInterval(tick, 100);
 </script>
 <div style="position:fixed; bottom:80px; width:100%; text-align:center; color:#333; font-size:0.5rem; pointer-events:none;">v7.0 TON Golden Master</div>
 </body>
